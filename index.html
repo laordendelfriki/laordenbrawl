@@ -1313,6 +1313,7 @@ function withSafes(mode,roster){
  return roster.concat([0,1].map(t=>({k:'safe',team:t,slot:0,ctrl:'safe',nick:'',hp})));
 }
 function newMatch(mode,roster,matchId){
+ IN.at=0;IN.sp=0;IN.gp=0;IN.mx=0;IN.my=0; // que no se arrastren ataques/gadgets de la partida anterior
  // roster: [{k,team,slot,ctrl:'me'|'bot'|'peer'|'safe',peer,nick}]
  setMap(mode);
  G={id:matchId||Math.random().toString(36).slice(2,8),mode,score:[0,0],rounds:[0,0],round:1,time:mode==='ko'?75:mode==='train'?5999:150,units:[],proj:[],zones:[],ball:null,phase:mode==='train'?'play':'count',phaseT:3,me:null,res:null,dlog:[],dtot:0};
@@ -2278,6 +2279,7 @@ $('bOpen').onclick=()=>{const W=wallet();if(W.boxes<1)return;const o=rollBox();$
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
  {v:'1.6',d:'28 oct 2026',t:'John Púas Lilas',l:[
+  ['f','Al empezar una partida ya no se lanza solo un ataque y un gadget.'],
   ['n','Nueva skin <b>John Púas Lilas</b>: ropa lila, pelo de pinchos lilas y ojos rojos. 550 Fénix en la tienda.'],
   ['n','Botón <b>Novedades</b>: aquí verás siempre lo último del juego.'],
   ['n','Botón <b>Instalar app</b> para tenerlo en el escritorio del móvil o del PC.'],
