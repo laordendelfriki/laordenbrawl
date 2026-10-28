@@ -194,6 +194,9 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
 #invOv[hidden]{display:none}
 #invOv .wl{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px;padding:18px;border:3px solid var(--out);border-radius:22px;background:linear-gradient(#2aa8ff,#1a4ac0);box-shadow:0 8px 0 var(--out);text-align:center}
 #invOv h2{margin:0}#invOv p{margin:0;font-weight:900;font-size:1.05rem}
+.topback{position:sticky;top:0;align-self:flex-start;z-index:5;display:inline-flex;align-items:center;gap:4px;flex:none;margin:-6px 0 -4px;border:3px solid var(--out);border-radius:14px;padding:5px 12px 5px 8px;background:linear-gradient(#8a7aff,#4430b8);color:#fff;font:400 1rem var(--f-disp);text-shadow:var(--txt-out);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 4px 0 var(--out);cursor:pointer}
+.topback:active{transform:translateY(3px);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 1px 0 var(--out)}
+.topback:focus-visible{outline:3px solid #fff;outline-offset:2px}
 #toast{position:absolute;left:50%;top:64px;transform:translateX(-50%);z-index:30;background:#2b1d63;border:3px solid var(--out);border-radius:16px;padding:9px 16px;font-weight:900;font-size:.88rem;max-width:90%;text-align:center;box-shadow:0 5px 0 var(--out)}
 @media (min-aspect-ratio:23/20){#tip{display:none}}
 #tip{position:absolute;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));text-align:center;font-size:.72rem;font-weight:900;color:rgba(255,255,255,.8);text-shadow:0 2px 0 var(--out);pointer-events:none;z-index:5}
@@ -2401,9 +2404,21 @@ function renderFriends(){
 $('bFriends').onclick=()=>{screen('sFriends');$('frMsg').textContent='';renderFriends();};
 $('bFrBack').onclick=()=>{if(NR&&isHost&&role==='lobby'){screen('sLobby');renderLobby();}else screen('sTitle');};
 $('bLInv').onclick=()=>{screen('sFriends');$('frMsg').textContent='Elige a quién invitar a esta sala.';renderFriends();};
+
+/* Botón «Volver» arriba en cada pantalla (hace lo mismo que el de abajo) */
+['bBack','bOBack','bLeave','bRBack','bShBack','bBxBack','bCpBack','bGaBack','bAcBack','bPlBack','bFrBack','bNwBack'].forEach(id=>{const src=$(id);if(!src)return;const sc=src.closest('.screen');if(!sc)return;
+ const b=document.createElement('button');b.type='button';b.className='topback';b.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.5 4.5 8 12l7.5 7.5-2.1 2.1L3.8 12l9.6-9.6z"/></svg>'+esc(src.textContent);
+ b.setAttribute('aria-label',src.textContent);b.onclick=()=>src.click();sc.insertBefore(b,sc.firstChild);});
+/* La música se para al salir del juego o cambiar de app, y vuelve al regresar */
+function audioAway(){stopMusic();if(AC&&AC.state==='running')AC.suspend().catch(()=>{});}
+function audioBack(){if(!AC)return;AC.resume().catch(()=>{}).then(()=>musicFor(state==='play'?'battle':'menu'));}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)audioAway();else audioBack();});
+addEventListener('pagehide',audioAway);addEventListener('blur',()=>{if(document.hidden)audioAway();});
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
  {v:'1.7.1',d:'28 oct 2026',t:'Ajuste de premios',l:[
+  ['n','Botón <b>Volver</b> también arriba en todas las pantallas, sin tener que bajar hasta el final.'],
+  ['f','La música ya no se sigue oyendo al salir del juego o cambiar de app.'],
   ['c','Las cajas dan personajes y skins con mucha menos frecuencia: personaje 1,5 %, skin 2,5 %, emoticono 10 %.'],
   ['c','Menos trofeos por partida: victoria +5, empate +1, derrota −4.'],
   ['c','Menos Fénix por partida: como mucho 35 (antes 70).']]},
