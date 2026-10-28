@@ -133,7 +133,7 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
 #superBtn svg{width:32px;height:32px}
 @keyframes pulse{50%{transform:scale(1.08)}}
 @media (prefers-reduced-motion:reduce){#superBtn.ready span{animation:none}}
-#superBtn{right:calc(132px + env(safe-area-inset-right,0px))!important;bottom:calc(30px + env(safe-area-inset-bottom,0px))!important}
+#superBtn{right:calc(34px + env(safe-area-inset-right,0px))!important;bottom:calc(150px + env(safe-area-inset-bottom,0px))!important}
 @media (pointer:fine){#superBtn{right:calc(18px + env(safe-area-inset-right,0px))!important;bottom:calc(24px + env(safe-area-inset-bottom,0px))!important}}
 @media (min-aspect-ratio:23/20) and (pointer:coarse){#superBtn{right:calc(30px + env(safe-area-inset-right,0px))!important;bottom:calc(150px + env(safe-area-inset-bottom,0px))!important}}
 #atkBtn{position:absolute;right:calc(22px + env(safe-area-inset-right,0px));bottom:calc(30px + env(safe-area-inset-bottom,0px));width:104px;height:104px;border-radius:50%;border:3px solid var(--out);z-index:7;background:rgba(255,77,90,.22);box-shadow:inset 0 0 0 5px rgba(255,120,130,.75),0 5px 0 rgba(26,18,38,.6);touch-action:none}
@@ -292,7 +292,7 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
 .lvt{display:flex;flex-direction:column;flex:1;min-width:0}.lvt b{font:400 1.1rem var(--f-disp);text-shadow:var(--txt-out)}.lvt small{font-weight:900;font-size:.75rem;color:var(--mute)}
 .lvbar{display:flex;gap:3px;margin-top:3px}.lvbar i{flex:1;height:8px;border-radius:4px;background:#1a1240;border:2px solid var(--out)}.lvbar i.on{background:linear-gradient(#d8b8ff,#7a3aff)}
 .lvrow .btn{font-size:1rem;padding:6px 12px;display:flex;flex-direction:column;align-items:center;line-height:1}.lvrow .btn small{margin:2px 0 0}
-#gadBtn{position:absolute;right:calc(220px + env(safe-area-inset-right,0px));bottom:calc(40px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:3px solid var(--out);z-index:7;color:#a8f0b8;background:linear-gradient(#3a5a4a,#1e3a2a);box-shadow:0 4px 0 var(--out);touch-action:none;display:grid;place-items:center}
+#gadBtn{position:absolute;right:calc(122px + env(safe-area-inset-right,0px));bottom:calc(140px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:3px solid var(--out);z-index:7;color:#a8f0b8;background:linear-gradient(#3a5a4a,#1e3a2a);box-shadow:0 4px 0 var(--out);touch-action:none;display:grid;place-items:center}
 #gadBtn.ready{color:#fff;background:radial-gradient(circle at 40% 30%,#b8ffb0,#3ad86a 55%,#1a9a4a)}
 #gadBtn i{position:absolute;top:-6px;right:-6px;min-width:22px;height:22px;border-radius:11px;background:#1a1226;border:2px solid #3ad86a;font:400 .85rem/18px var(--f-disp);font-style:normal;color:#fff;text-align:center}
 @media (pointer:fine){#gadBtn{right:calc(108px + env(safe-area-inset-right,0px));bottom:calc(30px + env(safe-area-inset-bottom,0px))}}
@@ -686,6 +686,11 @@ function mouth(c,L,mx,my,d,expr){
 function hairFront(c,L,hx,hy,R,d){
  const hr=L.hair,st=L.style,bb=[hx-R-1,hy-R-1.4,2*R+2,R*1.5];
  const lc=shade(hr,-95);
+ if(st==='bald'){ // calvete: solo matas a los lados y brillo en la coronilla
+  if(d==='up'){toon(c,ell(c,hx,hy+2.8,R-.2,R*.36),[hx-R,hy+.5,2*R,R*.8],hr,{lc,gloss:false});return;}
+  if(d==='left'){toon(c,ell(c,hx+R-1.4,hy+1.2,1.6,1.8),[hx+R-3,hy-.6,3.2,3.6],hr,{lc,gloss:false});}
+  else[-1,1].forEach(k=>toon(c,ell(c,hx+k*(R-.1),hy+1,1.05,1.7),[hx+k*(R-.1)-1.05,hy-.7,2.1,3.4],hr,{lc,gloss:false}));
+  c.fillStyle='rgba(255,255,255,.55)';c.beginPath();c.ellipse(hx-(d==='left'?.2:1.6),hy-R+1.4,1.8,.6,-.3,0,Math.PI*2);c.fill();return;}
  if(d==='up'){
   if(st==='long'){toon(c,rect(c,hx-R-.6,hy-1,2*R+1.2,R+6.4,2.6),[hx-R,hy-1,2*R,R+6],shade(hr,-14),{gloss:false,lc});}
   toon(c,ell(c,hx,hy-.6,R+.45,R+.05),[hx-R,hy-R-.6,2*R,2*R],hr,{lc,sy:.25});
@@ -902,6 +907,7 @@ function drawChar(c,L,d,f){
   if(L.face&&L.face.fang&&expr!=='hit'){c.fillStyle='#ffffff';c.strokeStyle=INK;c.lineWidth=.18;[-1,1].forEach(k=>{const fx=mx+k*(side?.5:.7);c.beginPath();c.moveTo(fx-.32,my-.15);c.lineTo(fx+.32,my-.15);c.lineTo(fx,my+.85);c.closePath();c.fill();c.stroke();});}
   if(L.skull){c.strokeStyle='rgba(20,16,28,.8)';c.lineWidth=.22;c.beginPath();for(let i=-2;i<=2;i++){c.moveTo(mx+i*.5,my+.4);c.lineTo(mx+i*.5,my+1.4);}c.stroke();}
   if(L.goatee){c.fillStyle=L.goatee;c.beginPath();c.moveTo(mx-1.1,my+1.5);c.quadraticCurveTo(mx,my+3.6,mx+1.1,my+1.5);c.quadraticCurveTo(mx,my+2.1,mx-1.1,my+1.5);c.fill();}
+  if(L.cigar){const dx=side?-1:1,x0=mx+dx*.5;c.fillStyle='#5a2e14';c.beginPath();rrPath(c,Math.min(x0,x0+dx*3),my+.15,3,.85,.4);c.fill();c.fillStyle='#ffd23a';c.fillRect(Math.min(x0,x0+dx*3)+(side?.4:1.9),my+.15,.5,.85);c.fillStyle='#c8c8d0';c.beginPath();c.arc(x0+dx*3.1,my+.55,.4,0,Math.PI*2);c.fill();}
   if(L.mous){c.fillStyle=L.mous;c.beginPath();const w=(side?1.6:2)*(L.manly?1.25:1);c.moveTo(mx-w,my+.1);c.quadraticCurveTo(mx-w*.5,my-.9,mx,my-.4);c.quadraticCurveTo(mx+w*.5,my-.9,mx+w,my+.1);c.quadraticCurveTo(mx+w*.5,my-.25,mx,my-.05);c.quadraticCurveTo(mx-w*.5,my-.25,mx-w,my+.1);c.fill();}
  }
  hairFront(c,L,hx,hy,R,d);
@@ -1083,9 +1089,9 @@ const BR={
  xavo:{n:'Xavo',role:'Top 8',hp:4300,spd:3.05,reload:1.4,supCost:3000,supRange:6,atkRange:9,
   look:LOOK({face:{brow:'angry',mouth:'grin'},style:'messy',curly:true,hair:'#1a1210',beard:'#1a1210',top:'#2c2c32',camo:'#4e4e56',claw:'#e8322a',logo:true,trim:'#e8322a',pants:'#1e1e24',shoes:'#1a1a20',shoea:'#e8322a',skin:'#eec6a2',eye:'#3a2418'}),
   atkN:'Lata de Monster',atkD:'Lanza latas de Monster a larga distancia.',supN:'¡Hora del Monster!',supD:'Se bebe una Monster: durante 6 segundos su daño y su tamaño se duplican y corre mucho más rápido.',st:[3,5,3]},
- geri:{n:'Geri',role:'Defestamínico',hp:4300,spd:3.2,reload:1.3,supCost:3000,supRange:2.5,atkRange:7.5,
+ geri:{n:'Geri',role:'Defestamínico',hp:4300,spd:3.2,reload:1.3,supCost:3000,supRange:8,atkRange:7.5,
   look:LOOK({face:{brow:'angry',mouth:'teeth'},style:'short',hair:'#e8c46a',glasses:'#2a2a34',top:'#3a6ad8',trim:'#ffd23a',pants:'#2a3048',shoes:'#ffffff',shoea:'#3a6ad8',skin:'#f6d2b0',eye:'#3a6aa8'}),
-  atkN:'Peonza de combate',atkD:'Lanza su beyblade, que rebota en las paredes y vuelve a golpear.',supN:'¡Let it rip!',supD:'Monta un estadio a su alrededor: durante 3 segundos todo el que esté dentro recibe golpes sin parar.',st:[3,4,3]},
+  atkN:'Peonza de combate',atkD:'Lanza su beyblade, que rebota en las paredes y vuelve a golpear.',supN:'¡Let it rip!',supD:'Lanza una peonza gigante que rebota por las paredes y pega más fuerte con cada rebote. Al chocar con un rival le quita un % de su vida y se queda pegada triturándole, cada vez menos.',st:[3,4,3]},
  dani:{n:'Dani',role:'Tóxico',hp:4100,spd:3.1,reload:1.35,supCost:2900,supRange:7,atkRange:7,
   look:LOOK({face:{brow:'sly',mouth:'smirk',lids:.35},style:'short',hair:'#141016',glasses:'#1a1a22',top:'#2a3a24',trim:'#7ad84a',pants:'#22262a',shoes:'#1a1a1e',shoea:'#7ad84a',skin:'#f0c8a4'}),
   atkN:'Contador de veneno',atkD:'Dispara un frasco tóxico que envenena: sigue haciendo daño unos segundos.',supN:'Nube de infección',supD:'Lanza una nube venenosa que se queda en el suelo y destroza a quien la pise.',st:[3,4,3]},
@@ -1152,6 +1158,7 @@ const SKINS={
  /* Colección Héroes */
  xavi_hr:{k:'xavi',n:'Súper Tendero',tag:'Héroes',price:500,look:{hat:null,style:'short',mask:'#1a3aa8',cape:'#d0203a',capeIn:'#a01a2a',top:'#2a5ae8',trim:'#ffd23a',motif:'star',motifc:'#ffd23a',pack:null,pants:'#1a2a7a',shoes:'#d0203a',shoea:'#ffd23a'}},
  dani_hr:{k:'dani',n:'Doctor Tóxico',tag:'Héroes',price:450,look:{labcoat:'#f2f2f6',top:'#1a3a1a',trim:'#7aff4a',motif:'bubble',motifc:'#7aff4a',hat:'goggles',hata:'#7aff4a',pants:'#1a1a22',shoes:'#1a1a22',shoea:'#7aff4a'}},
+ geri_dp:{k:'geri',n:'Geri Depito',tag:'Especial',price:500,look:{style:'bald',hair:'#2a1a14',face:{brow:'sly',mouth:'smirk'},labcoat:'#8a1a3a',top:'#f4ecdc',trim:null,pants:'#8a1a3a',shoes:'#e88aa8',shoea:'#ffffff',stubble:true,cigar:true}},
  geri_hr:{k:'geri',n:'Geri Torbellino',tag:'Héroes',price:450,look:{mask:'#ff8a1e',cape:'#1a1a3a',capeIn:'#ff8a1e',top:'#1a1a3a',trim:'#ff8a1e',motif:'spiral',motifc:'#ff8a1e',pants:'#1a1a3a',shoes:'#ff8a1e',shoea:'#ffffff'}},
  alex_hr:{k:'alex',n:'Alex Jackpot',tag:'Héroes',price:500,look:{mask:'#ffbf1e',cape:'#5a1a8a',capeIn:'#ffbf1e',top:'#5a1a8a',trim:'#ffbf1e',motif:'coin',motifc:'#ffd23a',pants:'#2a1a3a',shoes:'#ffbf1e',shoea:'#5a1a8a'}},
  joker_hr:{k:'joker',n:'Joker Turbo',tag:'Héroes',price:450,look:{hat:'goggles',hata:'#7ae8ff',top:'#1a1a22',trim:'#ff9a2a',stripes:null,motif:'bolt',motifc:'#ff9a2a',pants:'#1a1a22',shoes:'#ff9a2a',shoea:'#1a1a22',pack:'#3a3a44',packa:'#ff9a2a'}},
@@ -1410,6 +1417,7 @@ function collide(u){
 }
 function moveBy(u,dx,dy){u.x+=dx;collide(u);u.y+=dy;collide(u);}
 const label=u=>u.ctrl==='bot'||!u.nick?u.b.n:u.nick;
+const SUP_RATE=.6; // velocidad de carga del súper (1 = como antes)
 function hurt(t,dmg,src,kn){
  if(t.dead||t.shield>0)return;
  if(src&&src.buff>0)dmg*=2;
@@ -1417,7 +1425,7 @@ function hurt(t,dmg,src,kn){
  if(!t.safe)dmg*=DMG_MUL;
  dmg=Math.round(dmg);t.hp-=dmg;t.lastHit=tNow;
  // pegar a la caja fuerte NO carga el súper
- if(src&&!src.dead){if(!t.safe)src.sup=Math.min(1,src.sup+dmg/src.b.supCost*(G.mode==='train'?3:1));src.st.dmg+=dmg;}
+ if(src&&!src.dead){if(!t.safe)src.sup=Math.min(1,src.sup+dmg/src.b.supCost*SUP_RATE*(G.mode==='train'?3:1));src.st.dmg+=dmg;}
  if(G.mode==='train'&&t.ctrl==='dummy'){G.dlog.push([tNow,dmg]);G.dtot+=dmg;}
  fxText(t.x,t.y,1.6,dmg,t.ctrl==='bot'?'#ffd8a0':'#ff6a6a');
  ev(['hit',t.id]);
@@ -1460,7 +1468,7 @@ const ATK={
 const SUP={
  xavi:(u,a,d)=>lob(u,a,clamp(d||6,2,7),'sobre',p=>boom(p.tx,p.ty,2,1500,u.team,u,4.5,0,'#ffbf3c')),
  xavo:(u)=>{u.buff=6;fxBurst(u.x,u.y,.6,'#7aff4a',18,3,.6,.12);},
- geri:(u)=>{G.zones.push({x:u.x,y:u.y,r:2.5,t:3,tick:0,every:.35,dmg:420,team:u.team,owner:u,follow:u,kind:'stadium'});},
+ geri:(u,a)=>{shot(u,a,{spd:9.5,range:6,dist:0,r:.62,dmg:0,bounce:0,kind:'megatop',mega:1,nb:0});fxBurst(u.x,u.y,.4,'#ffd23a',12,3,.4,.12);},
  dani:(u,a,d)=>lob(u,a,clamp(d||6,2,7),'toxic',p=>{G.zones.push({x:p.tx,y:p.ty,r:2.2,t:4,tick:0,every:.5,dmg:380,team:u.team,owner:u,kind:'cloud'});fxRing(p.tx,p.ty,2.2,'#7aff4a');}),
  lazuli:(u,a)=>{for(let i=0;i<4;i++)shot(u,a+(i-1.5)*.35,{spd:7,range:11,dmg:650,r:.32,kind:i%2?'bug':'merfolk',home:1});},
  victhor:(u,a)=>{u.dash={vx:Math.cos(a)*14,vy:Math.sin(a)*14,t:.28,dmg:0,hit:new Set(),after:()=>{for(let i=0;i<8;i++)shot(u,i/8*TAU,{spd:12,range:6,dmg:650,r:.26,kind:['card','top','pball'][i%3]});}};},
@@ -1615,8 +1623,46 @@ function simStep(dt){
  if(G.ball){stepBall(dt);stepKeep(dt);}
  if(G.mode==='ko')checkKO();
 }
+/* Súper de Geri: peonza gigante que rebota, crece en daño y se engancha al rival */
+const MEGA_MAXB=8,MEGA_LIFE=6;
+function megaMul(p){return 1+.35*p.nb;}
+function megaHurt(p,o,v){const w=p.owner,s0=w?w.sup:0;if(o.keeper)hurtKeeper(o,v,w);else hurt(o,v,w);if(w)w.sup=s0;} // el súper no recarga el súper
+function stepMega(p,dt){
+ p.dist+=dt; // dist/range = tiempo de vida usado (para el desvanecido)
+ if(p.grind){const o=p.grind;
+  if(o.dead||p.gn>=7)return megaEnd(p);
+  p.x=o.x+Math.cos(tNow*14)*.18;p.y=o.y-.35+Math.sin(tNow*14)*.12;p.a=tNow*20;
+  p.gt-=dt;if(p.gt<=0){p.gt=.3;p.gn++;
+   const v=Math.max(40,p.gd);megaHurt(p,o,v);p.gd*=.72;
+   if(p.gn%2)fxBurst(p.x,p.y,.3,'#ffd23a',5,2.5,.25,.08);}
+  return false;}
+ if(p.dist>=MEGA_LIFE)return megaEnd(p);
+ const n=Math.max(1,Math.ceil(hyp(p.vx,p.vy)*dt/.18));
+ for(let s=0;s<n;s++){
+  const ox=p.x,oy=p.y;p.x+=p.vx*dt/n;p.y+=p.vy*dt/n;
+  if(solid(p.x,p.y+.35)){
+   if(solid(p.x,oy+.35))p.vx=-p.vx;if(solid(ox,p.y+.35))p.vy=-p.vy;p.x=ox;p.y=oy;
+   p.nb++;const k=Math.min(1.06,14/hyp(p.vx,p.vy));p.vx*=k;p.vy*=k;
+   fxBurst(p.x,p.y,.3,'#ffffff',6,3,.3,.1);if(p.nb<=MEGA_MAXB)fxText(p.x,p.y,1.4,'x'+megaMul(p).toFixed(2).replace(/\.?0+$/,''),'#ffbf3c');
+   if(p.nb>MEGA_MAXB)return megaEnd(p);
+  }
+  const m=megaMul(p);
+  for(const o of G.units){if(o.team===p.team||o.dead)continue;
+   if(hyp(o.x-p.x,o.y-.35-p.y)<p.r+(o.safe?.85:.38)){
+    // golpe porcentual: 15% de la vida máxima +5% por rebote (máx. 45%)
+    const pct=Math.min(.45,.15+.05*p.nb);
+    const hit=o.safe?1400*m:o.max*pct,grind=o.safe?260*m:o.max*(.035+.01*p.nb);
+    megaHurt(p,o,hit);fxText(p.x,p.y,1.9,'¡'+Math.round(pct*100)+'%!','#ffd23a',1);fxRing(o.x,o.y,1.1,'#ffd23a');
+    p.grind=o;p.gd=grind;p.gt=.3;p.gn=0;return false;}}
+  if(G.keep)for(const k of G.keep){if(k.dead||k.team===p.team)continue;
+   if(hyp(k.x-p.x,k.y-.35-p.y)<p.r+.42){k.keeper=1;megaHurt(p,k,900*m);p.grind=k;p.gd=200*m;p.gt=.3;p.gn=0;return false;}}
+ }
+ p.a=ang(p.vx,p.vy);return false;
+}
+function megaEnd(p){fxBurst(p.x,p.y,.4,'#ffd23a',14,4,.45,.12);fxRing(p.x,p.y,.9,'#ffffff');return true;}
 function stepProj(dt){
  for(let i=G.proj.length-1;i>=0;i--){const p=G.proj[i];
+  if(p.mega){if(stepMega(p,dt))G.proj.splice(i,1);continue;}
   if(p.lob){p.t+=dt;const k=Math.min(1,p.t/p.T);p.x=p.sx+(p.tx-p.sx)*k;p.y=p.sy+(p.ty-p.sy)*k;p.h=Math.sin(k*Math.PI)*2.2;if(k>=1){G.proj.splice(i,1);p.onEnd(p);}continue;}
   if(p.home){let b=null,bd=6;for(const o of G.units){if(o.team===p.team||o.dead||p.hit.has(o))continue;const d=hyp(o.x-p.x,o.y-.35-p.y);if(d<bd){bd=d;b=o;}}if(b){const cur=ang(p.vx,p.vy),want=ang(b.x-p.x,b.y-.35-p.y);const df=((want-cur+Math.PI*3)%TAU)-Math.PI;const na=cur+clamp(df,-5*dt,5*dt),sp=hyp(p.vx,p.vy);p.vx=Math.cos(na)*sp;p.vy=Math.sin(na)*sp;}}
   const n=Math.max(1,Math.ceil(hyp(p.vx,p.vy)*dt/.2));let dead=false;
@@ -1697,7 +1743,7 @@ function afterPause(){
 }
 
 /* ================= Red: instantáneas ================= */
-const PK=['card','can','top','toxic','wave','pball','belly','chip','pack','lick','bigball','merfolk','bug','sobre','thor','chips','wrench','moto','chupete','panal','push'];
+const PK=['card','can','top','toxic','wave','pball','belly','chip','pack','lick','bigball','merfolk','bug','sobre','thor','chips','wrench','moto','chupete','panal','push','megatop'];
 const ZK=['stadium','cloud','stink','spin'];
 const DIRS=['down','up','left','right'];
 const r2=v=>Math.round(v*100)/100;
@@ -2042,12 +2088,13 @@ function drawProj(p,mt){
   else if(p.kind==='chips'){for(let i=0;i<4;i++){ctx.fillStyle=['#e8322a','#1a1a22','#3a8cff','#ffbf3c'][i];ctx.beginPath();ctx.ellipse(0,-i*TS*.1,TS*.26,TS*.12,0,0,TAU);ctx.fill();ctx.strokeStyle='#ffffff';ctx.lineWidth=1;ctx.stroke();}}
   ctx.restore();return;}
  ctx.save();ctx.translate(x,y);
- if(!['wave','belly','lick'].includes(p.kind)){const L2=TS*(p.kind==='bigball'?1.2:.95),tc=p.team===mt?'90,170,255':'255,90,100';ctx.save();ctx.rotate(a);const g=ctx.createLinearGradient(0,0,-L2,0);g.addColorStop(0,`rgba(${tc},.75)`);g.addColorStop(1,`rgba(${tc},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(0,-TS*.14);ctx.lineTo(-L2,0);ctx.lineTo(0,TS*.14);ctx.closePath();ctx.fill();ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.moveTo(0,-TS*.05);ctx.lineTo(-L2*.6,0);ctx.lineTo(0,TS*.05);ctx.closePath();ctx.fill();ctx.restore();}
+ if(!['wave','belly','lick','megatop'].includes(p.kind)){const L2=TS*(p.kind==='bigball'?1.2:.95),tc=p.team===mt?'90,170,255':'255,90,100';ctx.save();ctx.rotate(a);const g=ctx.createLinearGradient(0,0,-L2,0);g.addColorStop(0,`rgba(${tc},.75)`);g.addColorStop(1,`rgba(${tc},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(0,-TS*.14);ctx.lineTo(-L2,0);ctx.lineTo(0,TS*.14);ctx.closePath();ctx.fill();ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.moveTo(0,-TS*.05);ctx.lineTo(-L2*.6,0);ctx.lineTo(0,TS*.05);ctx.closePath();ctx.fill();ctx.restore();}
  switch(p.kind){
   case 'push':{ctx.rotate(a);ctx.globalAlpha=Math.max(0,.85-fade*.8);ctx.strokeStyle='#ffffff';ctx.lineWidth=Math.max(2,TS*.1);ctx.beginPath();ctx.arc(-TS*.25,0,TS*(.35+fade*.35),-.9,.9);ctx.stroke();ctx.strokeStyle='#7ad8ff';ctx.lineWidth=Math.max(1.5,TS*.05);ctx.beginPath();ctx.arc(-TS*.15,0,TS*(.3+fade*.3),-.7,.7);ctx.stroke();break;}
   case 'chupete':{ctx.rotate(tNow*9);const k=TS*.24;ctx.fillStyle='#7ad8ff';ctx.strokeStyle='#1a1226';ctx.lineWidth=1.6;ctx.beginPath();ctx.ellipse(0,0,k*1.3,k*.85,0,0,TAU);ctx.fill();ctx.stroke();ctx.strokeStyle='#ff6aa8';ctx.lineWidth=Math.max(2,TS*.08);ctx.beginPath();ctx.arc(0,k*.2,k*.65,0,TAU);ctx.stroke();ctx.fillStyle='#ffd23a';ctx.beginPath();ctx.arc(0,0,k*.35,0,TAU);ctx.fill();ctx.restore();ctx.save();ctx.translate(x,y);ctx.fillStyle='rgba(170,230,255,.85)';for(let i=0;i<3;i++){const t2=(tNow*3+i/3)%1;ctx.beginPath();ctx.ellipse(-Math.cos(a)*TS*(.25+t2*.4),-Math.sin(a)*TS*(.25+t2*.4)+t2*TS*.2,TS*.05,TS*.08,0,0,TAU);ctx.fill();}break;}
   case 'card':ctx.rotate(tNow*14);ctx.fillStyle='#ffffff';ctx.fillRect(-TS*.16,-TS*.22,TS*.32,TS*.44);ctx.fillStyle=p.team===mt?'#2a6ae8':'#d83a3a';ctx.fillRect(-TS*.12,-TS*.18,TS*.24,TS*.36);ctx.fillStyle='#ffbf3c';ctx.fillRect(-TS*.04,-TS*.04,TS*.08,TS*.08);break;
   case 'can':{ctx.rotate(tNow*12);const w=TS*.2,h=TS*.36;ctx.fillStyle='#16161c';ctx.fillRect(-w,-h,w*2,h*2);ctx.fillStyle='#b8bcc4';ctx.fillRect(-w,-h,w*2,h*.18);ctx.fillRect(-w,h*.82,w*2,h*.18);ctx.strokeStyle='#7aff4a';ctx.lineWidth=Math.max(1.5,TS*.07);ctx.beginPath();ctx.moveTo(-w*.4,-h*.5);ctx.lineTo(w*.2,-h*.05);ctx.lineTo(-w*.2,h*.05);ctx.lineTo(w*.4,h*.55);ctx.stroke();break;}
+  case 'megatop':{const glow=.5+.5*Math.sin(tNow*10);ctx.fillStyle='rgba(255,210,58,'+(.18+.15*glow)+')';ctx.beginPath();ctx.arc(0,0,TS*.82,0,TAU);ctx.fill();ctx.rotate(tNow*30);const r=TS*.62;ctx.fillStyle='#d8dce8';ctx.beginPath();for(let i=0;i<8;i++){const q=i/8*TAU;ctx.lineTo(Math.cos(q)*r,Math.sin(q)*r);ctx.lineTo(Math.cos(q+.42)*r*.62,Math.sin(q+.42)*r*.62);}ctx.closePath();ctx.fill();ctx.strokeStyle='#22202a';ctx.lineWidth=2.5;ctx.stroke();ctx.fillStyle='#3a6ad8';ctx.beginPath();ctx.arc(0,0,r*.5,0,TAU);ctx.fill();ctx.stroke();ctx.fillStyle='#ffd23a';ctx.beginPath();ctx.arc(0,0,r*.3,0,TAU);ctx.fill();ctx.fillStyle='#1a1a22';ctx.beginPath();ctx.arc(0,0,r*.12,0,TAU);ctx.fill();ctx.strokeStyle='rgba(255,255,255,.7)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*1.12,0,1.4);ctx.stroke();ctx.beginPath();ctx.arc(0,0,r*1.12,Math.PI,Math.PI+1.4);ctx.stroke();break;}
   case 'top':{ctx.rotate(tNow*25);const r=TS*.3;ctx.fillStyle='#c8ccd8';ctx.beginPath();for(let i=0;i<6;i++){const q=i/6*TAU;ctx.lineTo(Math.cos(q)*r,Math.sin(q)*r);ctx.lineTo(Math.cos(q+.5)*r*.6,Math.sin(q+.5)*r*.6);}ctx.closePath();ctx.fill();ctx.strokeStyle='#22202a';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#ffd23a';ctx.beginPath();ctx.arc(0,0,r*.4,0,TAU);ctx.fill();ctx.fillStyle='#1a1a22';ctx.beginPath();ctx.arc(0,0,r*.15,0,TAU);ctx.fill();break;}
   case 'toxic':ctx.fillStyle='rgba(122,216,74,.35)';ctx.beginPath();ctx.arc(0,0,TS*.34,0,TAU);ctx.fill();ctx.fillStyle='#7ad84a';ctx.beginPath();ctx.arc(0,0,TS*.19,0,TAU);ctx.fill();ctx.fillStyle='#2a4a1a';ctx.beginPath();ctx.arc(TS*.05,-TS*.04,TS*.05,0,TAU);ctx.arc(-TS*.06,TS*.05,TS*.04,0,TAU);ctx.fill();break;
   case 'wave':ctx.rotate(a);ctx.globalAlpha=1-fade*.4;ctx.strokeStyle='#7ad0ff';ctx.lineWidth=Math.max(3,TS*.15);ctx.beginPath();ctx.arc(-TS*.1,0,TS*.45,-1.1,1.1);ctx.stroke();ctx.strokeStyle='#ffffff';ctx.lineWidth=Math.max(1.5,TS*.05);ctx.beginPath();ctx.arc(-TS*.05,0,TS*.45,-.8,.8);ctx.stroke();break;
@@ -2416,6 +2463,11 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)audioAway()
 addEventListener('pagehide',audioAway);addEventListener('blur',()=>{if(document.hidden)audioAway();});
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
+ {v:'1.8',d:'28 oct 2026',t:'Let it rip!',l:[
+  ['n','Nuevo súper de <b>Geri</b>: una peonza gigante que rebota por las paredes, pega más con cada rebote (15 % de la vida del rival +5 % por rebote) y se queda triturándolo.'],
+  ['n','Nueva skin <b>Geri Depito</b> (colección Especial, 500 Fénix).'],
+  ['c','El súper tarda más en cargarse.'],
+  ['c','El gadget sale al <b>soltar</b> el botón, no al rozarlo, y los botones de súper y gadget están mejor colocados en el móvil.']]},
  {v:'1.7.1',d:'28 oct 2026',t:'Ajuste de premios',l:[
   ['n','Botón <b>Volver</b> también arriba en todas las pantallas, sin tener que bajar hasta el final.'],
   ['f','La música ya no se sigue oyendo al salir del juego o cambiar de app.'],
@@ -2483,7 +2535,10 @@ $('bGal').onclick=()=>{screen('sGal');renderGallery();};
 $('bGaBack').onclick=toMenu;
 $('bBox').onclick=()=>{screen('sBox');renderBox();};
 $('bBxBack').onclick=toMenu;
-$('gadBtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();doGadget();});
+{let gp=null;const GB=$('gadBtn'); // el gadget sale al SOLTAR encima del botón, no al rozarlo
+ GB.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();gp=e.pointerId;try{GB.setPointerCapture(e.pointerId);}catch(_){}});
+ GB.addEventListener('pointerup',e=>{e.preventDefault();e.stopPropagation();if(e.pointerId!==gp)return;gp=null;const r=GB.getBoundingClientRect();if(e.clientX>=r.left-6&&e.clientX<=r.right+6&&e.clientY>=r.top-6&&e.clientY<=r.bottom+6)doGadget();});
+ GB.addEventListener('pointercancel',()=>{gp=null;});}
 $('bShop').onclick=()=>{shopTab=+$('bShop').dataset.gift?'skins':'pass';screen('sShop');renderShop();};
 $('bShBack').onclick=toMenu;
 $('bRBack').onclick=toMenu;
@@ -2795,7 +2850,7 @@ function rankedResult(r){
 const STORY={
  xavi:'El tendero y alma de La Orden del Friki, en La Llagosta. Conoce cada carta del local y defiende la tienda a golpe de sobre legendario.',
  xavo:'Cliente fiel y jugador de torneo, con un Top 8 a sus espaldas. Nunca va sin su lata de Monster: cuando se la bebe, nadie le para.',
- geri:'Defestamínico, el rey de las peonzas. Su beyblade rebota por todas partes y cuando grita «¡Let it rip!» monta un estadio en mitad de la pelea.',
+ geri:'Defestamínico, el rey de las peonzas. Su beyblade rebota por todas partes y cuando grita «¡Let it rip!» suelta una peonza gigante que rebota sin control y se engancha al rival hasta dejarlo temblando.',
  dani:'Tóxico de nombre y de estilo: juega Magic con mazos de veneno. Paciente y retorcido, cada golpe suyo sigue quemando un rato.',
  lazuli:'El Tritones. Maestro de los mazos azules de tritones y bichos que dan asco. Suelta su horda y deja que hagan el trabajo sucio.',
  victhor:'Juega a todo: Beyblade, Pokémon, cartas… y siempre con estilo. Pequeño, rapidísimo y con la gorra bien puesta.',
@@ -2807,7 +2862,7 @@ const STORY={
  olivia:'La más pequeña de La Orden y la que de verdad manda. Llega en diciembre gateando a toda velocidad, con su chupete lleno de babas y un pañal que mejor no abrir.',
  thor:'El perro de La Orden. Rápido, cariñoso y muy baboso: reparte lengüetazos y persigue su pelota por todo el mapa.'
 };
-const DMG={xavi:['3 cartas × 420','1.500 en área + empuje'],xavo:['1.000 a larga distancia','×2 daño y tamaño durante 6 s'],geri:['760, rebota 2 veces','420 cada 0,35 s durante 3 s'],dani:['480 + veneno 660','Nube: 380 cada 0,5 s durante 4 s'],lazuli:['820, atraviesa rivales','4 bichos × 650 que persiguen'],victhor:['620 / 700 / 780 en ciclo','Sprint + 8 disparos × 650'],sara:['1.150 + empujón','1.500 + aturde 1,1 s'],alex:['3 fichas × 380','1.700 (o bote doble 2 × 1.300)'],pelucas:['2 sobres × 520','Abrazo 1.400 + cura hasta 1.600'],joker:['1.100 justo donde apuntas','1.900 en área + empuje'],thor:['2 lengüetazos × 560','1.100, rebota 4 veces'],john:['1.250 en cono + empuje','460 cada 0,3 s durante 3 s'],olivia:['700 en zigzag + frena al rival','1.800 en área + tufillo 220 cada 0,5 s']};
+const DMG={xavi:['3 cartas × 420','1.500 en área + empuje'],xavo:['1.000 a larga distancia','×2 daño y tamaño durante 6 s'],geri:['760, rebota 2 veces','15% vida (+5% por rebote) + triturado'],dani:['480 + veneno 660','Nube: 380 cada 0,5 s durante 4 s'],lazuli:['820, atraviesa rivales','4 bichos × 650 que persiguen'],victhor:['620 / 700 / 780 en ciclo','Sprint + 8 disparos × 650'],sara:['1.150 + empujón','1.500 + aturde 1,1 s'],alex:['3 fichas × 380','1.700 (o bote doble 2 × 1.300)'],pelucas:['2 sobres × 520','Abrazo 1.400 + cura hasta 1.600'],joker:['1.100 justo donde apuntas','1.900 en área + empuje'],thor:['2 lengüetazos × 560','1.100, rebota 4 veces'],john:['1.250 en cono + empuje','460 cada 0,3 s durante 3 s'],olivia:['700 en zigzag + frena al rival','1.800 en área + tufillo 220 cada 0,5 s']};
 let galK='xavi';
 function renderGallery(){
  const g=$('gaGrid');g.innerHTML='';
