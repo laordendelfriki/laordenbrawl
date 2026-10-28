@@ -131,6 +131,15 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
 #atkBtn span::before{width:26px;height:5px;margin:-2.5px 0 0 -13px}#atkBtn span::after{width:5px;height:26px;margin:-13px 0 0 -2.5px}
 #fsBtn,#pauseBtn{position:absolute;top:10px;z-index:7;border:3px solid var(--out);border-radius:14px;background:linear-gradient(#6a58ec,#4430b8);color:#fff;font:400 1.05rem var(--f-disp);padding:5px 12px;cursor:pointer;box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 4px 0 var(--out);text-shadow:var(--txt-out)}
 #fsBtn{right:calc(10px + env(safe-area-inset-right,0px))}#pauseBtn{left:calc(10px + env(safe-area-inset-left,0px));background:linear-gradient(#ff7a8a,#e8324a)}
+#rotOv{position:fixed;inset:0;z-index:90;background:radial-gradient(circle at 50% 30%,#5a3ad8,#1c0f4a 75%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;box-sizing:border-box;text-align:center;color:#fff}
+#rotOv[hidden]{display:none}
+#rotOv h2{margin:0;font:400 1.9rem var(--f-disp);text-shadow:var(--txt-out);color:#ffd84a}
+#rotOv p{margin:0;font-weight:900;max-width:320px;line-height:1.35}
+#rotOv .ph{width:62px;height:104px;border:5px solid #fff;border-radius:14px;position:relative;animation:rotPh 2.2s ease-in-out infinite;box-shadow:0 6px 0 var(--out)}
+#rotOv .ph:after{content:"";position:absolute;left:50%;bottom:6px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#fff}
+@keyframes rotPh{0%,25%{transform:rotate(0)}55%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+#rotOv .btn{min-width:240px}
+#rotOv .no{background:none;border:0;color:#bfb4ff;font:800 .9rem var(--f-body);text-decoration:underline;cursor:pointer}
 #toast{position:absolute;left:50%;top:64px;transform:translateX(-50%);z-index:30;background:#2b1d63;border:3px solid var(--out);border-radius:16px;padding:9px 16px;font-weight:900;font-size:.88rem;max-width:90%;text-align:center;box-shadow:0 5px 0 var(--out)}
 @media (min-aspect-ratio:23/20){#tip{display:none}}
 #tip{position:absolute;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));text-align:center;font-size:.72rem;font-weight:900;color:rgba(255,255,255,.8);text-shadow:0 2px 0 var(--out);pointer-events:none;z-index:5}
@@ -367,6 +376,7 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
  <button id="atkBtn" hidden type="button" aria-label="Atacar"><span></span></button>
  <button id="fsBtn" hidden type="button" aria-label="Pantalla completa">⛶</button>
  <div id="toast" hidden></div>
+ <div id="rotOv" hidden role="dialog" aria-label="Gira la pantalla"><div class="ph"></div><h2 id="rotT">¡Gira el móvil!</h2><p id="rotP">La Orden Brawl se juega mejor en horizontal y a pantalla completa.</p><button class="btn" id="rotFs" type="button">Pantalla completa</button><button class="no" id="rotNo" type="button">Seguir así</button></div>
  <button id="pauseBtn" hidden type="button">Salir</button>
  <div id="tip" hidden></div>
 
@@ -1636,6 +1646,24 @@ async function goFull(){
 }
 $('fsBtn').onclick=goFull;$('fsBtn2').onclick=goFull;
 addEventListener('fullscreenchange',()=>setTimeout(resize,100));addEventListener('orientationchange',()=>setTimeout(resize,300));
+// Aviso de girar pantalla / pantalla completa (solo móvil/tablet)
+let rotSkip=false;
+const fsOK=()=>!!(document.fullscreenEnabled||document.webkitFullscreenEnabled);
+const isFull=()=>!!(document.fullscreenElement||document.webkitFullscreenElement)||matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches||navigator.standalone===true;
+function rotCheck(){const ov=$('rotOv');if(!ov)return;
+ if(!isTouch||rotSkip){ov.hidden=true;return;}
+ const port=innerHeight>innerWidth*1.05,needFs=fsOK()&&!isFull();
+ if(!port&&!needFs){ov.hidden=true;return;}
+ $('rotT').textContent=port?'¡Gira el móvil!':'¡Pantalla completa!';
+ $('rotP').textContent=port?(fsOK()?'Ponlo en horizontal y a pantalla completa para jugar mejor.':'Ponlo en horizontal para jugar mejor.'):'Toca el botón para jugar sin barras del navegador.';
+ ov.querySelector('.ph').style.display=port?'':'none';
+ $('rotFs').hidden=!needFs;$('rotNo').textContent=port?'Seguir en vertical':'Ahora no';
+ ov.hidden=false;}
+$('rotFs').onclick=async()=>{await goFull();setTimeout(rotCheck,400);};
+$('rotNo').onclick=()=>{rotSkip=true;rotCheck();};
+addEventListener('resize',()=>setTimeout(rotCheck,150));addEventListener('orientationchange',()=>setTimeout(rotCheck,350));
+addEventListener('fullscreenchange',()=>{if(!isFull())rotSkip=false;setTimeout(rotCheck,150);});addEventListener('webkitfullscreenchange',()=>setTimeout(rotCheck,150));
+setTimeout(rotCheck,300);
 function nearestVisibleEnemy(range){
  const v=V();if(!v||!v.me)return null;const me=role==='client'&&CL.pred?Object.assign({},v.me,CL.pred):v.me;let b=null,bd=range;
  for(const o of v.units){if(o.team===me.team||o.dead||hiddenFrom(o,me.team,v.units))continue;const d=hyp(o.x-me.x,o.y-me.y);if(d<bd){bd=d;b=o;}}return b?{t:b,d:bd,me}:null;
