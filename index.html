@@ -113,6 +113,17 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
 .score .t{font-size:1.1rem;color:#fff;min-width:3.6em;text-align:center;font-variant-numeric:tabular-nums;background:linear-gradient(#3a2a86,#1e1450);display:flex;align-items:center;justify-content:center;padding:0 8px}
 .dots{display:flex;gap:5px}.dots i{width:14px;height:14px;border-radius:50%;background:rgba(26,18,38,.55);border:2px solid var(--out)}
 .dots.b i.on,.dots.r i.on{background:#ffd23a;box-shadow:inset 0 2px 0 rgba(255,255,255,.6)}
+/* marcador compacto y translúcido */
+#hud{padding-top:5px}
+.score{border:2px solid rgba(26,18,38,.55);border-radius:11px;font:400 1rem var(--f-disp);box-shadow:none;opacity:.82}
+.score .b,.score .r{min-width:1.8em;padding:1px 7px}
+.score .b{background:rgba(42,122,232,.5)}.score .r{background:rgba(232,50,74,.5)}
+.score .t{font-size:.78rem;min-width:2.9em;padding:0 5px;background:rgba(20,14,50,.42)}
+.score .dots{gap:3px}.score .dots i{width:9px;height:9px;border-width:1.5px}
+#sPick.step-map .stepChar,#sPick.step-char .stepMap{display:none!important}
+.mode em{position:relative;font-style:normal;font-size:.68rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase;opacity:.9;background:rgba(26,18,38,.35);border-radius:8px;padding:2px 6px;align-self:flex-start}
+.mapsel{display:flex;align-items:center;gap:8px;background:rgba(26,18,38,.55);border:3px solid var(--out);border-radius:14px;padding:6px 14px;font-weight:900;font-size:.9rem}
+.mapsel b{font:400 1.05rem var(--f-disp);color:var(--gold);text-shadow:var(--txt-out)}
 #banner{position:absolute;left:0;right:0;top:36%;text-align:center;font:400 clamp(2.6rem,13vw,4rem) var(--f-disp);color:var(--gold);text-shadow:var(--txt-out),0 6px 0 var(--out),0 12px 26px rgba(0,0,0,.6);pointer-events:none;z-index:6;transition:opacity .25s,transform .35s cubic-bezier(.2,1.8,.4,1)}
 #banner small{display:block;font-size:.42em;color:#fff;text-shadow:var(--txt-out)}
 #banner.off{opacity:0;transform:scale(.6)}
@@ -398,22 +409,23 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
   <p class="hint">Peleas 3 contra 3 con la gente de La Orden. En el móvil: arrastra a la izquierda para moverte y a la derecha para apuntar. En el ordenador: WASD, ratón y clic; E o clic derecho para el súper.</p>
  </section>
 
- <section class="screen" id="sPick" hidden>
-  <h2>Elige luchador</h2>
-  <div class="grid" id="cards"></div>
-  <div class="info" id="pInfo"></div>
-  <div class="info skinsel" id="pSkins" hidden></div>
-  <h2>Modo</h2>
-  <div class="modes">
-   <button class="mode ball" type="button" data-m="ball" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff"/><path fill="#1a1226" d="M12 7l3.5 2.5-1.3 4h-4.4l-1.3-4z"/></svg><b>Balón Brawl</b><span>Mete 2 goles en la portería rival. Pasa, chuta y no pierdas el balón.</span></button>
-   <button class="mode ko" type="button" data-m="ko"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 2C7 2 3.5 5.6 3.5 10c0 2.6 1.2 4.7 3 6v3.2c0 .9.7 1.6 1.6 1.6h7.8c.9 0 1.6-.7 1.6-1.6V16c1.8-1.3 3-3.4 3-6C20.5 5.6 17 2 12 2Zm-3.4 11.2a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Zm6.8 0a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Z"/></svg><b>Noqueo</b><span>Sin reapariciones. El primer equipo que gane 2 rondas se lleva la partida.</span></button>
-   <button class="mode heist" type="button" data-m="heist"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="17" rx="3" fill="#fff"/><circle cx="12" cy="11.5" r="4.5" fill="none" stroke="#1a1226" stroke-width="2"/><path stroke="#1a1226" stroke-width="2" d="M12 7v9M7.5 11.5h9"/></svg><b>Atraco</b><span>Destruye la caja fuerte rival antes de que caiga la tuya.</span></button>
-   <button class="mode ranked" type="button" data-m="ranked"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 2l8 3.5V11c0 5-3.5 8.6-8 10-4.5-1.4-8-5-8-10V5.5z"/></svg><b>Competitivo</b><span>Sube de Madera a Máster. Mapa al azar y rivales cada vez más fuertes.</span></button>
-   <button class="mode train" type="button" data-m="train"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#1a1226" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="#1a1226"/></svg><b>Práctica</b><span>Prueba tus ataques y tu súper contra muñecos que no pegan. Verás el daño que haces.</span></button>
+ <section class="screen step-map" id="sPick" hidden>
+  <h2 class="stepMap">Elige mapa</h2>
+  <div class="modes stepMap">
+   <button class="mode ball" type="button" data-m="ball" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff"/><path fill="#1a1226" d="M12 7l3.5 2.5-1.3 4h-4.4l-1.3-4z"/></svg><b>Balón Brawl</b><em>Campo de La Llagosta</em><span>Mete 2 goles en la portería rival. Cada portería tiene un portero: se le puede noquear.</span></button>
+   <button class="mode ko" type="button" data-m="ko"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 2C7 2 3.5 5.6 3.5 10c0 2.6 1.2 4.7 3 6v3.2c0 .9.7 1.6 1.6 1.6h7.8c.9 0 1.6-.7 1.6-1.6V16c1.8-1.3 3-3.4 3-6C20.5 5.6 17 2 12 2Zm-3.4 11.2a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Zm6.8 0a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Z"/></svg><b>Noqueo</b><em>Trastienda de La Orden</em><span>Sin reapariciones. El primer equipo que gane 2 rondas se lleva la partida.</span></button>
+   <button class="mode heist" type="button" data-m="heist"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="17" rx="3" fill="#fff"/><circle cx="12" cy="11.5" r="4.5" fill="none" stroke="#1a1226" stroke-width="2"/><path stroke="#1a1226" stroke-width="2" d="M12 7v9M7.5 11.5h9"/></svg><b>Atraco</b><em>Cámara acorazada</em><span>Destruye la caja fuerte rival antes de que caiga la tuya.</span></button>
+   <button class="mode ranked" type="button" data-m="ranked"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 2l8 3.5V11c0 5-3.5 8.6-8 10-4.5-1.4-8-5-8-10V5.5z"/></svg><b>Competitivo</b><em>Mapa al azar</em><span>Sube de Madera a Máster. Mapa al azar y rivales cada vez más fuertes.</span></button>
+   <button class="mode train" type="button" data-m="train"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#1a1226" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="#1a1226"/></svg><b>Práctica</b><em>Zona de práctica</em><span>Prueba tus ataques y tu súper contra muñecos que no pegan. Verás el daño que haces.</span></button>
   </div>
-  <div class="rkline" id="pRank" hidden></div>
-  <div class="sizes"><button class="size" type="button" data-s="3">3 contra 3</button><button class="size" type="button" data-s="1">1 contra 1</button></div>
-  <div class="row"><button class="btn sec" id="bBack" type="button">Volver</button><button class="btn" id="bGo" type="button">¡A pelear!</button></div>
+  <div class="rkline stepMap" id="pRank" hidden></div>
+  <div class="sizes stepMap"><button class="size" type="button" data-s="3">3 contra 3</button><button class="size" type="button" data-s="1">1 contra 1</button></div>
+  <div class="mapsel stepChar" id="pMapSel"></div>
+  <h2 class="stepChar">Elige luchador</h2>
+  <div class="grid stepChar" id="cards"></div>
+  <div class="info stepChar" id="pInfo"></div>
+  <div class="info skinsel stepChar" id="pSkins" hidden></div>
+  <div class="row"><button class="btn sec" id="bBack" type="button">Volver</button><button class="btn" id="bGo" type="button">Siguiente</button></div>
  </section>
 
  <section class="screen" id="sOnline" hidden>
@@ -439,9 +451,9 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
    <div class="team red"><button class="tbtn" id="bTeamR" type="button">Equipo rojo</button><ul id="tRed"></ul></div>
   </div>
   <div class="modes">
-   <button class="mode ball" type="button" data-m="ball"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff"/><path fill="#1a1226" d="M12 7l3.5 2.5-1.3 4h-4.4l-1.3-4z"/></svg><b>Balón Brawl</b><span>Gana quien meta 2 goles.</span></button>
-   <button class="mode ko" type="button" data-m="ko"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 2C7 2 3.5 5.6 3.5 10c0 2.6 1.2 4.7 3 6v3.2c0 .9.7 1.6 1.6 1.6h7.8c.9 0 1.6-.7 1.6-1.6V16c1.8-1.3 3-3.4 3-6C20.5 5.6 17 2 12 2Zm-3.4 11.2a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Zm6.8 0a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Z"/></svg><b>Noqueo</b><span>Al mejor de 3 rondas.</span></button>
-   <button class="mode heist" type="button" data-m="heist"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="17" rx="3" fill="#fff"/><circle cx="12" cy="11.5" r="4.5" fill="none" stroke="#1a1226" stroke-width="2"/><path stroke="#1a1226" stroke-width="2" d="M12 7v9M7.5 11.5h9"/></svg><b>Atraco</b><span>Destruye la caja fuerte rival.</span></button>
+   <button class="mode ball" type="button" data-m="ball"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff"/><path fill="#1a1226" d="M12 7l3.5 2.5-1.3 4h-4.4l-1.3-4z"/></svg><b>Balón Brawl</b><em>Campo de La Llagosta</em><span>Gana quien meta 2 goles.</span></button>
+   <button class="mode ko" type="button" data-m="ko"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 2C7 2 3.5 5.6 3.5 10c0 2.6 1.2 4.7 3 6v3.2c0 .9.7 1.6 1.6 1.6h7.8c.9 0 1.6-.7 1.6-1.6V16c1.8-1.3 3-3.4 3-6C20.5 5.6 17 2 12 2Zm-3.4 11.2a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Zm6.8 0a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2Z"/></svg><b>Noqueo</b><em>Trastienda de La Orden</em><span>Al mejor de 3 rondas.</span></button>
+   <button class="mode heist" type="button" data-m="heist"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="3" width="20" height="17" rx="3" fill="#fff"/><circle cx="12" cy="11.5" r="4.5" fill="none" stroke="#1a1226" stroke-width="2"/><path stroke="#1a1226" stroke-width="2" d="M12 7v9M7.5 11.5h9"/></svg><b>Atraco</b><em>Cámara acorazada</em><span>Destruye la caja fuerte rival.</span></button>
   </div>
   <div class="sizes"><button class="size" type="button" data-s="3">3 contra 3</button><button class="size" type="button" data-s="1">1 contra 1</button></div>
   <h2>Tu luchador</h2>
@@ -702,6 +714,8 @@ function drawChar(c,L,d,f){
  const atk=f===3,expr=f===4?'hit':atk?'atk':'';const ff=atk||f===4?0:f;
  const sk=L.skin,tp=L.top,pa=L.pants,lcTop=shade(tp,-100);
  const side=d==='left',back=d==='up';
+  if(L.ghost){c.save();const g=c.createRadialGradient(8,15,1,8,15,11);g.addColorStop(0,'rgba(110,255,220,.42)');g.addColorStop(1,'rgba(110,255,220,0)');c.fillStyle=g;c.beginPath();c.ellipse(8,15,10,11.5,0,0,Math.PI*2);c.fill();
+   c.fillStyle='rgba(180,255,238,.5)';c.beginPath();c.moveTo(3.2,16.5);c.quadraticCurveTo(1.6,21.5,3.6,24.6);c.quadraticCurveTo(5.2,23,6.6,24.8);c.quadraticCurveTo(8,23,9.4,24.8);c.quadraticCurveTo(10.8,23,12.4,24.6);c.quadraticCurveTo(14.4,21.5,12.8,16.5);c.closePath();c.fill();c.restore();}
  // ---- capa (detrás) ----
  if(L.cape&&!back){const cp=()=>{if(side){c.moveTo(7,12.4);c.quadraticCurveTo(13.8,15,14.6,22.4);c.quadraticCurveTo(12.6,21.4,11.4,22.6);c.quadraticCurveTo(10.2,21.6,8.6,22.4);c.closePath();}else{c.moveTo(4.2,12.4);c.lineTo(11.8,12.4);c.quadraticCurveTo(14.6,17,15,22.6);c.quadraticCurveTo(12.6,21.6,10.8,22.8);c.quadraticCurveTo(8,21.6,5.2,22.8);c.quadraticCurveTo(3.4,21.6,1,22.6);c.quadraticCurveTo(1.4,17,4.2,12.4);c.closePath();}};
   toon(c,cp,[1,12.4,14,10.4],L.capeIn||L.cape,{lc:shade(L.cape,-90),gloss:false});}
@@ -830,6 +844,7 @@ function drawChar(c,L,d,f){
   c.beginPath();if(side){c.moveTo(ps[0][0]+1.95*.86,hy+.4);c.lineTo(ps[1][0]-1.95*.72,hy+.4);c.moveTo(ps[1][0]+1.4,hy+.3);c.lineTo(hx+R-1.2,hy+.6);}else{c.moveTo(hx-.4,hy+.3);c.quadraticCurveTo(hx,hy-.1,hx+.4,hy+.3);c.moveTo(hx-4.3,hy+.2);c.lineTo(hx-R+.2,hy-.1);c.moveTo(hx+4.3,hy+.2);c.lineTo(hx+R-.2,hy-.1);}c.stroke();}
  if(L.patch&&!back){const ex=side?hx+.3:hx+2.35,s2=side?.72:1;c.strokeStyle='#14101c';c.lineWidth=.45;c.beginPath();c.moveTo(hx-R+.6,hy-2.6);c.lineTo(hx+R-.4,hy+2.2);c.stroke();toon(c,ell(c,ex,hy+.9,1.75*s2,1.85),[ex-1.75,hy-1,3.5,3.7],'#1a1622',{lc:'#000',spec:.25});}
  if(L.earring&&!back){c.strokeStyle='#ffd23a';c.lineWidth=.38;c.beginPath();c.arc(side?hx+R-1.3:hx+R-.1,hy+3,.55,0,Math.PI*2);c.stroke();}
+  if(L.ghost){const fl=(x,y,s)=>{c.fillStyle='rgba(80,255,210,.9)';c.beginPath();c.moveTo(x,y-2.3*s);c.quadraticCurveTo(x+1.35*s,y-.4*s,x,y+.7*s);c.quadraticCurveTo(x-1.35*s,y-.4*s,x,y-2.3*s);c.fill();E(c,x,y-.15*s,.5*s,.55*s,'#eafffa');};fl(.6,8.5,1);fl(15.4,10.6,.8);fl(14.2,4.4,.55);}
 }
 
 /* ================= Thor (perro) en la misma caja ================= */
@@ -1029,10 +1044,12 @@ const BR={
   atkN:'Carritazo',atkD:'Empuja el carrito con Daniel dentro y barre todo lo que tiene delante, en forma de cono.',supN:'¡Peonza con Daniel!',supD:'Coge a Daniel en brazos y gira como una peonza durante 3 segundos, golpeando a todos los de alrededor.',st:[5,1,2]},
  olivia:{n:'Olivia',role:'La bebé de La Orden',baby:true,small:true,hp:4000,spd:3.35,reload:1.2,supCost:2700,supRange:7,atkRange:7,lobSup:true,look:null,
   atkN:'Chupete babeado',atkD:'Lanza chupetes llenos de babas que avanzan en zigzag y frenan al rival.',supN:'¡Pañal bomba!',supD:'Toca para soltarlo donde está o arrastra para lanzarlo: explota y deja un tufillo que hace daño.',st:[2,4,4]},
+ keeper:{n:'Portero',role:'Portero',npc:true,hp:3200,spd:2.7,reload:1,supCost:1e12,supRange:0,atkRange:0,st:[0,0,0],
+   look:LOOK({face:{brow:'angry',mouth:'teeth'},style:'short',hair:'#2a1a14',hat:'capback',hatc:'#1a1a22',hata:'#ffd23a',top:'#c8f03a',trim:'#1a1a22',stripes:'#9ad01e',pants:'#1a1a22',shoes:'#1a1a22',shoea:'#c8f03a',skin:'#e8b98e'})},
  thor:{n:'Thor',role:'El perro de La Orden',dog:true,hp:4800,spd:3.75,reload:.85,supCost:2600,supRange:9,atkRange:2.6,look:null,
   atkN:'Lengüetazo',atkD:'Dos lametazos rápidos y babosos a corta distancia. Es el más rápido de La Orden.',supN:'¡La pelota!',supD:'Lanza su pelota negra, que rebota por las paredes y arrolla a todo el que pilla.',st:[4,2,5]}
 };
-const ORDER=Object.keys(BR);
+const ORDER=Object.keys(BR).filter(k=>!BR[k].npc);
 /* ---------- Clase y rareza ---------- */
 const CLS={dano:['Daño','⚔️'],tirador:['Tirador','🎯'],lanzador:['Lanzador','💣'],control:['Control','🌀'],asesino:['Asesino','🗡️'],tanque:['Tanque','🛡️'],sanador:['Sanador','💚']};
 const RAR={comun:['Común',1],raro:['Raro',2],epico:['Épico',3],mitico:['Mítico',4],legendario:['Legendario',5],ultra:['Ultra legendaria',6]};
@@ -1073,17 +1090,20 @@ const SKINS={
  xavi_dr:{k:'xavi',n:'Xavi Dragón',tag:'Temporada 1',excl:'pase',price:0,look:{hat:'dragon',hatc:'#2aa05a',hata:'#ffd23a',top:'#1e7a44',trim:'#ffd23a',motif:'scales',motifc:'#7ae89a',cape:'#1e7a44',capeIn:'#ff8a1e',pack:null,pants:'#14502c',shoes:'#ffd23a',shoea:'#1e7a44'}},
  xavo_dm:{k:'xavo',n:'Xavo Diamante',tag:'Competitivo',excl:'rank',price:0,look:{top:'#3a8aff',camo:'#7ae8ff',claw:'#ffffff',trim:'#ffffff',pants:'#1a3a8a',shoes:'#7ae8ff',shoea:'#ffffff',hat:'crown',hatc:'#7ae8ff',hata:'#ffffff'}},
  sara_ms:{k:'sara',n:'Sara la Suprema',tag:'Competitivo',excl:'rank',price:0,look:{hat:'crown',hatc:'#ffd23a',hata:'#ff4d6a',top:'#7a2ab8',trim:'#ffd23a',cape:'#b01e4a',capeIn:'#ffd23a',collar:true,pants:'#3a1a5a',shoes:'#ffd23a',shoea:'#7a2ab8'}},
+ john_hw:{k:'john',n:'John Espectro',tag:'Halloween',price:500,look:{ghost:true,skin:'#cfe4ec',hair:'#eef8fb',top:'#253250',trim:'#5affd8',cape:'#1c2640',capeIn:'#2ac8b0',pants:'#1c2640',shoes:'#141a28',shoea:'#5affd8',eye:'#2affd0',face:{brow:'up',mouth:'open',lids:.3},stroller:{frame:'#3a4a6a',hood:'#2a3a5c',seat:'#5affd8'}}},
  thor_hw:{k:'thor',n:'Thor Brujito',tag:'Halloween',price:500,dog:{hat:'witch',hatc:'#6a2aa8',hata:'#ff8a1e',harness:'#ff8a1e',wings:true}}
 };
 const LOOKC={};
 /* ---------- Progresión: luchadores, niveles, fuerza, gadgets, cajas ---------- */
 const FREE=['xavi','xavo','joker','dani','lazuli'];
 const CHAR_PRICE={john:700,olivia:1500,geri:500,victhor:600,alex:600,sara:800,pelucas:700,thor:800};
-const LV_COST=[0,0,30,50,80,120,170,230],MAXLV=7,GAD_LV=3,BOX_DAY=5;
+const LV_COST=[0,0,30,50,80,120,170,230],MAXLV=7,GAD_LV=3,BOX_DAY=8;
 const FZ_PACKS=[[50,100],[120,220],[300,500]];
 const GAD={xavi:['Oferta flash','Se cura 800 de vida y corre más rápido 2 segundos.'],xavo:['Lata de reserva','Recarga toda la munición al instante.'],geri:['Lanzador','Un acelerón corto hacia donde se mueve o apunta.'],dani:['Charco tóxico','Deja un charco de veneno a sus pies.'],lazuli:['Caparazón de bicho','Un escudo que bloquea todo el daño durante 1,5 segundos.'],victhor:['Combo','Carga al instante un 35 % de la súper.'],sara:['Antojo','Se come algo rico y se cura 1.500.'],alex:['Ficha de la suerte','Durante 3 segundos todo su daño es doble.'],pelucas:['Abrazo de grupo','Cura 700 a él y a sus compañeros cercanos.'],joker:['Turbo','Corre mucho más rápido 3 segundos.'],thor:['Hueso','Se cura 900 y sale corriendo 1,5 segundos.'],john:['Carrito turbo','Sale disparado con el carrito y arrolla a quien pille.'],olivia:['Berrinche','Llora tan fuerte que aturde 1 segundo a los rivales de alrededor.']};
-const powMul=(lv,online)=>1+Math.min(online?.15:.3,.05*((lv||1)-1));
-const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();};
+const powMul=(lv,online)=>1+Math.min(online?.2:.42,.07*((lv||1)-1));
+const DMG_MUL=.68; // daño base más bajo: se recupera subiendo de nivel en la tienda
+// el día de cajas empieza a las 18:00 (hora local): restamos 18 h antes de mirar la fecha
+const today=()=>{const d=new Date(Date.now()-18*3600e3);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();};
 function lookOf(k,sk){const S=sk&&SKINS[sk]&&SKINS[sk].k===k?SKINS[sk]:null;if(BR[k].dog||BR[k].baby)return S?S.dog:null;if(!S)return BR[k].look;const key=k+'|'+sk;if(!LOOKC[key]){const L=Object.assign({},BR[k].look,S.look);if(S.look.face)L.face=Object.assign({},BR[k].look.face,S.look.face);LOOKC[key]=L;}return LOOKC[key];}
 const SAFEB=hp=>({n:'Caja fuerte',role:'',hp,spd:0,reload:1,supCost:1e12,supRange:0,atkRange:0,st:[0,0,0]});
 const supText=b=>b.supN.endsWith('!')?b.supN:'¡'+b.supN+'!';
@@ -1297,7 +1317,7 @@ function soloRoster(mode,pick,size){
 function resetPositions(){
  for(const u of G.units){const [x,y]=u.safe?M.safes[u.team]:M.spawn[u.team][u.slot];Object.assign(u,{x,y,hp:u.max,dead:false,resp:0,ammo:3,kx:0,ky:0,dash:null,stun:0,poison:null,buff:0,shield:0,aim:u.team?Math.PI/2:-Math.PI/2,dir:u.team?'down':'up'});}
  G.proj.length=0;G.zones.length=0;
- if(G.mode==='ball')G.ball={x:W/2,y:H/2,vx:0,vy:0,c:null,cool:0,last:null};
+ if(G.mode==='ball'){G.ball={x:W/2,y:H/2,vx:0,vy:0,c:null,cool:0,last:null};G.keep=[0,1].map(t=>({team:t,x:W/2,y:t?KEEP_Y0:H-KEEP_Y0,hp:KEEP_HP,max:KEEP_HP,dead:false,resp:0,cd:0,lastHit:-9,hitT:-9,dir:t?'down':'up',mv:false,walk:0}));}else G.keep=null;
  G.phase='count';G.phaseT=3;
 }
 const enemies=u=>G.units.filter(o=>o.team!==u.team&&!o.dead&&!o.safe);
@@ -1323,9 +1343,11 @@ const label=u=>u.ctrl==='bot'||!u.nick?u.b.n:u.nick;
 function hurt(t,dmg,src,kn){
  if(t.dead||t.shield>0)return;
  if(src&&src.buff>0)dmg*=2;
- if(src){dmg*=src.pm||1;if(src.luckT>0)dmg*=2;}
+ if(src){dmg*=src.pm||1;if(src.luckT>0)dmg*=2;if(src.ctrl==='bot')dmg*=botDmg(src);}
+ if(!t.safe)dmg*=DMG_MUL;
  dmg=Math.round(dmg);t.hp-=dmg;t.lastHit=tNow;
- if(src&&!src.dead){src.sup=Math.min(1,src.sup+dmg/src.b.supCost*(G.mode==='train'?3:1));src.st.dmg+=dmg;}
+ // pegar a la caja fuerte NO carga el súper
+ if(src&&!src.dead){if(!t.safe)src.sup=Math.min(1,src.sup+dmg/src.b.supCost*(G.mode==='train'?3:1));src.st.dmg+=dmg;}
  if(G.mode==='train'&&t.ctrl==='dummy'){G.dlog.push([tNow,dmg]);G.dtot+=dmg;}
  fxText(t.x,t.y,1.6,dmg,t.ctrl==='bot'?'#ffd8a0':'#ff6a6a');
  ev(['hit',t.id]);
@@ -1344,6 +1366,7 @@ function ko(t,src){
 }
 function boom(x,y,r,dmg,team,src,kn,stun,col){
  for(const o of G.units){if(o.team===team||o.dead)continue;const d=hyp(o.x-x,o.y-y);if(d<r+(o.safe?.8:.3)){const a=ang(o.x-x,o.y-y);hurt(o,dmg,src,kn?[Math.cos(a)*kn,Math.sin(a)*kn]:null);if(stun&&!o.dead&&!o.safe)o.stun=Math.max(o.stun,stun);}}
+ if(G.keep)for(const k of G.keep)if(!k.dead&&k.team!==team&&hyp(k.x-x,k.y-y)<r+.3)hurtKeeper(k,dmg,src);
  fxRing(x,y,r,col||'#ffbf3c');fxBurst(x,y,0,col||'#ffbf3c',14,r*2,.5,.14);ev(['s',.45]);
 }
 function shot(u,a,o){const sp=o.spd||12;G.proj.push(Object.assign({x:u.x+Math.cos(a)*.35,y:u.y-.35+Math.sin(a)*.35,a,team:u.team,owner:u,spd:12,range:6,r:.22,dmg:300,pierce:false,bounce:0,hit:new Set(),kind:'card',dist:0},o,{vx:Math.cos(a)*sp,vy:Math.sin(a)*sp}));}
@@ -1429,18 +1452,20 @@ function steer(u,px,py){
  return [bx-u.x,by-u.y];
 }
 function nearestEnemy(u,maxD=99){let b=null,bd=maxD;for(const o of enemies(u)){if(hiddenFrom(o,u.team,G.units))continue;const d=hyp(o.x-u.x,o.y-u.y);if(d<bd){bd=d;b=o;}}return b;}
-function aimAt(u,t,spd){const d=hyp(t.x-u.x,t.y-u.y),tt=d/(spd||12);const vx=(t.mvx||0)*.6,vy=(t.mvy||0)*.6;return ang(t.x+vx*tt-u.x,t.y+vy*tt-u.y);}
+function aimAt(u,t,spd,lead){if(lead==null)lead=1;const d=hyp(t.x-u.x,t.y-u.y),tt=d/(spd||12);const vx=(t.mvx||0)*.6*lead,vy=(t.mvy||0)*.6*lead;return ang(t.x+vx*tt-u.x,t.y+vy*tt-u.y);}
 function humanTeams(){const s=new Set();for(const u of G.units)if(u.ctrl!=='bot'&&u.ctrl!=='safe')s.add(u.team);return s;}
+// habilidad 0..1: en competitivo los rivales van de Madera (torpes) a Máster (muy buenos)
+function botSkill(u){const vsHuman=!humanTeams().has(u.team);if(G.ranked){const t=G.rkTier||0;return vsHuman?Math.min(1,.08+t*.15):.6;}return vsHuman?.45:.65;}
+function botDmg(u){return .72+.28*botSkill(u);}
 function bot(u,dt){
- const A=u.ai;A.t-=dt;
+ const A=u.ai;A.t-=dt;const SK=botSkill(u);
  const B=G.ball,ownGoalY=u.team?1.5:H-1.5,foeGoalY=u.team?H-1.5:1.5,CX=W/2;
- const easy=G.ranked?G.rkTier<2:(humanTeams().has(u.team)?false:true);const sharp=G.ranked&&G.rkTier>=4; // los rivales de las personas fallan un poco más
- let tgt=nearestEnemy(u,14),go=null;
+ let tgt=nearestEnemy(u,8+6*SK),go=null;
  if(G.mode==='ball'){
   if(B.c===u){
    go=[CX+Math.sin(tNow*.7+u.id)*2,foeGoalY];
    const dg=Math.abs(u.y-foeGoalY);
-   if(dg<6.5&&los(u.x,u.y,CX,foeGoalY)&&A.t<=0){attack(u,ang(CX+(rnd()-.5)*2.4-u.x,foeGoalY-u.y));A.t=.4;}
+   if(dg<6.5&&los(u.x,u.y,CX,foeGoalY)&&A.t<=0){attack(u,ang(CX+(rnd()-.5)*(2.4+(1-SK)*3)-u.x,foeGoalY-u.y));A.t=.4+(1-SK)*.6;}
    else if(tgt&&hyp(tgt.x-u.x,tgt.y-u.y)<1.6&&u.sup>=1)superAtk(u,ang(CX-u.x,foeGoalY-u.y));
   }else if(!B.c){
    const mates=G.units.filter(o=>o.team===u.team&&!o.dead).sort((a,b)=>hyp(a.x-B.x,a.y-B.y)-hyp(b.x-B.x,b.y-B.y));
@@ -1457,7 +1482,7 @@ function bot(u,dt){
    if(u.sup>=1&&d<u.b.supRange)superAtk(u,ang(fs.x-u.x,fs.y-u.y),d);}
  }
  if(!go){
-  const low=u.hp<u.max*.3;
+  const low=SK>.35&&u.hp<u.max*.3;
   if(tgt){const d=hyp(tgt.x-u.x,tgt.y-u.y),pref=u.b.atkRange*.72;
    if(low&&d<u.b.atkRange+1.5){const a=ang(u.x-tgt.x,u.y-tgt.y);go=[u.x+Math.cos(a)*3,u.y+Math.sin(a)*3];}
    else if(d>pref+.5)go=[tgt.x,tgt.y];
@@ -1466,8 +1491,8 @@ function bot(u,dt){
  }
  if(tgt&&!(B&&B.c===u)){
   const d=hyp(tgt.x-u.x,tgt.y-u.y);
-  if(u.sup>=1&&d<u.b.supRange&&los(u.x,u.y,tgt.x,tgt.y)&&rnd()<.04)superAtk(u,aimAt(u,tgt,13)+(rnd()-.5)*.1,d);
-  else if(d<u.b.atkRange+.3&&u.ammo>=1&&tNow-u.lastAtk>(easy?.75:sharp?.42:.55)+rnd()*.5&&los(u.x,u.y,tgt.x,tgt.y))attack(u,aimAt(u,tgt,13)+(rnd()-.5)*(easy?.5:.26),d+(rnd()-.5)*(easy?1.4:.7));
+  if(u.sup>=1&&d<u.b.supRange&&los(u.x,u.y,tgt.x,tgt.y)&&rnd()<.008+.035*SK)superAtk(u,aimAt(u,tgt,13,SK)+(rnd()-.5)*(.5-.4*SK),d);
+  else if(d<u.b.atkRange+.3&&u.ammo>=(SK<.4?2:1)&&tNow-u.lastAtk>(1.05-.6*SK)+rnd()*(.8-.35*SK)&&los(u.x,u.y,tgt.x,tgt.y))attack(u,aimAt(u,tgt,13,SK)+(rnd()-.5)*(.8-.6*SK),d+(rnd()-.5)*(2-1.4*SK));
  }
  if(go){const [dx,dy]=steer(u,clamp(go[0],1.2,W-1.2),clamp(go[1],1.2,H-1.2)),d=hyp(dx,dy);if(d>.15)return [dx/d,dy/d];}
  return [0,0];
@@ -1499,7 +1524,7 @@ function simStep(dt){
   }
   if(u.buff>0)u.buff-=dt;
   if(u.gcd>0)u.gcd-=dt;if(u.slowT>0)u.slowT-=dt;if(u.spinT>0)u.spinT-=dt;if(u.spdT>0)u.spdT-=dt;if(u.luckT>0)u.luckT-=dt;
-  const spd=u.b.spd*(G.ball&&G.ball.c===u?.92:1)*(u.buff>0?1.6:1)*(u.spdT>0?1.45:1)*(u.slowT>0?.62:1);
+  const spd=u.b.spd*(u.ctrl==='bot'?.84+.16*botSkill(u):1)*(G.ball&&G.ball.c===u?.92:1)*(u.buff>0?1.6:1)*(u.spdT>0?1.45:1)*(u.slowT>0?.62:1);
   if(u.dash){const D=u.dash;moveBy(u,D.vx*dt,D.vy*dt);D.t-=dt;
    for(const o of enemies(u))if(D.dmg&&!D.hit.has(o)&&hyp(o.x-u.x,o.y-u.y)<.9){D.hit.add(o);const a=ang(D.vx,D.vy);
     if(D.hug){hurt(o,D.dmg,u,null);if(!o.dead)o.stun=Math.max(o.stun,1.6);D.t=Math.min(D.t,.05);fxText(o.x,o.y,2.4,'¡Abrazo!','#ff8ab8',1);fxBurst(o.x,o.y,.8,'#ff6a9a',10,2,.8,.12,1);}
@@ -1515,9 +1540,9 @@ function simStep(dt){
  }
  for(let i=0;i<G.units.length;i++)for(let j=i+1;j<G.units.length;j++){const a=G.units[i],b=G.units[j];if(a.dead||b.dead||a.safe&&b.safe)continue;const dx=b.x-a.x,dy=b.y-a.y,d=hyp(dx,dy);if((a.safe||b.safe)&&d<1.05&&d>1e-4){const m=a.safe?b:a,o=a.safe?a:b,ux=(m.x-o.x)/d,uy=(m.y-o.y)/d;m.x=o.x+ux*1.05;m.y=o.y+uy*1.05;collide(m);continue;}if(a.safe||b.safe)continue;if(d<.7&&d>1e-4){const p=(.7-d)/2;a.x-=dx/d*p;a.y-=dy/d*p;b.x+=dx/d*p;b.y+=dy/d*p;collide(a);collide(b);}}
  stepProj(dt);
- for(let i=G.zones.length-1;i>=0;i--){const z=G.zones[i];z.t-=dt;if(z.follow){if(z.follow.dead)z.t=0;else{z.x=z.follow.x;z.y=z.follow.y;}}z.tick-=dt;if(z.tick<=0){z.tick=z.every;for(const o of G.units)if(o.team!==z.team&&!o.dead&&hyp(o.x-z.x,o.y-z.y)<z.r)hurt(o,z.dmg,z.owner);}if(z.t<=0)G.zones.splice(i,1);}
+ for(let i=G.zones.length-1;i>=0;i--){const z=G.zones[i];z.t-=dt;if(z.follow){if(z.follow.dead)z.t=0;else{z.x=z.follow.x;z.y=z.follow.y;}}z.tick-=dt;if(z.tick<=0){z.tick=z.every;for(const o of G.units)if(o.team!==z.team&&!o.dead&&hyp(o.x-z.x,o.y-z.y)<z.r)hurt(o,z.dmg,z.owner);if(G.keep)for(const k of G.keep)if(!k.dead&&k.team!==z.team&&hyp(k.x-z.x,k.y-z.y)<z.r)hurtKeeper(k,z.dmg,z.owner);}if(z.t<=0)G.zones.splice(i,1);}
  for(const u of G.units){if(u.dead||!u.poison)continue;const P=u.poison;P.t-=dt;P.acc+=dt;if(P.acc>=.5){P.acc-=.5;hurt(u,P.dps*.5,P.src);}if(P.t<=0)u.poison=null;}
- if(G.ball)stepBall(dt);
+ if(G.ball){stepBall(dt);stepKeep(dt);}
  if(G.mode==='ko')checkKO();
 }
 function stepProj(dt){
@@ -1532,6 +1557,7 @@ function stepProj(dt){
     else{dead=true;break;}
    }
    for(const o of G.units){if(o.team===p.team||o.dead||p.hit.has(o))continue;if(hyp(o.x-p.x,o.y-.35-p.y)<p.r+(o.safe?.85:.38)){p.hit.add(o);const kb=p.kb?p.kb/4:0;hurt(o,p.dmg,p.owner,kb?[p.vx*.3*kb,p.vy*.3*kb]:null);if(p.onHit&&!o.dead)p.onHit(o,p);if(!p.pierce){dead=true;break;}}}
+   if(!dead&&G.keep)for(const k of G.keep){if(k.dead||k.team===p.team||p.hit.has(k))continue;if(hyp(k.x-p.x,k.y-.35-p.y)<p.r+.42){p.hit.add(k);hurtKeeper(k,p.dmg,p.owner);if(!p.pierce){dead=true;break;}}}
    if(p.dist>=p.range)dead=true;
   }
   p.a=ang(p.vx,p.vy);
@@ -1550,6 +1576,27 @@ function stepBall(dt){
   if(B.cool<=0)for(const u of G.units){if(u.dead||u.stun>0)continue;if(hyp(u.x-B.x,u.y-B.y)<.62){if(B.last===u&&B.cool>-.25)continue;B.c=u;B.last=u;break;}}
  }
 }
+const KEEP_HP=3200,KEEP_Y0=2.5;
+function hurtKeeper(k,dmg,src){if(k.dead)return;if(src&&src.buff>0)dmg*=2;if(src){dmg*=(src.pm||1);if(src.luckT>0)dmg*=2;if(src.ctrl==='bot')dmg*=botDmg(src);}dmg=Math.round(dmg*DMG_MUL);
+ k.hp-=dmg;k.lastHit=tNow;k.hitT=performance.now()/1000;fxText(k.x,k.y,1.6,dmg,'#ffffff');
+ if(k.hp<=0){k.hp=0;k.dead=true;k.resp=7;fxBurst(k.x,k.y,.5,'#ffffff',16,3,.6,.16);fxText(k.x,k.y,2,'¡Portero K.O.!','#ffbf3c',1);ev(['s',.3]);}}
+function stepKeep(dt){const B=G.ball;if(!G.keep||!B)return;
+ for(const k of G.keep){const gy=k.team?KEEP_Y0:H-KEEP_Y0;
+  if(k.dead){k.resp-=dt;if(k.resp<=0){Object.assign(k,{dead:false,hp:k.max,x:W/2,y:gy});fxBurst(k.x,k.y,.5,'#ffffff',10,2,.5,.12);}continue;}
+  k.cd-=dt;if(tNow-k.lastHit>3)k.hp=Math.min(k.max,k.hp+k.max*.12*dt);
+  const gx0=M.goal[0]+.35,gx1=M.goal[1]+.65,bx=B.c?B.c.x:B.x,by=B.c?B.c.y:B.y;
+  let px=clamp(Math.abs(by-gy)<10?bx:W/2,gx0,gx1);
+  if(!B.c&&(k.team?B.vy<-1:B.vy>1)){const tt=(gy-B.y)/B.vy;if(tt>0&&tt<1.4)px=clamp(B.x+B.vx*tt,gx0,gx1);}
+  const dx=px-k.x,st=2.6*dt,mvx=Math.abs(dx)<st?dx:Math.sign(dx)*st;k.x+=mvx; // velocidad limitada: se le puede batir por la escuadra
+  const out=B.c&&B.c.team!==k.team&&Math.abs(B.c.y-gy)<4.5?(k.team?.9:-.9):0;k.y+=clamp(gy+out-k.y,-2*dt,2*dt);
+  k.mv=Math.abs(mvx)>1e-3;if(k.mv)k.walk+=dt;k.dir=k.mv?(mvx<0?'left':'right'):(k.team?'down':'up');
+  if(!B.c&&k.cd<=0&&hyp(B.x-k.x,B.y-k.y)<.78){const sp=hyp(B.vx,B.vy),toward=k.team?B.vy<0:B.vy>0;
+   if(toward&&sp>17&&rnd()<.45){k.cd=.5;} // los supertiros a veces se le cuelan
+   else if(toward&&sp>9&&rnd()<.18){k.cd=.5;}
+   else{const a=ang((B.x-k.x)*.8+(rnd()-.5)*.8,k.team?1:-1),ns=Math.max(5,sp*.5);B.vx=Math.cos(a)*ns;B.vy=Math.sin(a)*ns;B.last=null;B.cool=.25;k.cd=.6;if(sp>4){fxText(k.x,k.y,2,'¡PARADA!','#ffffff',1);fxBurst(B.x,B.y,0,'#ffffff',10,3,.4,.1);ev(['s',.2]);}}}
+  if(B.c&&B.c.team!==k.team&&k.cd<=0&&hyp(B.c.x-k.x,B.c.y-k.y)<.8){B.c=null;B.last=null;B.cool=.45;const a=ang(rnd()-.5,k.team?1:-1);B.vx=Math.cos(a)*7;B.vy=Math.sin(a)*7;k.cd=1.8;fxText(k.x,k.y,2,'¡Robada!','#ffffff',1);}
+  for(const u of G.units){if(u.dead||u.safe)continue;const ux=u.x-k.x,uy=u.y-k.y,d=hyp(ux,uy);if(d<.72&&d>1e-4){u.x=k.x+ux/d*.72;u.y=k.y+uy/d*.72;collide(u);}}
+ }}
 function goal(team){
  G.score[team]++;if(G.ball.last&&G.ball.last.team===team)G.ball.last.st.goals++;
  ev(['g',team,G.score[0],G.score[1]]);
@@ -1593,7 +1640,8 @@ function snapshot(){
   else p.push([k,Math.round(q.x*10),Math.round(q.y*10),Math.round(q.a*100),Math.round(q.dist/q.range*100),q.team]);}
  const z=G.zones.map(z=>[ZK.indexOf(z.kind),Math.round(z.x*10),Math.round(z.y*10),Math.round(z.r*10),Math.round(z.t*10)]);
  const b=G.ball?[Math.round(G.ball.x*100),Math.round(G.ball.y*100),G.ball.c?G.ball.c.id:-1]:null;
- return {id:G.id,ph:G.phase,tm:Math.ceil(G.time),sc:G.score,rd:G.rounds,u,p,z,b,e:EVQ,res:G.phase==='end'?G.res:null};
+ const kp=G.keep?G.keep.map(k=>[Math.round(k.x*100),Math.round(k.y*100),Math.max(0,Math.round(k.hp)),k.dead?1:0,DIRS.indexOf(k.dir),k.mv?1:0]):null;
+ return {id:G.id,ph:G.phase,tm:Math.ceil(G.time),sc:G.score,rd:G.rounds,u,p,z,b,kp,e:EVQ,res:G.phase==='end'?G.res:null};
 }
 
 /* ================= Vista común para pintar ================= */
@@ -1602,10 +1650,10 @@ function viewUnit(u){return u;}
 function myIndex(){if(role==='client')return CL?CL.myIdx:-1;return G&&G.me?G.me.id:-1;}
 function myTeam(){if(role==='client')return CL&&CL.units[CL.myIdx]?CL.units[CL.myIdx].team:0;return G&&G.me?G.me.team:0;}
 function V(){
- if(role==='client'){if(!CL)return null;return {mode:CL.mode,units:CL.units,proj:CL.proj,zones:CL.zones,ball:CL.ball,me:CL.units[CL.myIdx],phase:CL.ph,time:CL.tm,score:CL.sc,rounds:CL.rd};}
+ if(role==='client'){if(!CL)return null;return {mode:CL.mode,units:CL.units,proj:CL.proj,zones:CL.zones,ball:CL.ball,keep:CL.keep,me:CL.units[CL.myIdx],phase:CL.ph,time:CL.tm,score:CL.sc,rounds:CL.rd};}
  if(!G)return null;
  const ball=G.ball?{x:G.ball.x,y:G.ball.y,c:G.ball.c?G.ball.c.id:-1}:null;
- return {mode:G.mode,units:G.units,proj:G.proj,zones:G.zones,ball,me:G.me,phase:G.phase,time:G.time,score:G.score,rounds:G.rounds};
+ return {mode:G.mode,units:G.units,proj:G.proj,zones:G.zones,ball,keep:G.keep,me:G.me,phase:G.phase,time:G.time,score:G.score,rounds:G.rounds};
 }
 
 /* ================= Entrada ================= */
@@ -1786,10 +1834,12 @@ function draw(){
  const vrow=q=>clamp(Math.floor(vty(q.x,q.y)),0,MH-1);
  for(const u of v.units){if(u.dead)WASDEAD[u.id]=true;else byRow[vrow(pos(u))].push(u);}
  const ballRow=v.ball&&v.ball.c<0?vrow(v.ball):-1;
+ const keepRow={};if(v.keep)for(const k of v.keep)if(!k.dead)(keepRow[vrow(k)]=keepRow[vrow(k)]||[]).push(k);
  const y0=Math.max(0,Math.floor(camY)-1),y1=Math.min(MH-1,Math.ceil(camY+VH)+1);
  for(let vr=y0;vr<=y1;vr++){
   for(const [x,y] of ROW_T[vr].walls)drawWall(x,y,v.mode);
   if(vr===ballRow)drawBall(v.ball,null);
+  if(keepRow[vr])for(const k of keepRow[vr])drawKeeper(k,mt);
   for(const u of byRow[vr].sort((a,b)=>vty(pos(a).x,pos(a).y)-vty(pos(b).x,pos(b).y)))drawUnit(u,pos(u),v,mt);
   for(const [x,y] of ROW_T[vr].bushes){const inside=v.units.some(u=>!u.dead&&u.team===mt&&Math.floor(pos(u).x)===x&&Math.floor(pos(u).y)===y);drawBush(x,y,inside?.5:1,v.mode);}
  }
@@ -1852,6 +1902,13 @@ function drawUnit(u,p,v,mt){
  if(u.sup>=1){ctx.globalAlpha=.5+.3*Math.sin(tNow*8);ctx.strokeStyle='#ffbf3c';ctx.lineWidth=Math.max(2,TS*.09);ctx.beginPath();ctx.ellipse(cx,cy,TS*.62,TS*.32,0,0,TAU);ctx.stroke();}
  ctx.restore();
 }
+function drawKeeper(k,mt){
+ const img=sprite('keeper',viewDir(k.dir),k.mv?1+(Math.floor(k.walk*7)%2):0,performance.now()/1000-(k.hitT||-9)<.13,''),cx=VX(k.x,k.y),cy=VY(k.x,k.y);
+ ctx.save();ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(cx,cy,TS*.45,TS*.22,0,0,TAU);ctx.fill();
+ const tc=k.team===mt?'58,140,255':'255,77,90';ctx.strokeStyle=`rgba(${tc},.95)`;ctx.lineWidth=Math.max(2,TS*.07);ctx.setLineDash([TS*.14,TS*.09]);ctx.beginPath();ctx.ellipse(cx,cy,TS*.58,TS*.32,0,0,TAU);ctx.stroke();ctx.setLineDash([]);
+ ctx.drawImage(img,Math.round(cx-img.width/2),Math.round(cy-img.feet));
+ const bw=TS*1.05,bh=Math.max(4,TS*.12),by=cy-img.feet-bh+TS*.15;ctx.fillStyle='rgba(20,14,30,.85)';ctx.fillRect(cx-bw/2-1,by-1,bw+2,bh+2);ctx.fillStyle=k.team===mt?'#3a9cff':'#ff4d5a';ctx.fillRect(cx-bw/2,by,bw*Math.max(0,k.hp/k.max),bh);
+ ctx.font=`400 ${Math.round(TS*.3)}px 'Lilita One',Impact,sans-serif`;ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=3;ctx.strokeStyle='#120e1e';ctx.strokeText('Portero',cx,by-3);ctx.fillStyle='#fff';ctx.fillText('Portero',cx,by-3);ctx.restore();}
 function drawSafe(u,mt){
  const x=VX(u.x,u.y),y=VY(u.x,u.y),w=TS*1.5,h=TS*1.3,mine=u.team===mt,hit=tNow-(HITS[u.id]||-9)<.12;
  ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(x,y+TS*.1,w*.62,TS*.3,0,0,TAU);ctx.fill();
@@ -1976,7 +2033,7 @@ function showEnd(res,units,myIdx){musicFor('menu');
  {const lv1=bpState().lv;$('eBp').hidden=!bpx;if(bpx)$('eBp').innerHTML=`<span><b>+${bpx}</b> puntos de pase · nivel ${lv1}${lv1>lv0?' <em>¡SUBES DE NIVEL!</em>':''}</span>`;}
  {const nw=achReady().filter(a=>!ach0.includes(a.id));$('eAch').hidden=!nw.length;if(nw.length)$('eAch').innerHTML=`<span>🏆 <b>¡Logro${nw.length>1?'s':''} completado${nw.length>1?'s':''}!</b> ${esc(nw.map(a=>a.n).join(', '))}</span>`;}
  $('eRk').hidden=!rk;if(rk)$('eRk').innerHTML=`${tierBadge(rk.t)}<span><b>${rk.d>=0?'+':''}${rk.d} puntos de rango</b><small>${rk.rp} · ${TIERS[rk.t][0]}${rk.up?' · ¡SUBES DE RANGO!':''}</small>${rk.newly.length?`<small>Premio: ${rk.newly.map(i=>rwList(TIER_RW[i])).join(' ')}</small>`:''}</span>`;
- $('eFx').innerHTML=`${COIN}<b>+${fx}</b> Fénix <small>· tienes ${wallet().fenix}</small>`;
+ $('eFx').hidden=!fx;$('eFx').innerHTML=`${COIN}<b>+${fx}</b> Fénix <small>· tienes ${wallet().fenix}</small>`;
  $('eBox').hidden=!gotBox;if(gotBox)$('eBox').innerHTML=`${BOXI}<b>¡Caja conseguida!</b> <small>${wallet().boxToday}/${BOX_DAY} hoy</small>`;
  const online=role!=='solo';
  $('bAgain').hidden=online;$('bMenu').textContent=online?'Volver a la sala':'Menú';
@@ -2008,26 +2065,29 @@ function skinSel(el,k,after){
   row.appendChild(b);};
  add('','Normal');mine.forEach(([id,S])=>add(id,S.n.replace(BR[k].n,'').trim()||S.n));
 }
+let pickStep='map';
 function buildPick(){
+ $('sPick').className='screen step-'+pickStep;
+ {const mn=mode==='ranked'?'Mapa al azar':MAPS[mode]?MAPS[mode].name:'';const tn=mode==='ranked'?'COMPETITIVO':MODE_N[mode]||'';$('pMapSel').innerHTML=`🗺️ <b>${esc(mn)}</b> · ${esc(tn)}${mode==='ball'||mode==='ko'||mode==='heist'?(size===1?' · 1 contra 1':' · 3 contra 3'):''}`;}
  if(!ownsChar(pick)&&mode!=='train')pick=ownsChar(save.pick)?save.pick:'xavi';
  cardGrid($('cards'),pick,k=>{pick=k;buildPick();},null,mode==='train');
  $('pInfo').innerHTML=infoHtml(pick);skinSel($('pSkins'),pick,buildPick);
  document.querySelectorAll('#sPick .mode').forEach(m=>m.setAttribute('aria-pressed',String(m.dataset.m===mode)));
  document.querySelectorAll('#sPick .size').forEach(m=>m.setAttribute('aria-pressed',String(+m.dataset.s===size)));
- document.querySelector('#sPick .sizes').hidden=mode==='train'||mode==='ranked';$('bGo').textContent=mode==='train'?'¡A practicar!':mode==='ranked'?'¡A competir!':'¡A pelear!';
- {const S=rkState();$('pRank').hidden=mode!=='ranked';if(mode==='ranked')$('pRank').innerHTML=`${tierBadge(S.t)}<span><b>${TIERS[S.t][0]} · ${S.rp} puntos</b><small>Mapa y modo al azar. Rivales de nivel ${S.t+1}. Ganar +30, perder −15 (nunca bajas de rango).</small></span>`;}
+ document.querySelector('#sPick .sizes').hidden=mode==='train'||mode==='ranked';$('bGo').textContent=pickStep==='map'?'Siguiente':mode==='train'?'¡A practicar!':mode==='ranked'?'¡A competir!':'¡A pelear!';
+ {const S=rkState();$('pRank').hidden=mode!=='ranked';if(mode==='ranked')$('pRank').innerHTML=`${tierBadge(S.t)}<span><b>${TIERS[S.t][0]} · ${S.rp} puntos</b><small>Mapa y modo al azar. Rivales de nivel ${S.t+1}: en Madera fallan mucho y mejoran en cada rango. Ganar +30, perder −15 (nunca bajas de rango).</small></span>`;}
 }
 document.querySelectorAll('#sPick .mode').forEach(m=>m.onclick=()=>{mode=m.dataset.m;buildPick();});
 document.querySelectorAll('#sPick .size').forEach(m=>m.onclick=()=>{size=+m.dataset.s;buildPick();});
 const SCREENS=['sTitle','sPick','sEnd','sOnline','sLobby','sRank','sShop','sBox','sComp','sGal','sAch'];
 function screen(id){SCREENS.forEach(s=>$(s).hidden=s!==id);$('toast').hidden=true;}
 function toMenu(){musicFor('menu');leaveOnline();role='solo';state='menu';G=null;CL=null;showHUD(false);banner('');screen('sTitle');renderAccount();}
-$('bPlay').onclick=()=>{screen('sPick');buildPick();};
-$('bBack').onclick=toMenu;
+$('bPlay').onclick=()=>{pickStep='map';screen('sPick');buildPick();};
+$('bBack').onclick=()=>{if(pickStep==='char'){pickStep='map';buildPick();$('sPick').scrollTop=0;return;}toMenu();};
 function startSolo(){screen(null);role='solo';resize();
- if(mode==='ranked'){const t=rkState().t,mm=['ball','ko','heist'][Math.floor(rnd()*3)];const ro=soloRoster(mm,pick,3);ro.forEach(r=>{if(r.ctrl==='bot')r.lv=t+1;});newMatch(mm,ro);G.ranked=true;G.rkTier=t;ev(['b','COMPETITIVO',MODE_N[mm]+' · '+TIERS[t][0]]);return;}
+ if(mode==='ranked'){const t=rkState().t,mm=['ball','ko','heist'][Math.floor(rnd()*3)];const ro=soloRoster(mm,pick,3);ro.forEach(r=>{if(r.ctrl==='bot')r.lv=r.team===0?Math.max(1,t):t+1;});newMatch(mm,ro);G.ranked=true;G.rkTier=t;ev(['b','COMPETITIVO',MODE_N[mm]+' · '+TIERS[t][0]]);return;}
  newMatch(mode,soloRoster(mode,pick,size));}
-$('bGo').onclick=()=>{fromGal=false;if(ownsChar(pick))save.pick=pick;save.mode=mode;save.size=size;store();startSolo();};
+$('bGo').onclick=()=>{if(pickStep==='map'){pickStep='char';buildPick();$('sPick').scrollTop=0;return;}fromGal=false;if(ownsChar(pick))save.pick=pick;save.mode=mode;save.size=size;store();startSolo();};
 $('bMenu').onclick=()=>{if(role==='solo')toMenu();else backToLobby();};
 $('bAgain').onclick=()=>startSolo();
 let fromGal=false;
@@ -2039,7 +2099,7 @@ const RANKS=[[0,'Novato'],[60,'Bronce'],[160,'Plata'],[320,'Oro'],[550,'Diamante
 const rankOf=t=>{let r=RANKS[0][1];for(const [v,n] of RANKS)if(t>=v)r=n;return r;};
 function emptyProf(){return {nick:save.nick||'',tro:0,games:0,wins:0,ko:0,goals:0,dmg:0,best:{},upd:0,fenix:0,owned:[],eq:{}};}
 /* ---------- Fénix: moneda del juego ---------- */
-function fenixFor(r,ko,dmg,goals){return Math.min(70,(r==='win'?25:r==='draw'?15:10)+ko*4+goals*8+Math.min(20,Math.floor(dmg/1000)*2));}
+function fenixFor(r,ko,dmg,goals){if(r==='lose')return 0;return Math.min(70,(r==='win'?25:r==='draw'?15:10)+ko*4+goals*8+Math.min(20,Math.floor(dmg/1000)*2));}
 const cloudOn=()=>!!(DB&&UID&&PROF&&CANW!==false);
 function wallet(){const P=cloudOn()?PROF:(save.local||{});return {fenix:P.fenix||0,owned:Array.isArray(P.owned)?P.owned:[],eq:P.eq&&typeof P.eq==='object'?P.eq:{},chars:Array.isArray(P.chars)?P.chars:[],lv:P.lv&&typeof P.lv==='object'?P.lv:{},fz:P.fz||0,boxes:P.boxes||0,emos:Array.isArray(P.emos)?P.emos:[],emo:P.emo||'',bp:P.bp||null,rp:P.rp||0,rkgot:Array.isArray(P.rkgot)?P.rkgot:[],rkbest:P.rkbest||0,boxToday:P.boxDay===today()?(P.boxToday||0):0};}
 const ownsChar=k=>FREE.includes(k)||wallet().chars.includes(k);
@@ -2181,7 +2241,7 @@ function buySkin(id){const S=SKINS[id],W=wallet();if(W.owned.includes(id))return
  saveWallet(P=>{P.fenix=(P.fenix||0)-S.price;P.owned=Array.isArray(P.owned)?P.owned:[];if(!P.owned.includes(id))P.owned.push(id);P.eq=P.eq||{};P.eq[S.k]=id;});
  renderShop();toast(S.gift?`¡Regalo reclamado! ${S.n} ya es tuya y la llevas puesta.`:`¡Has comprado ${S.n}! Ya la llevas puesta.`);}
 /* ---------- Cajas ---------- */
-function renderBox(){const W=wallet();$('bxN').textContent=W.boxes;$('bxDay').textContent=`Hoy has ganado ${W.boxToday} de ${BOX_DAY} cajas. Cada victoria da una caja (máximo ${BOX_DAY} al día).`;$('bOpen').disabled=W.boxes<1;$('bxRes').innerHTML='';$('bxBox').className='bigbox';}
+function renderBox(){const W=wallet();$('bxN').textContent=W.boxes;$('bxDay').textContent=`Hoy has ganado ${W.boxToday} de ${BOX_DAY} cajas. Cada victoria da una caja (máximo ${BOX_DAY} al día). Se renuevan cada día a las 18:00.`;$('bOpen').disabled=W.boxes<1;$('bxRes').innerHTML='';$('bxBox').className='bigbox';}
 function rollBox(){const W=wallet();const out={fenix:20+Math.floor(rnd()*41),fz:15+Math.floor(rnd()*31),char:null,skin:null};
  const lockedC=ORDER.filter(k=>!ownsChar(k)),freeS=Object.keys(SKINS).filter(id=>!W.owned.includes(id)&&ownsChar(SKINS[id].k)&&!SKINS[id].excl&&!SKINS[id].gift),freeE=Object.keys(EMO).filter(id=>(EMO[id].src==='box'||EMO[id].src==='shop')&&!W.emos.includes(id));
  const r=rnd();if(r<.06&&lockedC.length)out.char=lockedC[Math.floor(rnd()*lockedC.length)];else if(r<.12&&freeS.length)out.skin=freeS[Math.floor(rnd()*freeS.length)];else if(r<.3&&freeE.length)out.emo=freeE[Math.floor(rnd()*freeE.length)];return out;}
@@ -2198,7 +2258,7 @@ $('bAch').onclick=()=>{screen('sAch');renderAch();};
 $('bAcBack').onclick=toMenu;
 $('acAll').onclick=claimAllAch;
 $('bComp').onclick=()=>{screen('sComp');renderComp();};
-$('bCpPlay').onclick=()=>{mode='ranked';screen('sPick');buildPick();};
+$('bCpPlay').onclick=()=>{mode='ranked';pickStep='char';screen('sPick');buildPick();};
 $('bCpBack').onclick=toMenu;
 $('bGal').onclick=()=>{screen('sGal');renderGallery();};
 $('bGaBack').onclick=toMenu;
@@ -2368,6 +2428,7 @@ function applySnap(st){
  CL.proj=st.p.map(q=>q.length>6?{kind:PK[q[0]],x:q[1]/10,y:q[2]/10,a:q[3]/100,h:q[4]/10,team:q[5],tx:q[6]/10,ty:q[7]/10,lob:1}:{kind:PK[q[0]],x:q[1]/10,y:q[2]/10,a:q[3]/100,fade:q[4]/100,team:q[5]});
  CL.zones=st.z.map(z=>({kind:ZK[z[0]],x:z[1]/10,y:z[2]/10,r:z[3]/10,t:z[4]/10}));
  CL.ball=st.b?{x:st.b[0]/100,y:st.b[1]/100,c:st.b[2]}:null;
+ if(st.kp){const old=CL.keep||[];CL.keep=st.kp.map((a,i)=>{const o=old[i]||{walk:0,hitT:-9};return {team:i,x:a[0]/100,y:a[1]/100,hp:a[2],max:KEEP_HP,dead:!!a[3],dir:DIRS[a[4]]||'up',mv:!!a[5],walk:(o.walk||0)+(a[5]?.05:0),hitT:o.hp!=null&&a[2]<o.hp?performance.now()/1000:o.hitT};});}else CL.keep=null;
  for(const e of st.e){if(e[0]>CL.lastEv){CL.lastEv=e[0];applyEv(e.slice(1));}}
  if(st.ph==='end'&&st.res&&state!=='end')showEnd(st.res,CL.units,CL.myIdx);
 }
@@ -2453,7 +2514,7 @@ function bpReward(track,l){
 }
 function bpState(){const W=wallet();const B=W.bp&&W.bp.s===SEASON.id?W.bp:{s:SEASON.id,xp:0,prem:false,cf:[],cp:[]};return {xp:B.xp||0,prem:!!B.prem,cf:B.cf||[],cp:B.cp||[],lv:Math.min(BP_LV,Math.floor((B.xp||0)/BP_XP))};}
 function bpMut(P,fn){if(!P.bp||P.bp.s!==SEASON.id)P.bp={s:SEASON.id,xp:0,prem:false,cf:[],cp:[]};P.bp.cf=P.bp.cf||[];P.bp.cp=P.bp.cp||[];fn(P.bp);}
-function bpXpFor(r,ko,goals,ranked){return Math.min(140,(r==='win'?60:r==='draw'?40:30)+ko*5+goals*10+(ranked&&r==='win'?20:0));}
+function bpXpFor(r,ko,goals,ranked){if(r==='lose')return Math.min(20,10+ko*2+goals*3);return Math.min(140,(r==='win'?60:r==='draw'?40:30)+ko*5+goals*10+(ranked&&r==='win'?20:0));}
 function rwHTML(R){if(!R)return '';if(R.fenix)return `${COIN}<b>${R.fenix}</b>`;if(R.fz)return `${FZI}<b>${R.fz}</b>`;if(R.box)return `${BOXI}<b>${R.box>1?'×'+R.box:''}</b>`;if(R.emo)return emoHTML(R.emo,'sm');if(R.skin)return '<b class="skinrw">SKIN</b>';return '';}
 function rwText(R){if(R.fenix)return `${R.fenix} Fénix`;if(R.fz)return `${R.fz} de Fuerza`;if(R.box)return R.box>1?`${R.box} cajas`:'una caja';if(R.emo)return `el emoticono ${EMO[R.emo].n}`;if(R.skin)return `la skin ${SKINS[R.skin].n}`;return '';}
 function giveReward(P,R){if(R.fenix)P.fenix=(P.fenix||0)+R.fenix;if(R.fz)P.fz=(P.fz||0)+R.fz;if(R.box)P.boxes=(P.boxes||0)+R.box;
