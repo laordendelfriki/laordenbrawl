@@ -1,0 +1,1 @@
+window.FB_CONFIG={apiKey:"AIzaSyCDXetxLBkAreO3ATuR4LeSwLIekg5usXU",authDomain:"la-orden-del-friki.firebaseapp.com",databaseURL:"https://la-orden-del-friki-default-rtdb.europe-west1.firebasedatabase.app",projectId:"la-orden-del-friki",storageBucket:"la-orden-del-friki.firebasestorage.app",messagingSenderId:"333983094933",appId:"1:333983094933:web:48a123886e291d92b3a39c"};
