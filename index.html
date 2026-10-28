@@ -140,6 +140,12 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
 @keyframes rotPh{0%,25%{transform:rotate(0)}55%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
 #rotOv .btn{min-width:240px}
 #rotOv .no{background:none;border:0;color:#bfb4ff;font:800 .9rem var(--f-body);text-decoration:underline;cursor:pointer}
+#instOv{position:fixed;inset:0;z-index:91;background:rgba(10,6,30,.85);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+#instOv[hidden]{display:none}
+#instOv .wl{width:100%;max-width:400px;display:flex;flex-direction:column;gap:10px;padding:18px;border:3px solid var(--out);border-radius:22px;background:linear-gradient(#3a2a96,#2b1d6e);box-shadow:0 8px 0 var(--out)}
+#instOv h2{margin:0;text-align:center;font:400 1.6rem var(--f-disp);text-shadow:var(--txt-out)}
+#instOv ol{margin:0;padding-left:22px;font-weight:800;line-height:1.5}
+#instOv b{color:#ffd84a}
 #toast{position:absolute;left:50%;top:64px;transform:translateX(-50%);z-index:30;background:#2b1d63;border:3px solid var(--out);border-radius:16px;padding:9px 16px;font-weight:900;font-size:.88rem;max-width:90%;text-align:center;box-shadow:0 5px 0 var(--out)}
 @media (min-aspect-ratio:23/20){#tip{display:none}}
 #tip{position:absolute;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));text-align:center;font-size:.72rem;font-weight:900;color:rgba(255,255,255,.8);text-shadow:0 2px 0 var(--out);pointer-events:none;z-index:5}
@@ -376,6 +382,7 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
  <button id="atkBtn" hidden type="button" aria-label="Atacar"><span></span></button>
  <button id="fsBtn" hidden type="button" aria-label="Pantalla completa">⛶</button>
  <div id="toast" hidden></div>
+ <div id="instOv" hidden role="dialog" aria-label="Instalar app"><div class="wl"><h2>Instalar La Orden Brawl</h2><div id="instTxt"></div><button class="btn" id="instOk" type="button">Entendido</button></div></div>
  <div id="rotOv" hidden role="dialog" aria-label="Gira la pantalla"><div class="ph"></div><h2 id="rotT">¡Gira el móvil!</h2><p id="rotP">La Orden Brawl se juega mejor en horizontal y a pantalla completa.</p><button class="btn" id="rotFs" type="button">Pantalla completa</button><button class="no" id="rotNo" type="button">Seguir así</button></div>
  <button id="pauseBtn" hidden type="button">Salir</button>
  <div id="tip" hidden></div>
@@ -386,7 +393,7 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
   <div class="acct" id="acct"></div>
   <div class="trophy" id="tTro"></div>
   <div class="menu"><button class="btn" id="bPlay" type="button">Jugar solo</button><button class="btn online" id="bOnline" type="button">Online</button><button class="btn rank" id="bComp" type="button">Competitivo</button><button class="btn shop" id="bShop" type="button">Tienda</button><button class="btn box" id="bBox" type="button" data-n="0">Cajas</button><button class="btn hero" id="bGal" type="button">Personajes</button><button class="btn ach" id="bAch" type="button" data-n="0">Logros</button><button class="btn sec" id="bRank" type="button">Perfil</button></div>
-  <div class="row"><button class="btn sec" id="fsBtn2" type="button">Pantalla completa</button></div>
+  <div class="row"><button class="btn sec" id="fsBtn2" type="button">Pantalla completa</button><button class="btn" id="instBtn" type="button" hidden>Instalar app</button></div>
   <div class="row snd"><button class="btn sec" type="button" data-snd="m">Música</button><button class="btn sec" type="button" data-snd="s">Sonido</button></div>
   <p class="hint">Peleas 3 contra 3 con la gente de La Orden. En el móvil: arrastra a la izquierda para moverte y a la derecha para apuntar. En el ordenador: WASD, ratón y clic; E o clic derecho para el súper.</p>
  </section>
@@ -1646,6 +1653,23 @@ async function goFull(){
 }
 $('fsBtn').onclick=goFull;$('fsBtn2').onclick=goFull;
 addEventListener('fullscreenchange',()=>setTimeout(resize,100));addEventListener('orientationchange',()=>setTimeout(resize,300));
+// Instalar como app (móvil y PC)
+let instEv=null;const UA=navigator.userAgent;
+const isIOS=/iphone|ipad|ipod/i.test(UA)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const isApp=()=>matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches||navigator.standalone===true;
+const canSW='serviceWorker' in navigator&&location.protocol==='https:';
+function instShow(){$('instBtn').hidden=isApp()||!(canSW||instEv);}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();instEv=e;instShow();});
+addEventListener('appinstalled',()=>{instEv=null;$('instBtn').hidden=true;toast('¡Instalada! Ya la tienes en tu escritorio.');});
+$('instBtn').onclick=async()=>{
+ if(instEv){instEv.prompt();try{await instEv.userChoice;}catch(e){}instEv=null;instShow();return;}
+ let h;
+ if(isIOS)h='<ol><li>Abre esta página en <b>Safari</b>.</li><li>Toca el botón <b>Compartir</b> (cuadrado con flecha ↑).</li><li>Elige <b>Añadir a pantalla de inicio</b> y luego <b>Añadir</b>.</li></ol>';
+ else if(isTouch)h='<ol><li>Abre el menú del navegador (<b>⋮</b> arriba a la derecha).</li><li>Toca <b>Instalar aplicación</b> o <b>Añadir a pantalla de inicio</b>.</li></ol><p>Funciona mejor con <b>Chrome</b>.</p>';
+ else h='<ol><li>Usa <b>Chrome</b> o <b>Edge</b>.</li><li>Pulsa el icono de <b>instalar</b> (pantalla con flecha) al final de la barra de direcciones, o menú <b>⋮ → Enviar, guardar y compartir → Instalar página como app</b>.</li></ol>';
+ $('instTxt').innerHTML=h;$('instOv').hidden=false;};
+$('instOk').onclick=()=>{$('instOv').hidden=true;};
+instShow();
 // Aviso de girar pantalla / pantalla completa (solo móvil/tablet)
 let rotSkip=false;
 const fsOK=()=>!!(document.fullscreenEnabled||document.webkitFullscreenEnabled);
