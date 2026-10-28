@@ -2080,7 +2080,7 @@ function showEnd(res,units,myIdx){musicFor('menu');
  state='end';showHUD(false);banner('');
  const me=units[myIdx];const mt=me?me.team:0;const s=res.s;const mine=s[mt],theirs=s[1-mt];
  const r=mine===theirs?'draw':mine>theirs?'win':'lose';
- const st0=res.st[myIdx]||[0,0,0];const d=r==='win'?8:r==='lose'?-3:1;
+ const st0=res.st[myIdx]||[0,0,0];const d=r==='win'?TRO_W:r==='lose'?TRO_L:TRO_D;
  const fx=fenixFor(r,st0[0],st0[1],st0[2]);const gotBox=r==='win'&&wallet().boxToday<BOX_DAY;
  const ranked=!!(((role==='solo'||role==='host')&&G&&G.ranked)||(role==='client'&&CL&&CL.rk));const bpx=seasonOn()?bpXpFor(r,st0[0],st0[2],ranked):0;const lv0=bpState().lv;
  const md0=(G&&G.mode)||(CL&&CL.mode);let bi=0,bvv=-1;res.st.forEach((q,i)=>{if(units[i]&&units[i].safe)return;const val=q[0]*2000+q[1]+q[2]*3000;if(val>bvv){bvv=val;bi=i;}});
@@ -2166,7 +2166,8 @@ const RANKS=[[0,'Novato'],[60,'Bronce'],[160,'Plata'],[320,'Oro'],[550,'Diamante
 const rankOf=t=>{let r=RANKS[0][1];for(const [v,n] of RANKS)if(t>=v)r=n;return r;};
 function emptyProf(){return {nick:save.nick||'',tro:0,games:0,wins:0,ko:0,goals:0,dmg:0,best:{},upd:0,fenix:0,owned:[],eq:{}};}
 /* ---------- Fénix: moneda del juego ---------- */
-function fenixFor(r,ko,dmg,goals){if(r==='lose')return 0;return Math.min(70,(r==='win'?25:r==='draw'?15:10)+ko*4+goals*8+Math.min(20,Math.floor(dmg/1000)*2));}
+const TRO_W=5,TRO_D=1,TRO_L=-4; // trofeos por partida (antes +8 / +1 / -3)
+function fenixFor(r,ko,dmg,goals){if(r==='lose')return 0;return Math.min(35,(r==='win'?12:r==='draw'?7:5)+ko*2+goals*4+Math.min(10,Math.floor(dmg/1000)));} // antes hasta 70
 const cloudOn=()=>!!(DB&&UID&&PROF&&CANW!==false);
 function wallet(){const P=cloudOn()?PROF:(save.local||{});return {fenix:P.fenix||0,owned:Array.isArray(P.owned)?P.owned:[],eq:P.eq&&typeof P.eq==='object'?P.eq:{},chars:Array.isArray(P.chars)?P.chars:[],lv:P.lv&&typeof P.lv==='object'?P.lv:{},fz:P.fz||0,boxes:P.boxes||0,emos:Array.isArray(P.emos)?P.emos:[],emo:P.emo||'',bp:P.bp||null,rp:P.rp||0,rkgot:Array.isArray(P.rkgot)?P.rkgot:[],rkbest:P.rkbest||0,boxToday:P.boxDay===today()?(P.boxToday||0):0};}
 const ownsChar=k=>FREE.includes(k)||wallet().chars.includes(k);
@@ -2216,7 +2217,7 @@ function recordResult(x){
 async function ownerSaveOthers(res,units){
  if(!(DB&&IS_OWNER))return;
  for(let i=0;i<units.length;i++){const u=units[i];if(u.ctrl!=='peer'||!u.by||u.cw!==0)continue;
-  const mt=u.team,s=res.s,r=s[mt]===s[1-mt]?'draw':s[mt]>s[1-mt]?'win':'lose',d=r==='win'?8:r==='lose'?-3:1,st=res.st[i]||[0,0,0],fx=fenixFor(r,st[0],st[1],st[2]),bpx=seasonOn()?bpXpFor(r,st[0],st[2],false):0;
+  const mt=u.team,s=res.s,r=s[mt]===s[1-mt]?'draw':s[mt]>s[1-mt]?'win':'lose',d=r==='win'?TRO_W:r==='lose'?TRO_L:TRO_D,st=res.st[i]||[0,0,0],fx=fenixFor(r,st[0],st[1],st[2]),bpx=seasonOn()?bpXpFor(r,st[0],st[2],false):0;
   try{const sn=await DB.doc('players/'+u.by).get();const n=applyRes(sn.exists?sn.data():{nick:u.nick},{r,d,fx,bpx,mode:(G&&G.mode),mvp:false,sup:u.nSup||0,gad:u.nGad||0,k:u.k,ko:st[0],dmg:st[1],goals:st[2],nick:u.nick});await DB.doc('players/'+u.by).set(n);}catch(e){}
  }
 }
@@ -2312,7 +2313,8 @@ function buySkin(id){const S=SKINS[id],W=wallet();if(W.owned.includes(id))return
 function renderBox(){const W=wallet();$('bxN').textContent=W.boxes;$('bxDay').textContent=`Hoy has ganado ${W.boxToday} de ${BOX_DAY} cajas. Cada victoria da una caja (máximo ${BOX_DAY} al día). Se renuevan cada día a las 18:00.`;$('bOpen').disabled=W.boxes<1;$('bxRes').innerHTML='';$('bxBox').className='bigbox';}
 function rollBox(){const W=wallet();const out={fenix:20+Math.floor(rnd()*41),fz:15+Math.floor(rnd()*31),char:null,skin:null};
  const lockedC=ORDER.filter(k=>!ownsChar(k)),freeS=Object.keys(SKINS).filter(id=>!W.owned.includes(id)&&ownsChar(SKINS[id].k)&&!SKINS[id].excl&&!SKINS[id].gift),freeE=Object.keys(EMO).filter(id=>(EMO[id].src==='box'||EMO[id].src==='shop')&&!W.emos.includes(id));
- const r=rnd();if(r<.06&&lockedC.length)out.char=lockedC[Math.floor(rnd()*lockedC.length)];else if(r<.12&&freeS.length)out.skin=freeS[Math.floor(rnd()*freeS.length)];else if(r<.3&&freeE.length)out.emo=freeE[Math.floor(rnd()*freeE.length)];return out;}
+ // probabilidades: personaje 1,5 %, skin 2,5 %, emoticono 10 % (antes 6 %, 6 % y 18 %)
+ const r=rnd();if(r<.015&&lockedC.length)out.char=lockedC[Math.floor(rnd()*lockedC.length)];else if(r<.04&&freeS.length)out.skin=freeS[Math.floor(rnd()*freeS.length)];else if(r<.14&&freeE.length)out.emo=freeE[Math.floor(rnd()*freeE.length)];return out;}
 $('bOpen').onclick=()=>{const W=wallet();if(W.boxes<1)return;const o=rollBox();$('bOpen').disabled=true;
  saveWallet(P=>{P.stx=P.stx&&typeof P.stx==='object'?P.stx:{};P.stx.box=(P.stx.box||0)+1;P.boxes=Math.max(0,(P.boxes||0)-1);P.fenix=(P.fenix||0)+o.fenix;P.fz=(P.fz||0)+o.fz;if(o.char){P.chars=Array.isArray(P.chars)?P.chars:[];if(!P.chars.includes(o.char))P.chars.push(o.char);}if(o.skin){P.owned=Array.isArray(P.owned)?P.owned:[];if(!P.owned.includes(o.skin))P.owned.push(o.skin);}if(o.emo){P.emos=Array.isArray(P.emos)?P.emos:[];if(!P.emos.includes(o.emo))P.emos.push(o.emo);}});
  const bx=$('bxBox');bx.className='bigbox shake';sfx('box');
@@ -2401,6 +2403,10 @@ $('bFrBack').onclick=()=>{if(NR&&isHost&&role==='lobby'){screen('sLobby');render
 $('bLInv').onclick=()=>{screen('sFriends');$('frMsg').textContent='Elige a quién invitar a esta sala.';renderFriends();};
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
+ {v:'1.7.1',d:'28 oct 2026',t:'Ajuste de premios',l:[
+  ['c','Las cajas dan personajes y skins con mucha menos frecuencia: personaje 1,5 %, skin 2,5 %, emoticono 10 %.'],
+  ['c','Menos trofeos por partida: victoria +5, empate +1, derrota −4.'],
+  ['c','Menos Fénix por partida: como mucho 35 (antes 70).']]},
  {v:'1.7',d:'28 oct 2026',t:'Amigos',l:[
   ['n','Nuevo botón <b>Amigos</b>: tu código de amigo, solicitudes de amistad y lista de amigos.'],
   ['n','Invita a un amigo a una <b>partida normal</b> o <b>competitiva</b> desde su ficha. Le salta un aviso para unirse.'],
