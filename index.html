@@ -1852,12 +1852,16 @@ $('rotNo').onclick=()=>{rotSkip=true;rotCheck();};
 addEventListener('resize',()=>setTimeout(rotCheck,150));addEventListener('orientationchange',()=>setTimeout(rotCheck,350));
 addEventListener('fullscreenchange',()=>{if(!isFull())rotSkip=false;setTimeout(rotCheck,150);});addEventListener('webkitfullscreenchange',()=>setTimeout(rotCheck,150));
 setTimeout(rotCheck,300);
-function nearestVisibleEnemy(range){
+function nearestVisibleEnemy(range,noSafe){
  const v=V();if(!v||!v.me)return null;const me=role==='client'&&CL.pred?Object.assign({},v.me,CL.pred):v.me;let b=null,bd=range;
- for(const o of v.units){if(o.team===me.team||o.dead||hiddenFrom(o,me.team,v.units))continue;const d=hyp(o.x-me.x,o.y-me.y);if(d<bd){bd=d;b=o;}}return b?{t:b,d:bd,me}:null;
+ for(const o of v.units){if(o.team===me.team||o.dead||(noSafe&&o.safe)||hiddenFrom(o,me.team,v.units))continue;const d=hyp(o.x-me.x,o.y-me.y);if(d<bd){bd=d;b=o;}}return b?{t:b,d:bd,me}:null;
 }
 function autoAim(sup){
- const v=V(),me=v.me;const n=nearestVisibleEnemy((sup?me.b.supRange:me.b.atkRange)+1.5);
+ // Sin apuntar: dispara al punto donde está AHORA el rival más cercano (no le persigue).
+ // Primero un luchador a tiro; si no hay, el luchador visible más cercano; si no, la caja fuerte.
+ const v=V(),me=v.me,R=sup?me.b.supRange:me.b.atkRange;
+ if(v.ball&&v.ball.c===me.id&&!nearestVisibleEnemy(R+1.5,true))return [ang(W/2-me.x,(me.team?H-1.5:1.5)-me.y),5];
+ const n=nearestVisibleEnemy(R+1.5,true)||nearestVisibleEnemy(16,true)||nearestVisibleEnemy(16,false);
  if(n)return [ang(n.t.x-n.me.x,n.t.y-n.me.y),n.d];
  if(v.ball&&v.ball.c===me.id)return [ang(W/2-me.x,(me.team?H-1.5:1.5)-me.y),5];
  return [IN.aim,5];
@@ -2464,6 +2468,7 @@ addEventListener('pagehide',audioAway);addEventListener('blur',()=>{if(document.
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
  {v:'1.8',d:'28 oct 2026',t:'Let it rip!',l:[
+  ['c','Si atacas o tiras el súper sin apuntar, va al punto donde está el rival más cercano en ese momento (aunque esté un poco lejos). No le persigue: si se mueve, puede esquivarlo.'],
   ['n','Nuevo súper de <b>Geri</b>: una peonza gigante que rebota por las paredes, pega más con cada rebote (15 % de la vida del rival +5 % por rebote) y se queda triturándolo.'],
   ['n','Nueva skin <b>Geri Depito</b> (colección Especial, 500 Fénix).'],
   ['c','El súper tarda más en cargarse.'],
