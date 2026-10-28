@@ -157,6 +157,19 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
 #instOv h2{margin:0;text-align:center;font:400 1.6rem var(--f-disp);text-shadow:var(--txt-out)}
 #instOv ol{margin:0;padding-left:22px;font-weight:800;line-height:1.5}
 #instOv b{color:#ffd84a}
+.btn.news::after{content:"¡Nuevo!";position:absolute;top:-12px;right:-14px;background:#e8323a;border:3px solid var(--out);border-radius:10px;font:400 .72rem/1 var(--f-disp);padding:3px 6px;color:#fff;transform:rotate(8deg)}
+.btn.news.seen::after{display:none}
+.news{display:flex;flex-direction:column;gap:12px;width:100%}
+.nw{box-sizing:border-box;width:100%;padding:12px 14px;border:3px solid var(--out);border-radius:18px;background:linear-gradient(#3a2a96,#2b1d6e);box-shadow:0 5px 0 var(--out)}
+.nw.top{background:linear-gradient(#5a2ad0,#3a1a8a);box-shadow:0 5px 0 var(--out),0 0 0 3px #ffd23a}
+.nw header{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.nw header b{font:400 1.25rem var(--f-disp);color:var(--gold);text-shadow:var(--txt-out)}
+.nw header em{font-style:normal;font:400 .8rem var(--f-disp);background:#1a1240;border:2px solid var(--out);border-radius:999px;padding:1px 8px}
+.nw header small{margin-left:auto;font-weight:900;font-size:.75rem;color:var(--mute)}
+.nw ul{margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:.88rem;line-height:1.3}
+.nw li::marker{color:var(--gold)}
+.nw li i{font-style:normal;font-size:.7rem;font-weight:900;border-radius:6px;padding:0 5px;margin-right:4px;vertical-align:1px}
+.nw li i.n{background:#3ad86a;color:#0a2a14}.nw li i.c{background:#3a9cff;color:#06203a}.nw li i.f{background:#ff8a3a;color:#3a1400}
 #toast{position:absolute;left:50%;top:64px;transform:translateX(-50%);z-index:30;background:#2b1d63;border:3px solid var(--out);border-radius:16px;padding:9px 16px;font-weight:900;font-size:.88rem;max-width:90%;text-align:center;box-shadow:0 5px 0 var(--out)}
 @media (min-aspect-ratio:23/20){#tip{display:none}}
 #tip{position:absolute;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));text-align:center;font-size:.72rem;font-weight:900;color:rgba(255,255,255,.8);text-shadow:0 2px 0 var(--out);pointer-events:none;z-index:5}
@@ -404,7 +417,7 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
   <div class="acct" id="acct"></div>
   <div class="trophy" id="tTro"></div>
   <div class="menu"><button class="btn" id="bPlay" type="button">Jugar solo</button><button class="btn online" id="bOnline" type="button">Online</button><button class="btn rank" id="bComp" type="button">Competitivo</button><button class="btn shop" id="bShop" type="button">Tienda</button><button class="btn box" id="bBox" type="button" data-n="0">Cajas</button><button class="btn hero" id="bGal" type="button">Personajes</button><button class="btn ach" id="bAch" type="button" data-n="0">Logros</button><button class="btn sec" id="bRank" type="button">Perfil</button></div>
-  <div class="row"><button class="btn sec" id="fsBtn2" type="button">Pantalla completa</button><button class="btn" id="instBtn" type="button" hidden>Instalar app</button></div>
+  <div class="row"><button class="btn sec" id="fsBtn2" type="button">Pantalla completa</button><button class="btn gold news" id="bNews" type="button">Novedades</button><button class="btn" id="instBtn" type="button" hidden>Instalar app</button></div>
   <div class="row snd"><button class="btn sec" type="button" data-snd="m">Música</button><button class="btn sec" type="button" data-snd="s">Sonido</button></div>
   <p class="hint">Peleas 3 contra 3 con la gente de La Orden. En el móvil: arrastra a la izquierda para moverte y a la derecha para apuntar. En el ordenador: WASD, ratón y clic; E o clic derecho para el súper.</p>
  </section>
@@ -513,6 +526,13 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
   <div class="actabs" id="acTabs" role="group" aria-label="Categorías"></div>
   <ol class="aclist" id="acList"></ol>
   <button class="btn sec" id="bAcBack" type="button">Volver</button>
+ </section>
+
+ <section class="screen" id="sNews" hidden>
+  <h2>Novedades</h2>
+  <p class="hint">Todo lo que vamos añadiendo y arreglando en La Orden Brawl.</p>
+  <div class="news" id="nwList"></div>
+  <button class="btn sec" id="bNwBack" type="button">Volver</button>
  </section>
 
  <section class="screen" id="sEnd" hidden>
@@ -1091,6 +1111,7 @@ const SKINS={
  xavo_dm:{k:'xavo',n:'Xavo Diamante',tag:'Competitivo',excl:'rank',price:0,look:{top:'#3a8aff',camo:'#7ae8ff',claw:'#ffffff',trim:'#ffffff',pants:'#1a3a8a',shoes:'#7ae8ff',shoea:'#ffffff',hat:'crown',hatc:'#7ae8ff',hata:'#ffffff'}},
  sara_ms:{k:'sara',n:'Sara la Suprema',tag:'Competitivo',excl:'rank',price:0,look:{hat:'crown',hatc:'#ffd23a',hata:'#ff4d6a',top:'#7a2ab8',trim:'#ffd23a',cape:'#b01e4a',capeIn:'#ffd23a',collar:true,pants:'#3a1a5a',shoes:'#ffd23a',shoea:'#7a2ab8'}},
  john_hw:{k:'john',n:'John Espectro',tag:'Halloween',price:500,look:{ghost:true,skin:'#cfe4ec',hair:'#eef8fb',top:'#253250',trim:'#5affd8',cape:'#1c2640',capeIn:'#2ac8b0',pants:'#1c2640',shoes:'#141a28',shoea:'#5affd8',eye:'#2affd0',face:{brow:'up',mouth:'open',lids:.3},stroller:{frame:'#3a4a6a',hood:'#2a3a5c',seat:'#5affd8'}}},
+ john_lila:{k:'john',n:'John Púas Lilas',tag:'Especial',price:550,look:{style:'spiky',hair:'#a24aff',eye:'#ff1e2e',eyeH:.9,top:'#6a2ab8',trim:'#d8a8ff',stripes:null,pants:'#2a1440',shoes:'#1a1022',shoea:'#b86aff',face:{brow:'angry',mouth:'smile',lids:.25},stroller:{frame:'#4a1a7a',hood:'#7a3ad0',seat:'#ff3a5a'}}},
  thor_hw:{k:'thor',n:'Thor Brujito',tag:'Halloween',price:500,dog:{hat:'witch',hatc:'#6a2aa8',hata:'#ff8a1e',harness:'#ff8a1e',wings:true}}
 };
 const LOOKC={};
@@ -1706,7 +1727,7 @@ let instEv=null;const UA=navigator.userAgent;
 const isIOS=/iphone|ipad|ipod/i.test(UA)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const isApp=()=>matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches||navigator.standalone===true;
 const canSW='serviceWorker' in navigator&&location.protocol==='https:';
-function instShow(){$('instBtn').hidden=isApp()||!(canSW||instEv);}
+function instShow(){$('instBtn').hidden=!window.WEBAUTH||isApp()||!(canSW||instEv);}
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();instEv=e;instShow();});
 addEventListener('appinstalled',()=>{instEv=null;$('instBtn').hidden=true;toast('¡Instalada! Ya la tienes en tu escritorio.');});
 $('instBtn').onclick=async()=>{
@@ -2079,7 +2100,7 @@ function buildPick(){
 }
 document.querySelectorAll('#sPick .mode').forEach(m=>m.onclick=()=>{mode=m.dataset.m;buildPick();});
 document.querySelectorAll('#sPick .size').forEach(m=>m.onclick=()=>{size=+m.dataset.s;buildPick();});
-const SCREENS=['sTitle','sPick','sEnd','sOnline','sLobby','sRank','sShop','sBox','sComp','sGal','sAch'];
+const SCREENS=['sTitle','sPick','sEnd','sOnline','sLobby','sRank','sShop','sBox','sComp','sGal','sAch','sNews'];
 function screen(id){SCREENS.forEach(s=>$(s).hidden=s!==id);$('toast').hidden=true;}
 function toMenu(){musicFor('menu');leaveOnline();role='solo';state='menu';G=null;CL=null;showHUD(false);banner('');screen('sTitle');renderAccount();}
 $('bPlay').onclick=()=>{pickStep='map';screen('sPick');buildPick();};
@@ -2254,6 +2275,53 @@ $('bOpen').onclick=()=>{const W=wallet();if(W.boxes<1)return;const o=rollBox();$
   if(o.char){const d=document.createElement('div');d.className='rw epic';d.appendChild(portrait(o.char,90));d.insertAdjacentHTML('beforeend',`<b>¡${esc(BR[o.char].n)}!</b><small>Nuevo luchador</small>`);res.appendChild(d);}
   if(o.skin){const S=SKINS[o.skin];const d=document.createElement('div');d.className='rw epic';d.appendChild(portrait(S.k,90,o.skin));d.insertAdjacentHTML('beforeend',`<b>${esc(S.n)}</b><small>Nueva skin</small>`);res.appendChild(d);}
   $('bxN').textContent=wallet().boxes;$('bOpen').disabled=wallet().boxes<1;},900);};
+// ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
+const PATCHES=[
+ {v:'1.6',d:'28 oct 2026',t:'John Púas Lilas',l:[
+  ['n','Nueva skin <b>John Púas Lilas</b>: ropa lila, pelo de pinchos lilas y ojos rojos. 550 Fénix en la tienda.'],
+  ['n','Botón <b>Novedades</b>: aquí verás siempre lo último del juego.'],
+  ['n','Botón <b>Instalar app</b> para tenerlo en el escritorio del móvil o del PC.'],
+  ['c','En el móvil sale un aviso para girarlo y ponerlo a pantalla completa.']]},
+ {v:'1.5',d:'28 oct 2026',t:'¡Ya en internet!',l:[
+  ['n','El juego ya está en la web: laordendelfriki.github.io/laordenbrawl'],
+  ['n','Inicia sesión con Google o con tu email y tu progreso se guarda en la nube.'],
+  ['n','Online con salas por código para jugar con tus amigos.'],
+  ['c','Si jugabas sin cuenta, al registrarte te llevas lo que tenías.']]},
+ {v:'1.4',d:'Oct 2026',t:'Porteros y espectros',l:[
+  ['n','Ahora primero eliges el mapa y después el luchador.'],
+  ['n','Balón Brawl tiene <b>portero</b> en cada portería (se le puede noquear).'],
+  ['n','Skin de Halloween <b>John Espectro</b>.'],
+  ['c','Daño base más bajo, y la Fuerza de la tienda sube más: subir de nivel se nota de verdad.'],
+  ['c','Ahora hay <b>8 cajas al día</b>, que se renuevan a las 18:00.']]},
+ {v:'1.3',d:'Oct 2026',t:'La familia crece',l:[
+  ['n','Nuevo luchador mítico: <b>John</b> y su hijo Daniel en el carrito. Súper: ¡la peonza!'],
+  ['c','<b>Sara</b> pasa a legendaria (y embarazada, no gorda).'],
+  ['f','En Atraco ya se reaparece después de morir.']]},
+ {v:'1.2',d:'Oct 2026',t:'Llega Olivia',l:[
+  ['n','<b>Olivia</b>, la primera ULTRA LEGENDARIA: chupetes con babas en zigzag y pañal bomba.'],
+  ['n','Clases (tanque, curandero, ataque…) y rarezas: común, raro, épico, mítico, legendario y ultra.'],
+  ['n','42 logros con premios.'],
+  ['n','Música y efectos de sonido (se pueden apagar).'],
+  ['n','Botón "Campo de entrenamiento" en Personajes para probar a cualquiera.']]},
+ {v:'1.1',d:'Oct 2026',t:'Temporada 1: La Orden del Dragón',l:[
+  ['n','Pase de batalla de 50 niveles, gratis y premium, con la skin Xavi Dragón al final.'],
+  ['n','Modo Competitivo de Madera a Máster, con skins exclusivas.'],
+  ['n','Emoticonos de perfil y sección Personajes con historia, ataques y skins.'],
+  ['c','Mapas más grandes con el logo de La Orden en el centro.'],
+  ['c','Pelucas más varonil y sin saltitos al andar.']]},
+ {v:'1.0',d:'Oct 2026',t:'Fénix y tienda',l:[
+  ['n','Moneda <b>Fénix</b>: se gana jugando.'],
+  ['n','Tienda con skins (Halloween, Entrenadores, Piratas, Navidad, Héroes), personajes y Fuerza.'],
+  ['n','Niveles de personaje, cajas diarias y gadgets.'],
+  ['n','Modos Balón Brawl, Noqueo, Atraco, 1 contra 1 y Práctica.']]}];
+const NWTAG={n:'NUEVO',c:'CAMBIO',f:'ARREGLO'};
+function newsBadge(){$('bNews').classList.toggle('seen',save.seenV===PATCHES[0].v);}
+function renderNews(){const L=$('nwList');L.innerHTML='';PATCHES.forEach((p,i)=>{const d=document.createElement('article');d.className='nw'+(i?'':' top');
+ d.innerHTML=`<header><b>${p.t}</b><em>v${p.v}</em><small>${p.d}</small></header><ul>${p.l.map(([k,t])=>`<li><i class="${k}">${NWTAG[k]}</i>${t}</li>`).join('')}</ul>`;L.appendChild(d);});
+ save.seenV=PATCHES[0].v;store();newsBadge();}
+$('bNews').onclick=()=>{screen('sNews');renderNews();};
+$('bNwBack').onclick=()=>screen('sTitle');
+newsBadge();
 $('bAch').onclick=()=>{screen('sAch');renderAch();};
 $('bAcBack').onclick=toMenu;
 $('acAll').onclick=claimAllAch;
