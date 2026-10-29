@@ -1051,7 +1051,7 @@ function drawBaby(c,O,d,f){
  const limb=(x0,y0,x1,y1,col,r)=>capsule(c,x0,y0,x1,y1,r||1.05,col,{lc:shade(col,-95)});
  const hand=(x,y,s)=>toon(c,ell(c,x,y,1.25*(s||1),1.05*(s||1)),[x-1.2,y-1,2.4,2],sk,{lc:shade(sk,-95),spec:.3});
  const dots=(clip)=>{c.save();c.beginPath();clip();c.clip();c.fillStyle=dot;for(let y=10;y<23;y+=1.6)for(let x=(y*5|0)%2?1:1.8;x<16;x+=1.6){c.beginPath();c.arc(x,y,.32,0,Math.PI*2);c.fill();}c.restore();};
- const pacifier=(x,y,s)=>{s=s||1;toon(c,ell(c,x,y+.1,1.7*s,1.05*s),[x-1.7*s,y-1*s,3.4*s,2.1*s],'#7ad8ff',{lc:'#1a4a6a',spec:.6});c.strokeStyle='#ff6aa8';c.lineWidth=.55*s;c.beginPath();c.arc(x,y+.25*s,.75*s,0,Math.PI*2);c.stroke();E(c,x,y+.1*s,.42*s,.36*s,'#ffd23a');};
+ const pacifier=(x,y,s)=>{s=s||1;toon(c,ell(c,x,y+.1,1.7*s,1.05*s),[x-1.7*s,y-1*s,3.4*s,2.1*s],O.paci||'#7ad8ff',{lc:O.paci?shade(O.paci,-110):'#1a4a6a',spec:.6});c.strokeStyle='#ff6aa8';c.lineWidth=.55*s;c.beginPath();c.arc(x,y+.25*s,.75*s,0,Math.PI*2);c.stroke();E(c,x,y+.1*s,.42*s,.36*s,'#ffd23a');};
  const head=(hx,hy,R,side,back)=>{
   if(!back){toon(c,ell(c,hx+(side?R-1.2:-R+.2),hy+.8,1,1.3),[hx-R,hy,2,2.6],sk,{gloss:false,lc:shade(sk,-95)});if(!side)toon(c,ell(c,hx+R-.2,hy+.8,1,1.3),[hx+R-1,hy,2,2.6],sk,{gloss:false,lc:shade(sk,-95)});}
   toon(c,ell(c,hx,hy,R,R*.95),[hx-R,hy-R,2*R,2*R],sk,{lc:shade(sk,-95),light:20,spec:.35});
@@ -1059,8 +1059,10 @@ function drawBaby(c,O,d,f){
   c.fillStyle=hr;if(back){c.beginPath();c.ellipse(hx,hy-1.2,R*.9,R*.72,0,0,Math.PI*2);c.fill();}
   else{c.beginPath();c.ellipse(hx+(side?.8:0),hy-R+1.4,R*.72,1.6,0,Math.PI,0);c.fill();}
   c.strokeStyle=hr;c.lineWidth=.9;c.lineCap='round';c.beginPath();const tx=hx+(side?1:0),ty=hy-R+.6;c.moveTo(tx,ty+.6);c.bezierCurveTo(tx-1.6,ty-1.8,tx+1.8,ty-2.8,tx+1.2,ty-.8);c.stroke();
-  // lazo
-  const bx=hx+(side?2.6:back?0:2.8),by=hy-R+1.6;[-1,1].forEach(k=>toon(c,()=>{c.moveTo(bx,by);c.quadraticCurveTo(bx+k*1.4,by-2,bx+k*2.4,by-.6);c.quadraticCurveTo(bx+k*2.2,by+1.4,bx,by);c.closePath();},[bx-2.4,by-2,4.8,3.4],bow,{lc:shade(bow,-100),gloss:false}));E(c,bx,by,.6,.6,shade(bow,-30));
+  if(O.crown){const cx=hx+(side?.8:0),cy=hy-R+1.3,w=side?3:3.6,gc=O.crown;
+   toon(c,()=>{c.moveTo(cx-w,cy);c.lineTo(cx-w-.3,cy-2.6);c.lineTo(cx-w*.45,cy-1.3);c.lineTo(cx,cy-3.4);c.lineTo(cx+w*.45,cy-1.3);c.lineTo(cx+w+.3,cy-2.6);c.lineTo(cx+w,cy);c.closePath();},[cx-w-.3,cy-3.4,2*w+.6,3.4],gc,{lc:shade(gc,-120),spec:.5});
+   E(c,cx,cy-1,.55,.55,'#ff2a5a');E(c,cx-w*.62,cy-.8,.38,.38,'#3ae0ff');E(c,cx+w*.62,cy-.8,.38,.38,'#7aff8a');[[cx-w-.3,cy-2.6],[cx,cy-3.4],[cx+w+.3,cy-2.6]].forEach(([px,py])=>E(c,px,py,.42,.42,'#fff6c0'));}
+  else{  const bx=hx+(side?2.6:back?0:2.8),by=hy-R+1.6;[-1,1].forEach(k=>toon(c,()=>{c.moveTo(bx,by);c.quadraticCurveTo(bx+k*1.4,by-2,bx+k*2.4,by-.6);c.quadraticCurveTo(bx+k*2.2,by+1.4,bx,by);c.closePath();},[bx-2.4,by-2,4.8,3.4],bow,{lc:shade(bow,-100),gloss:false}));E(c,bx,by,.6,.6,shade(bow,-30));}
   if(back)return;
   E(c,hx-(side?R*.55:2.9),hy+1.9,1.1,.65,'rgba(255,110,140,.45)');if(!side)E(c,hx+2.9,hy+1.9,1.1,.65,'rgba(255,110,140,.45)');
   const ex=side?[[hx-R*.55,.82]]:[[hx-2,1],[hx+2,1]];
@@ -1071,33 +1073,38 @@ function drawBaby(c,O,d,f){
   if(atk){c.fillStyle='#5a1a2a';c.beginPath();c.ellipse(side?hx-R*.55:hx,hy+3.1,.9,.75,0,0,Math.PI*2);c.fill();}
   else pacifier(side?hx-R+.4:hx,hy+3.1,side?.85:1);
  };
+   const sparkle=()=>{if(!O.sparkle)return;[[1.2,6.5,.9],[14.6,8.2,.7],[2.2,20,.6],[14.8,19.2,.8]].forEach(([x,y,r])=>{c.fillStyle='#fff6a0';c.beginPath();c.moveTo(x,y-r*1.6);c.lineTo(x+r*.45,y-r*.45);c.lineTo(x+r*1.6,y);c.lineTo(x+r*.45,y+r*.45);c.lineTo(x,y+r*1.6);c.lineTo(x-r*.45,y+r*.45);c.lineTo(x-r*1.6,y);c.lineTo(x-r*.45,y-r*.45);c.closePath();c.fill();});};
+  const cape=(f)=>{if(!O.cape)return;toon(c,f,[0,8,16,15],O.cape,{lc:shade(O.cape,-100),gloss:false});};
  if(d==='left'){
   // pierna y brazo de atrás
   limb(11.6,18.6,12.2+st*.5,21.8,shade(on,-25),1.1);limb(13.2,21.8,15.2-st*.4,21.6,shade(on,-25),1);
   limb(6.8,16.8,6.2-st*.8,21.6,shade(sk,-15));hand(6-st*.8,22.1,.95);
   const body=()=>c.ellipse(10.2,17,4.6,3.3,-.12,0,Math.PI*2);toon(c,body,[5.6,13.7,9.2,6.6],on,{lc:shade(on,-100),sy:.25});dots(body);
+  cape(()=>{c.moveTo(6.6,13.4);c.quadraticCurveTo(11.6,12,15.8,15);c.lineTo(15,19.6);c.quadraticCurveTo(11,19,7.2,17.8);c.closePath();});if(O.capeIn){c.strokeStyle=O.capeIn;c.lineWidth=.6;c.beginPath();c.moveTo(15,19.6);c.quadraticCurveTo(11,19,7.2,17.8);c.stroke();}
   toon(c,ell(c,13.8,16.2,2.4,2.6),[11.4,13.6,4.8,5.2],dp,{lc:'#8a8aa8',spec:.5});c.fillStyle='#7ad8ff';c.fillRect(12.3,14.6,1,.8);
   limb(10.6,19,11-st*.5,22,on,1.15);limb(11,22,13.6+st*.4,22.1,on,1.05);toon(c,ell(c,14,22.1,1.1,.8),[13,21.3,2.2,1.6],shade(on,10),{lc:shade(on,-90),gloss:false});
   limb(7.2,17.2,5.2+st*.8,21.6,sk);hand(4.8+st*.8,22.2,1.05);
   if(atk){limb(7,16.6,2,13.8,sk);hand(1.6,13.4,1.1);}
-  head(5,11.4,5.3,true,false);return;
+  head(5,11.4,5.3,true,false);sparkle();return;
  }
  if(d==='up'){
   limb(5.4,16,4.4,20.8-st*.6,sk);limb(10.6,16,11.6,20.8+st*.6,sk);hand(4.3,21.2-st*.6);hand(11.7,21.2+st*.6);
   head(8,10.6,5.3,false,true);
   const body=()=>c.ellipse(8,16.4,4.8,3.6,0,0,Math.PI*2);toon(c,body,[3.2,12.8,9.6,7.2],on,{lc:shade(on,-100),sy:.3});dots(body);
+  cape(()=>{c.moveTo(5.6,12.6);c.lineTo(10.4,12.6);c.lineTo(13.2,20.6);c.quadraticCurveTo(8,21.6,2.8,20.6);c.closePath();});if(O.capeIn){c.fillStyle=O.capeIn;c.fillRect(5.6,12.4,4.8,.8);}
   toon(c,ell(c,8,18.6,4,3.3),[4,15.3,8,6.6],dp,{lc:'#8a8aa8',spec:.5});c.strokeStyle='#d8d8ec';c.lineWidth=.35;c.beginPath();c.moveTo(8,16.2);c.lineTo(8,21.4);c.stroke();rr(c,4.6,16,1.4,1,.3,'#7ad8ff');rr(c,10,16,1.4,1,.3,'#7ad8ff');
   [[5.4,st],[10.6,-st]].forEach(([x,o])=>{toon(c,ell(c,x,22.4+o*.4,1.5,1.1),[x-1.5,21.3,3,2.2],shade(on,10),{lc:shade(on,-90),gloss:false});E(c,x,22.6+o*.4,.8,.55,shade(on,-20));});
   if(atk){limb(11,14.6,13.4,9.4,sk);hand(13.6,9,1.1);}
-  return;
+  sparkle();return;
  }
  // de frente: el culete con pañal asoma por detrás de la cabeza
  [[2.9,st>0],[13.1,st<0]].forEach(([x,up])=>toon(c,ell(c,x,21.6-(up?.5:0),1.7,1.3),[x-1.7,20.3,3.4,2.6],shade(on,-12),{lc:shade(on,-100),gloss:false}));
+ cape(()=>{c.moveTo(3.2,9.2);c.quadraticCurveTo(8,7,12.8,9.2);c.lineTo(14.6,15.4);c.quadraticCurveTo(8,13.6,1.4,15.4);c.closePath();});
  const body=()=>c.ellipse(8,11.6,4.4,3,0,0,Math.PI*2);toon(c,body,[3.6,8.6,8.8,6],on,{lc:shade(on,-100),sy:.3});dots(body);
  toon(c,ell(c,8,10.4,2.8,1.7),[5.2,8.7,5.6,3.4],dp,{lc:'#8a8aa8',spec:.5,gloss:false});
  limb(4.8,17.4,4.3,21.4-(st>0?.7:0),sk,1.1);hand(4.2,21.9-(st>0?.7:0),1.1);
  if(atk){limb(11.2,17.2,14.6,13.4,sk,1.1);hand(15,13,1.15);}else{limb(11.2,17.4,11.7,21.4-(st<0?.7:0),sk,1.1);hand(11.8,21.9-(st<0?.7:0),1.1);}
- head(8,14.6,5.5,false,false);
+ head(8,14.6,5.5,false,false);sparkle();
 }
 
 /* ================= Carrito con Daniel (para John) ================= */
@@ -1226,6 +1233,7 @@ const SKINS={
  john_hw:{k:'john',n:'John Espectro',tag:'Halloween',price:500,look:{ghost:true,skin:'#cfe4ec',hair:'#eef8fb',top:'#253250',trim:'#5affd8',cape:'#1c2640',capeIn:'#2ac8b0',pants:'#1c2640',shoes:'#141a28',shoea:'#5affd8',eye:'#2affd0',face:{brow:'up',mouth:'open',lids:.3},stroller:{frame:'#3a4a6a',hood:'#2a3a5c',seat:'#5affd8'}}},
  john_lila:{k:'john',n:'John Púas Lilas',tag:'Especial',price:550,look:{style:'spiky',hair:'#a24aff',eye:'#ff1e2e',eyeH:.9,top:'#6a2ab8',trim:'#d8a8ff',stripes:null,pants:'#2a1440',shoes:'#1a1022',shoea:'#b86aff',face:{brow:'angry',mouth:'smile',lids:.25},stroller:{frame:'#4a1a7a',hood:'#7a3ad0',seat:'#ff3a5a'}}},
  xavi_td:{k:'xavi',n:'Xavi Tendero',tag:'Código de tienda',excl:'code',price:0,look:{hat:'capback',hatc:'#2a6ae8',hata:'#ffd23a',top:'#ffffff',trim:'#2a6ae8',labcoat:'#1e7a44',pants:'#2a2a3a',shoes:'#1e1e2a',shoea:'#ffd23a',face:{brow:'up',mouth:'smile'}}},
+ olivia_su:{k:'olivia',n:'Olivia Suprema',tag:'Código de tienda',excl:'code',price:0,dog:{onesie:'#7a2ab8',dot:'#ffd23a',crown:'#ffd23a',cape:'#d0203a',capeIn:'#ffd23a',paci:'#ffd23a',eye:'#b04ad8',sparkle:true}},
  thor_hw:{k:'thor',n:'Thor Brujito',tag:'Halloween',price:500,dog:{hat:'witch',hatc:'#6a2aa8',hata:'#ff8a1e',harness:'#ff8a1e',wings:true}}
 };
 const LOOKC={};
@@ -2677,7 +2685,7 @@ function renderAdmin(){const adm=$('cdAdmin');
  const skinOpts=Object.entries(SKINS).map(([id,S])=>`<option value="${id}">${esc(S.n)}${S.excl==='code'?' ★':''}</option>`).join('');
  const charOpts=ORDER.map(k=>`<option value="${k}">${esc(BR[k].n)}</option>`).join('');
  adm.innerHTML=`<h3>Panel de Xavi · crear códigos</h3>
-  <span class="k">Al momento (1 código)</span><div class="cdq"><button class="btn" data-q="fenix:100" type="button">100 Fénix</button><button class="btn" data-q="fenix:500" type="button">500 Fénix</button><button class="btn gift" data-q="sbox" type="button">Cofre especial</button><button class="btn shop" data-q="skin:xavi_td" type="button">Skin Xavi Tendero</button></div>
+  <span class="k">Al momento (1 código)</span><div class="cdq"><button class="btn" data-q="fenix:100" type="button">100 Fénix</button><button class="btn" data-q="fenix:500" type="button">500 Fénix</button><button class="btn gift" data-q="sbox" type="button">Cofre especial</button><button class="btn shop" data-q="skin:xavi_td" type="button">Skin Xavi Tendero</button><button class="btn gold" data-q="skin:olivia_su" type="button">Olivia Suprema</button></div>
   <span class="k">Varios códigos</span>
   <div class="cdf"><label>Premio<select id="adT"><option value="fenix">Fénix</option><option value="sbox">Cofre especial</option><option value="box">Cajas normales</option><option value="skin">Skin</option><option value="char">Personaje</option></select></label>
   <label id="adNL">Cantidad<input id="adN" type="number" min="1" max="100000" value="200"></label>
@@ -2731,6 +2739,8 @@ $('profClose').onclick=()=>{$('profOv').hidden=true;profId=null;};
 $('profOv').addEventListener('click',e=>{if(e.target.id==='profOv'){$('profOv').hidden=true;profId=null;}});
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
+ {v:'2.2',d:'29 oct 2026',t:'Olivia Suprema',l:[
+  ['n','Skin única <b>Olivia Suprema</b>: corona de oro, capa real y chupete dorado. Solo se consigue con un código de La Orden del Friki.']]},
  {v:'2.1',d:'29 oct 2026',t:'Perfiles',l:[
   ['n','Toca a cualquier jugador del <b>ranking</b> o de tu lista de <b>amigos</b> para ver su perfil: trofeos, rango, estadísticas y luchadores favoritos.'],
   ['n','Desde su perfil puedes enviarle solicitud de amistad o invitarle a jugar.'],
