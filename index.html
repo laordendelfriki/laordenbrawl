@@ -229,6 +229,17 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
 .cdf select,.cdf input{width:100%;box-sizing:border-box;font:800 1rem var(--f-body);padding:8px 10px;border-radius:12px;border:3px solid var(--out);background:#fff;color:#1a1226;min-width:0}
 .cdnew{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px;border:3px solid var(--out);border-radius:16px;background:linear-gradient(#ffe066,#ff9a1e)}.cdnew small{font-weight:900;color:#3a1a00}.cdnew b{font:400 1.8rem var(--f-disp);letter-spacing:.12em;color:#fff;text-shadow:var(--txt-out)}.cdnew .btn{font-size:.95rem;padding:6px 14px}
 .cdlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}.cdlist li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;padding:5px 9px;border-radius:12px;background:rgba(26,18,38,.5)}.cdlist li b{font:400 1rem var(--f-disp);letter-spacing:.08em}.cdlist li span{flex:1;font-size:.8rem;font-weight:800}.cdlist li em{font-style:normal;font-size:.75rem;font-weight:900;color:#7aff8a}.cdlist li.used em{color:#ffb0b8}.cdlist li.used b{text-decoration:line-through;opacity:.7}
+.rank li.clk{cursor:pointer}.rank li.clk:active{transform:scale(.98)}
+.frwho{display:flex;align-items:center;gap:10px;flex:1;min-width:110px;background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer}.frwho>span:not(.emo){display:flex;flex-direction:column;min-width:0}
+#profOv{position:fixed;inset:0;z-index:88;background:rgba(10,6,30,.8);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+#profOv[hidden]{display:none}
+#profOv .pcard{width:100%;max-width:420px;max-height:100%;overflow-y:auto;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;padding:16px;border:3px solid var(--out);border-radius:22px;background:linear-gradient(#4a2ab0,#2b1d6e);box-shadow:0 8px 0 var(--out)}
+#profBox{display:flex;flex-direction:column;gap:12px}
+.phead{display:flex;align-items:center;gap:12px}.phead h3{margin:0;font:400 1.7rem var(--f-disp);color:var(--gold);text-shadow:var(--txt-out)}.phead h3 small{font-size:.6em;color:#fff}.phead p{margin:2px 0 0;font-weight:900;font-size:.9rem}.phead .tierl{display:flex;align-items:center;gap:6px;color:var(--mute)}
+.pstats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.pstats div{display:flex;flex-direction:column;align-items:center;padding:6px 4px;border-radius:12px;background:rgba(26,18,38,.5);border:2px solid var(--out)}.pstats b{font:400 1.3rem var(--f-disp);text-shadow:var(--txt-out)}.pstats small{font-size:.68rem;font-weight:900;color:var(--mute);text-align:center}
+.pbest{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.pbest div{display:flex;flex-direction:column;align-items:center;padding:4px;border-radius:14px;background:radial-gradient(circle at 50% 35%,#ffd23a,#ff5ac8 60%,#5a2ad0);border:3px solid var(--out)}.pbest canvas{width:72px;height:72px}.pbest b{font:400 .95rem var(--f-disp);text-shadow:var(--txt-out)}.pbest small{font-size:.66rem;font-weight:900}
+.pact{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}.pact .btn{font-size:1rem;padding:7px 14px}.pact .btn.cmpb{background:linear-gradient(#ff9a8a 0%,#ff5a4a 48%,#e8323a 52%,#b01e2a 100%)}.frok{font:400 1rem var(--f-disp);color:#7aff8a;text-shadow:var(--txt-out)}
+#profOv #profClose{align-self:center}
 #toast{position:absolute;left:50%;top:64px;transform:translateX(-50%);z-index:30;background:#2b1d63;border:3px solid var(--out);border-radius:16px;padding:9px 16px;font-weight:900;font-size:.88rem;max-width:90%;text-align:center;box-shadow:0 5px 0 var(--out)}
 @media (min-aspect-ratio:23/20){#tip{display:none}}
 #tip{position:absolute;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));text-align:center;font-size:.72rem;font-weight:900;color:rgba(255,255,255,.8);text-shadow:0 2px 0 var(--out);pointer-events:none;z-index:5}
@@ -466,6 +477,7 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
  <button id="fsBtn" hidden type="button" aria-label="Pantalla completa">⛶</button>
  <div id="toast" hidden></div>
  <div id="unlkOv" hidden role="dialog" aria-label="Desbloqueo"><div class="rays"></div><div class="ub"><small id="unlkK"></small><canvas id="unlkCv" width="260" height="260"></canvas><b id="unlkN"></b><em id="unlkR"></em><p id="unlkP"></p><button class="btn" id="unlkOk" type="button">¡Genial!</button></div></div>
+ <div id="profOv" hidden role="dialog" aria-label="Perfil"><div class="pcard"><div id="profBox"></div><button class="btn sec" id="profClose" type="button">Cerrar</button></div></div>
  <div id="invOv" hidden role="dialog" aria-label="Invitación"><div class="wl"><h2>¡Te invitan!</h2><p id="invTxt"></p><div class="row"><button class="btn sec" id="invNo" type="button">Ahora no</button><button class="btn" id="invYes" type="button">Unirme</button></div></div></div>
  <div id="instOv" hidden role="dialog" aria-label="Instalar app"><div class="wl"><h2>Instalar La Orden Brawl</h2><div id="instTxt"></div><button class="btn" id="instOk" type="button">Entendido</button></div></div>
  <div id="rotOv" hidden role="dialog" aria-label="Gira la pantalla"><div class="ph"></div><h2 id="rotT">¡Gira el móvil!</h2><p id="rotP">La Orden Brawl se juega mejor en horizontal y a pantalla completa.</p><button class="btn" id="rotFs" type="button">Pantalla completa</button><button class="no" id="rotNo" type="button">Seguir así</button></div>
@@ -2392,11 +2404,12 @@ async function renderRank(){
  else if(!RANK.length)list.innerHTML='<li class="empty">Todavía no hay nadie. ¡Juega una partida para estrenar el ranking!</li>';
  else{
   let ps={};try{ps=USR?await USR.profiles(RANK.map(r=>r.id)):{};}catch(e){}
-  list.innerHTML=RANK.map((r,i)=>`<li class="${r.id===UID?'you':''}"><em>${i+1}</em>${emoHTML(r.emo&&EMO[r.emo]?r.emo:'feliz','av')}<span><b>${esc(r.nick||'Jugador')}</b><small>${rankOf(r.tro||0)} · ${r.wins||0} victorias de ${r.games||0}</small></span><strong>${r.tro||0}</strong></li>`).join('');
+  list.innerHTML=RANK.map((r,i)=>`<li class="${r.id===UID?'you':''} clk" data-id="${esc(r.id)}" role="button" tabindex="0"><em>${i+1}</em>${emoHTML(r.emo&&EMO[r.emo]?r.emo:'feliz','av')}<span><b>${esc(r.nick||'Jugador')}</b><small>${rankOf(r.tro||0)} · ${r.wins||0} victorias de ${r.games||0}</small></span><strong>${r.tro||0}</strong></li>`).join('');
  }
+ list.querySelectorAll('li[data-id]').forEach(li=>{const go=()=>openProfile(li.dataset.id);li.onclick=go;li.onkeydown=e=>{if(e.key==='Enter')go();};});
  const P=(DB&&UID?PROF:null)||save.local||emptyProf();
  const best=Object.entries(P.best||{}).sort((a,b)=>b[1]-a[1]).slice(0,4).filter(([k])=>BR[k]);
- $('myStats').innerHTML=`<div class="profhead">${emoHTML(myEmo(),'big')}<div><h3>${esc((P.nick)||save.nick||'Tú')}</h3><p>${tierBadge(rkState().t)} ${rkState().rp} puntos de competitivo</p></div></div><span class="k">Tu icono (toca para cambiarlo)</span><div class="emopick">${emoOwned().map(id=>`<button type="button" data-e="${id}" aria-pressed="${id===myEmo()}">${EMO[id].svg}</button>`).join('')}</div><h3 style="display:none">${esc((P.nick)||save.nick||'Tú')}</h3><p>${P.tro||0} trofeos · ${rankOf(P.tro||0)}</p><div class="kv"><span>Partidas</span><b>${P.games||0}</b><span>Victorias</span><b>${P.wins||0}</b><span>K.O.</span><b>${P.ko||0}</b><span>Goles</span><b>${P.goals||0}</b><span>Daño total</span><b>${P.dmg||0}</b></div>${best.length?`<p class="k">Tus mejores luchadores</p><p>${best.map(([k,v])=>`${BR[k].n} ${v}`).join(' · ')}</p>`:''}${DB&&UID?'':'<p class="k">Sin cuenta: tus datos solo están en este dispositivo.</p>'}${CANW===false?'<p class="k">Tu progreso se guarda en la nube cuando juegas online en la sala de Xavi. Si Xavi te invita como Editor, se guardará siempre.</p>':''}`;
+ $('myStats').innerHTML=`<div class="profhead">${emoHTML(myEmo(),'big')}<div><h3>${esc((P.nick)||save.nick||'Tú')}</h3><p>${tierBadge(rkState().t)} ${rkState().rp} puntos de competitivo</p></div></div><span class="k">Tu icono (toca para cambiarlo)</span><div class="emopick">${emoOwned().map(id=>`<button type="button" data-e="${id}" aria-pressed="${id===myEmo()}">${emoHTML(id)}</button>`).join('')}</div><h3 style="display:none">${esc((P.nick)||save.nick||'Tú')}</h3><p>${P.tro||0} trofeos · ${rankOf(P.tro||0)}</p><div class="kv"><span>Partidas</span><b>${P.games||0}</b><span>Victorias</span><b>${P.wins||0}</b><span>K.O.</span><b>${P.ko||0}</b><span>Goles</span><b>${P.goals||0}</b><span>Daño total</span><b>${P.dmg||0}</b></div>${best.length?`<p class="k">Tus mejores luchadores</p><p>${best.map(([k,v])=>`${BR[k].n} ${v}`).join(' · ')}</p>`:''}${DB&&UID?'':'<p class="k">Sin cuenta: tus datos solo están en este dispositivo.</p>'}${CANW===false?'<p class="k">Tu progreso se guarda en la nube cuando juegas online en la sala de Xavi. Si Xavi te invita como Editor, se guardará siempre.</p>':''}`;
  document.querySelectorAll('#myStats .emopick button').forEach(b=>b.onclick=()=>{saveWallet(P=>{P.emo=b.dataset.e;});renderRank();});
 }
 $('bRank').onclick=()=>{screen('sRank');renderRank();renderPemoPick();};
@@ -2529,7 +2542,7 @@ function frReject(id){profSet(P=>{P.frx=Array.from(new Set((P.frx||[]).concat(id
 function frRemove(id){profSet(P=>{P.fr=(P.fr||[]).filter(x=>x!==id);P.frx=Array.from(new Set((P.frx||[]).concat(id))).slice(-200);});renderFriends();frBadge();}
 function frCancel(id){profSet(P=>{P.fr=(P.fr||[]).filter(x=>x!==id);});renderFriends();}
 function frRow(id,cls,btns){const p=FRDOC[id]||{};const t=tierOf(p.rp||0);
- return `<li class="${cls}">${EMO[p.emo]?emoHTML(p.emo,'av'):emoHTML('feliz','av')}<span><b>${esc(String(p.nick||(frFetching.has(id)?'…':'Jugador')).slice(0,12))}</b><small>${p.tro||0} trofeos · ${TIERS[t][0]}</small></span><div class="btns">${btns}</div></li>`;}
+ return `<li class="${cls}"><button class="frwho" type="button" data-p="${esc(id)}">${EMO[p.emo]?emoHTML(p.emo,'av'):emoHTML('feliz','av')}<span><b>${esc(String(p.nick||(frFetching.has(id)?'…':'Jugador')).slice(0,12))}</b><small>${p.tro||0} trofeos · ${TIERS[t][0]}</small></span></button><div class="btns">${btns}</div></li>`;}
 function renderFriends(){
  const box=$('frBox'),L=$('frLists');
  if(!friendsOn()){box.innerHTML=`<p>${DB&&UID?'Crea tu jugador en el menú principal para tener amigos.':window.WEBAUTH?'Inicia sesión para añadir amigos e invitarlos a jugar.':'Los amigos funcionan abriendo el juego con tu cuenta.'}</p>${window.WEBAUTH&&!UID?'<button class="btn" id="frLogin" type="button">Iniciar sesión</button>':''}`;L.innerHTML='';const b=$('frLogin');if(b)b.onclick=()=>window.WEBAUTH.open();return;}
@@ -2545,6 +2558,7 @@ function renderFriends(){
  h+=`<h3>Mis amigos (${S.fr.length})</h3><ul class="frl">${S.fr.length?S.fr.map(id=>frRow(id,'',inLobby?`<button class="btn" data-a="inv" data-id="${esc(id)}" type="button">Invitar a la sala</button>`:`<button class="btn" data-a="inv" data-id="${esc(id)}" type="button">Partida</button><button class="btn cmpb" data-a="invr" data-id="${esc(id)}" type="button">Competitiva</button><button class="x" data-a="del" data-id="${esc(id)}" type="button">Quitar</button>`)).join(''):'<li class="empty">Aún no tienes amigos. Pásales tu código o escribe el suyo arriba.</li>'}</ul>`;
  if(S.out.length)h+=`<h3>Enviadas, esperando respuesta</h3><ul class="frl">${S.out.map(id=>frRow(id,'',`<button class="x" data-a="cancel" data-id="${esc(id)}" type="button">Cancelar</button>`)).join('')}</ul>`;
  L.innerHTML=h;
+ L.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>openProfile(b.dataset.p));
  L.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const id=b.dataset.id,a=b.dataset.a;if(a==='ok')frAccept(id);else if(a==='no')frReject(id);else if(a==='del')frRemove(id);else if(a==='cancel')frCancel(id);else if(a==='inv')inviteFriend(id,false);else if(a==='invr')inviteFriend(id,true);});}
 $('bFriends').onclick=()=>{screen('sFriends');$('frMsg').textContent='';renderFriends();};
 $('bFrBack').onclick=()=>{if(NR&&isHost&&role==='lobby'){screen('sLobby');renderLobby();}else screen('sTitle');};
@@ -2684,8 +2698,43 @@ function renderAdmin(){const adm=$('cdAdmin');
  $('adList').onclick=async()=>{const L=$('adLog');L.innerHTML='<li>Cargando…</li>';try{const s=await DB.collection('codes').orderBy('at','desc').limit(40).get();L.innerHTML=s.docs.map(d=>{const x=d.data();return `<li class="${x.used?'used':''}"><b>${fmtCode(d.id)}</b><span>${esc(rwDesc(x.r))}${x.note?' · '+esc(x.note):''}</span><em>${x.used?'Canjeado'+(x.nick?' por '+esc(x.nick):''):'Libre'}</em></li>`;}).join('')||'<li>Aún no hay códigos.</li>';}catch(e){L.innerHTML='<li>No se pueden leer los códigos.</li>';}};}
 $('bCodes').onclick=()=>{screen('sCodes');renderCodes();};
 $('bCdBack').onclick=()=>screen('sTitle');
+
+/* ================= Ver el perfil de otro jugador ================= */
+let profId=null;
+async function openProfile(id){if(!id)return;profId=id;
+ let P=(id===UID&&PROF)||RANK.find(r=>r.id===id)||FRIN[id]||FRDOC[id]||null;
+ renderProfile(id,P);$('profOv').hidden=false;
+ if(DB){try{const sn=await DB.doc('players/'+id).get();if(sn.exists&&profId===id){FRDOC[id]=sn.data();renderProfile(id,sn.data());}}catch(e){}}}
+function renderProfile(id,P){const box=$('profBox');
+ if(!P){box.innerHTML='<p class="hint">Cargando perfil…</p>';return;}
+ const me=id===UID,t=tierOf(P.rp||0),bpl=P.bp&&P.bp.s===SEASON.id?Math.min(BP_LV,Math.floor((P.bp.xp||0)/BP_XP)):0;
+ const chars=ORDER.filter(k=>FREE.includes(k)||(Array.isArray(P.chars)&&P.chars.includes(k))).length,skins=(Array.isArray(P.owned)?P.owned:[]).filter(s=>SKINS[s]).length,ach=(Array.isArray(P.ach)?P.ach:[]).length;
+ const best=Object.entries(P.best||{}).filter(([k])=>BR[k]).sort((a,b)=>b[1]-a[1]).slice(0,3);
+ const wr=P.games?Math.round(100*(P.wins||0)/P.games):0;
+ let act='';
+ if(!me&&friendsOn()){const mine=myFr().includes(id),them=!!FRIN[id];
+  if(mine&&them)act=`<span class="frok">✓ Sois amigos</span><button class="btn" data-pa="inv" type="button">Partida</button><button class="btn cmpb" data-pa="invr" type="button">Competitiva</button>`;
+  else if(mine)act='<span class="frok">Solicitud enviada</span>';
+  else if(them)act='<button class="btn gift" data-pa="ok" type="button">Aceptar solicitud</button>';
+  else act='<button class="btn online" data-pa="add" type="button">Añadir amigo</button>';}
+ box.innerHTML=`<div class="phead">${emoHTML(P.emo&&EMO[P.emo]?P.emo:'feliz','big')}<div><h3>${esc(String(P.nick||'Jugador').slice(0,12))}${me?' <small>(tú)</small>':''}</h3><p><b>${P.tro||0}</b> trofeos · ${rankOf(P.tro||0)}</p><p class="tierl">${tierBadge(t)} ${TIERS[t][0]} · ${P.rp||0} puntos</p></div></div>
+ <div class="pstats"><div><b>${P.games||0}</b><small>Partidas</small></div><div><b>${P.wins||0}</b><small>Victorias</small></div><div><b>${wr}%</b><small>Ganadas</small></div><div><b>${P.ko||0}</b><small>K.O.</small></div><div><b>${P.goals||0}</b><small>Goles</small></div><div><b>${bpl}</b><small>Nivel de pase</small></div></div>
+ ${best.length?`<span class="k">Luchadores favoritos</span><div class="pbest">${best.map(([k,v])=>`<div data-k="${k}" data-s="${esc(P.eq&&P.eq[k]&&SKINS[P.eq[k]]?P.eq[k]:'')}"><canvas width="96" height="96"></canvas><b>${esc(BR[k].n)}</b><small>${v} trofeos</small></div>`).join('')}</div>`:''}
+ <div class="kv"><span>Personajes</span><b>${chars} de ${ORDER.length}</b><span>Skins</span><b>${skins}</b><span>Logros</span><b>${ach} de ${ACH.length}</b><span>Daño total</span><b>${P.dmg||0}</b></div>
+ ${act?`<div class="pact">${act}</div>`:''}`;
+ box.querySelectorAll('.pbest [data-k]').forEach(d=>d.querySelector('canvas').getContext('2d').drawImage(portrait(d.dataset.k,96,d.dataset.s||''),0,0));
+ box.querySelectorAll('[data-pa]').forEach(b=>b.onclick=()=>{const a=b.dataset.pa;FRDOC[id]=FRDOC[id]||P;
+  if(a==='add'){profSet(Q=>{Q.fr=Array.from(new Set((Q.fr||[]).concat(id))).slice(-200);Q.frx=(Q.frx||[]).filter(x=>x!==id);});toast('Solicitud enviada a '+(P.nick||'Jugador')+'.');renderProfile(id,P);}
+  else if(a==='ok'){frAccept(id);renderProfile(id,P);}
+  else if(a==='inv'||a==='invr'){$('profOv').hidden=true;inviteFriend(id,a==='invr');}});}
+$('profClose').onclick=()=>{$('profOv').hidden=true;profId=null;};
+$('profOv').addEventListener('click',e=>{if(e.target.id==='profOv'){$('profOv').hidden=true;profId=null;}});
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
+ {v:'2.1',d:'29 oct 2026',t:'Perfiles',l:[
+  ['n','Toca a cualquier jugador del <b>ranking</b> o de tu lista de <b>amigos</b> para ver su perfil: trofeos, rango, estadísticas y luchadores favoritos.'],
+  ['n','Desde su perfil puedes enviarle solicitud de amistad o invitarle a jugar.'],
+  ['f','Los iconos nuevos ya se ven bien al elegirlos en tu perfil.']]},
  {v:'2.0',d:'28 oct 2026',t:'¡Defiende la Tienda!',l:[
   ['n','Nuevo mapa <b>Calle de La Orden</b>: asfalto, aceras, pasos de cebra y jardineras.'],
   ['n','Carteles de las tiendas del barrio en los laterales del campo: Maxipa, Aroa Velvet, Estética Ana, ElJaninPhones, Magic Café y Bar Moreno.'],
