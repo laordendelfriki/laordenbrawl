@@ -1585,7 +1585,7 @@ const later=[];const after=(s,fn)=>later.push({t:tNow+s,fn,id:G.id});
 const ATK={
  xavi:(u,a)=>[-.17,0,.17].forEach(o=>shot(u,a+o,{spd:12.5,range:6.5,dmg:420,kind:'card'})),
  xavo:(u,a)=>shot(u,a,{spd:14,range:9,dmg:1000,r:.26,kind:'can'}),
- geri:(u,a)=>shot(u,a,{spd:12.5,range:11,dmg:700,bounce:6,r:.3,kind:'top'}),
+ geri:(u,a)=>shot(u,a,{spd:12.5,range:22,dmg:700,bounce:9,r:.3,kind:'top'}),
  dani:(u,a)=>shot(u,a,{spd:12,range:7,dmg:480,r:.26,kind:'toxic',onHit:(o,p)=>{if(!o.safe)o.poison={t:3,dps:220,acc:0,src:p.owner};}}),
  lazuli:(u,a)=>shot(u,a,{spd:12,range:7.5,dmg:820,r:.4,pierce:true,kind:'wave'}),
  victhor:(u,a)=>{u.cyc=((u.cyc||0)+1)%3;shot(u,a,{spd:[15,11,13][u.cyc],range:7,dmg:[620,700,780][u.cyc],bounce:u.cyc===1?1:0,r:.26,kind:['card','top','pball'][u.cyc]});},
@@ -1600,7 +1600,7 @@ const ATK={
 const SUP={
  xavi:(u,a,d)=>lob(u,a,clamp(d||6,2,7),'sobre',p=>boom(p.tx,p.ty,2,1500,u.team,u,4.5,0,'#ffbf3c')),
  xavo:(u)=>{u.buff=6;fxBurst(u.x,u.y,.6,'#7aff4a',18,3,.6,.12);},
- geri:(u,a)=>{shot(u,a,{spd:9.5,range:6,dist:0,r:.62,dmg:0,bounce:0,kind:'megatop',mega:1,nb:0});fxBurst(u.x,u.y,.4,'#ffd23a',12,3,.4,.12);},
+ geri:(u,a)=>{shot(u,a,{spd:19,range:6,dist:0,r:.62,dmg:0,bounce:0,kind:'megatop',mega:1,nb:0});fxBurst(u.x,u.y,.4,'#ffd23a',12,3,.4,.12);},
  dani:(u,a,d)=>lob(u,a,clamp(d||6,2,7),'toxic',p=>{G.zones.push({x:p.tx,y:p.ty,r:2.2,t:4,tick:0,every:.5,dmg:380,team:u.team,owner:u,kind:'cloud'});fxRing(p.tx,p.ty,2.2,'#7aff4a');}),
  lazuli:(u,a)=>{for(let i=0;i<4;i++)shot(u,a+(i-1.5)*.35,{spd:7,range:11,dmg:650,r:.32,kind:i%2?'bug':'merfolk',home:1});},
  victhor:(u,a)=>{u.dash={vx:Math.cos(a)*14,vy:Math.sin(a)*14,t:.28,dmg:0,hit:new Set(),after:()=>{for(let i=0;i<8;i++)shot(u,i/8*TAU,{spd:12,range:6,dmg:650,r:.26,kind:['card','top','pball'][i%3]});}};},
@@ -1774,7 +1774,7 @@ function stepMega(p,dt){
   const ox=p.x,oy=p.y;p.x+=p.vx*dt/n;p.y+=p.vy*dt/n;
   if(solid(p.x,p.y+.35)){
    if(solid(p.x,oy+.35))p.vx=-p.vx;if(solid(ox,p.y+.35))p.vy=-p.vy;p.x=ox;p.y=oy;
-   p.nb++;const k=Math.min(1.06,14/hyp(p.vx,p.vy));p.vx*=k;p.vy*=k;
+   p.nb++;const k=Math.min(1.06,21/hyp(p.vx,p.vy));p.vx*=k;p.vy*=k;
    fxBurst(p.x,p.y,.3,'#ffffff',6,3,.3,.1);if(p.nb<=MEGA_MAXB)fxText(p.x,p.y,1.4,'x'+megaMul(p).toFixed(2).replace(/\.?0+$/,''),'#ffbf3c');
    if(p.nb>MEGA_MAXB)return megaEnd(p);
   }
@@ -2819,6 +2819,10 @@ $('welGo').onclick=()=>{if(welBusy)return;welBusy=true;$('welOv').hidden=true;
 setInterval(welcomeCheck,1500);
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
+ {v:'2.5',d:'1 nov 2026',t:'Geri al máximo',l:[
+  ['c','<b>Geri</b>: su peonza básica recorre el doble de campo y rebota hasta 9 veces.'],
+  ['c','<b>Geri</b>: la peonza gigante del súper sale disparada el doble de rápido.'],
+  ['f','El daño que se ve en la ficha de Geri y John ya coincide con el real.']]},
  {v:'2.4',d:'1 nov 2026',t:'Gran lavado de cara',l:[
   ['n','Mapas con más volumen: muros más altos con sombras, arbustos con relieve, suelo con luces y sombras, y paisaje alrededor del campo (árboles, tejados o agua).'],
   ['f','Arreglados los botones que se veían cortados.'],
@@ -3282,7 +3286,7 @@ const STORY={
  thor:'El perro de La Orden. Rápido, cariñoso y muy baboso: reparte lengüetazos y persigue su pelota por todo el mapa.'
 };
 function dmgTxt(k,i,lv){const m=DMG_MUL*powMul(lv||1,false);return String(DMG[k][i]).replace(/(~?)(\d{1,3}(?:\.\d{3})+|\d{3,})/g,(s,t,n)=>t?n:(Math.round(parseInt(n.replace(/\./g,''))*m/10)*10).toLocaleString('es-ES'));}
-const DMG={xavi:['3 cartas × 420','1.500 en área + empuje'],xavo:['1.000 a larga distancia','×2 daño y tamaño durante 6 s'],geri:['760, rebota 2 veces','15% vida (+5% por rebote) + triturado'],dani:['480 + veneno 660','Nube: 380 cada 0,5 s durante 4 s'],lazuli:['820, atraviesa rivales','4 bichos × 650 que persiguen'],victhor:['620 / 700 / 780 en ciclo','Sprint + 8 disparos × 650'],sara:['1.150 + empujón','1.500 + aturde 1,1 s'],alex:['3 fichas × 380','1.700 (o bote doble 2 × 1.300)'],pelucas:['2 sobres × 520','Abrazo 1.400 + cura hasta ~1.600'],joker:['1.100 justo donde apuntas','1.900 en área + empuje'],thor:['2 lengüetazos × 560','1.100, rebota 4 veces'],john:['1.250 en cono + empuje','460 cada 0,3 s durante 3 s'],olivia:['700 en zigzag + frena al rival','1.800 en área + tufillo 220 cada 0,5 s']};
+const DMG={xavi:['3 cartas × 420','1.500 en área + empuje'],xavo:['1.000 a larga distancia','×2 daño y tamaño durante 6 s'],geri:['700, rebota hasta 9 veces','15% vida (+5% por rebote) + triturado'],dani:['480 + veneno 660','Nube: 380 cada 0,5 s durante 4 s'],lazuli:['820, atraviesa rivales','4 bichos × 650 que persiguen'],victhor:['620 / 700 / 780 en ciclo','Sprint + 8 disparos × 650'],sara:['1.150 + empujón','1.500 + aturde 1,1 s'],alex:['3 fichas × 380','1.700 (o bote doble 2 × 1.300)'],pelucas:['2 sobres × 520','Abrazo 1.400 + cura hasta ~1.600'],joker:['1.100 justo donde apuntas','1.900 en área + empuje'],thor:['2 lengüetazos × 560','1.100, rebota 4 veces'],john:['1.080 en cono + empuje','400 cada 0,3 s durante 3 s'],olivia:['700 en zigzag + frena al rival','1.800 en área + tufillo 220 cada 0,5 s']};
 let galK='xavi';
 
 
