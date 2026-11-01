@@ -3309,7 +3309,7 @@ function build3DScene(T,wrap,k,sk){
  const top=new T.Mesh(new T.CylinderGeometry(2.5,2.5,.06,48),pm(0x9a82ff));top.position.y=.01;top.receiveShadow=true;ped.add(top);sc.add(ped);
  const lights=[];for(let i=0;i<14;i++){const m=new T.Mesh(new T.SphereGeometry(.07,8,8),new T.MeshBasicMaterial({color:0xfff0a0}));sc.add(m);lights.push(m);}
  // personaje
- const fig=buildFig(T,k,sk);fig.traverse(o=>{if(o.isMesh){o.castShadow=true;}});sc.add(fig);
+ const fig=buildPuff(T,k,sk);fig.traverse(o=>{if(o.isMesh){o.castShadow=true;}});sc.add(fig);
  let ang=0,vel=.6,drag=null,jumpT=-9,run=true,last=performance.now();
  const cv=rd.domElement;
  cv.onpointerdown=e=>{drag={x:e.clientX,a:ang,m:0};vel=0;try{cv.setPointerCapture(e.pointerId);}catch(_){}};
@@ -3324,6 +3324,32 @@ function build3DScene(T,wrap,k,sk){
   rd.render(sc,cam);R3.raf=requestAnimationFrame(loop);};
  const stop=()=>{run=false;cancelAnimationFrame(R3&&R3.raf);try{rd.dispose();}catch(e){}};
  R3={stop,raf:0};loop();}
+
+/* Figura 3D "inflada" a partir de los dibujos originales: delante el dibujo de frente, detrás el de espaldas, con volumen redondeado */
+function buildPuff(T,k,sk){
+ const grab=d=>{const s=sprite(k,d,0,false,sk);const c=document.createElement('canvas');c.width=s.width;c.height=s.height;c.getContext('2d').drawImage(s,0,0);return c;};
+ const fc=grab('down'),bc=grab('up'),iw=fc.width,ih=fc.height,fd=fc.getContext('2d').getImageData(0,0,iw,ih).data;
+ const gw=90,gh=Math.round(gw*ih/iw),N=(gw+1)*(gh+1),ins=new Uint8Array(N),dist=new Float32Array(N);
+ const A=(x,y)=>{x=Math.min(iw-1,Math.max(0,Math.round(x)));y=Math.min(ih-1,Math.max(0,Math.round(y)));return fd[(y*iw+x)*4+3];};
+ for(let j=0;j<=gh;j++)for(let i=0;i<=gw;i++){const v=j*(gw+1)+i;ins[v]=A(i/gw*(iw-1),j/gh*(ih-1))>30?1:0;dist[v]=ins[v]?1e9:0;}
+ const id=(i,j)=>j*(gw+1)+i;
+ for(let j=0;j<=gh;j++)for(let i=0;i<=gw;i++){const v=id(i,j);if(!ins[v])continue;let m=dist[v];if(i>0)m=Math.min(m,dist[id(i-1,j)]+1);if(j>0)m=Math.min(m,dist[id(i,j-1)]+1);if(i>0&&j>0)m=Math.min(m,dist[id(i-1,j-1)]+1.414);if(i<gw&&j>0)m=Math.min(m,dist[id(i+1,j-1)]+1.414);dist[v]=m;}
+ for(let j=gh;j>=0;j--)for(let i=gw;i>=0;i--){const v=id(i,j);if(!ins[v])continue;let m=dist[v];if(i<gw)m=Math.min(m,dist[id(i+1,j)]+1);if(j<gh)m=Math.min(m,dist[id(i,j+1)]+1);if(i<gw&&j<gh)m=Math.min(m,dist[id(i+1,j+1)]+1.414);if(i>0&&j<gh)m=Math.min(m,dist[id(i-1,j+1)]+1.414);dist[v]=m;}
+ let dmax=1;for(let v=0;v<N;v++)if(ins[v])dmax=Math.max(dmax,dist[v]);
+ const Wm=4.2,Hm=Wm*ih/iw,depth=Wm*.3;
+ const mk=(sign,tex,mirror)=>{const pos=new Float32Array(N*3),uv=new Float32Array(N*2);
+  for(let j=0;j<=gh;j++)for(let i=0;i<=gw;i++){const v=id(i,j);const dd=ins[v]?Math.max(0,dist[v]-1)/dmax:0;const h=Math.sqrt(Math.min(1,dd*1.6))*depth;
+   pos[v*3]=(i/gw-.5)*Wm;pos[v*3+1]=(1-j/gh)*Hm;pos[v*3+2]=sign*h;uv[v*2]=mirror?1-i/gw:i/gw;uv[v*2+1]=1-j/gh;}
+  const idx=[];for(let j=0;j<gh;j++)for(let i=0;i<gw;i++){const a=id(i,j),b=id(i+1,j),c=id(i,j+1),d=id(i+1,j+1);
+   const t=(p,q,r)=>{if(ins[p]&&ins[q]&&ins[r]){if(sign>0)idx.push(p,r,q);else idx.push(p,q,r);}};t(a,b,d);t(a,d,c);}
+  const ge=new T.BufferGeometry();ge.setAttribute('position',new T.BufferAttribute(pos,3));ge.setAttribute('uv',new T.BufferAttribute(uv,2));ge.setIndex(idx);ge.computeVertexNormals();
+  const tx=new T.CanvasTexture(tex);tx.anisotropy=4;const m=new T.Mesh(ge,new T.MeshToonMaterial({map:tx,transparent:false,alphaTest:.1}));return m;};
+ const G=new T.Group(),body=new T.Group();G.add(body);G.userData.body=body;
+ // detrás: dibujo de espaldas en espejo; donde no cubre, colores del frente
+ const bk=document.createElement('canvas');bk.width=iw;bk.height=ih;const bx=bk.getContext('2d');bx.save();bx.translate(iw,0);bx.scale(-1,1);bx.drawImage(fc,0,0);bx.restore();bx.fillStyle='rgba(0,0,0,.25)';bx.globalCompositeOperation='source-atop';bx.fillRect(0,0,iw,ih);bx.globalCompositeOperation='source-over';
+ const bw=bc.width,bh=bc.height;bx.save();bx.translate(iw,0);bx.scale(-1,1);bx.drawImage(bc,(iw-bw)/2,ih-bh);bx.restore();
+ body.add(mk(1,fc,false));body.add(mk(-1,bk,true));
+ body.position.y=.05;return G;}
 function capG(T,r,h){const pts=[];for(let i=0;i<=8;i++){const a=-Math.PI/2+i/8*Math.PI/2;pts.push(new T.Vector2(Math.cos(a)*r,Math.sin(a)*r-h/2));}for(let i=0;i<=8;i++){const a=i/8*Math.PI/2;pts.push(new T.Vector2(Math.cos(a)*r,Math.sin(a)*r+h/2));}return new T.LatheGeometry(pts,20);}
 function buildFig(T,k,sk){
  const B=BR[k],L=lookOf(k,sk)||{},G=new T.Group(),col=c=>new T.Color(c||'#888');
