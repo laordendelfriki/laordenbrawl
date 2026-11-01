@@ -3295,7 +3295,7 @@ const STORY={
  lamine:'El niño prodigio de La Orden. Nunca va sin su bolsa con todos sus mazos, gana partidas que parecían perdidas y, cuando se pone serio, abre la bolsa y llueven cartas.',
  thor:'El perro de La Orden. Rápido, cariñoso y muy baboso: reparte lengüetazos y persigue su pelota por todo el mapa.'
 };
-function dmgTxt(k,i,lv){const m=DMG_MUL*powMul(lv||1,false);return String(DMG[k][i]).replace(/(~?)(\d{1,3}(?:\.\d{3})+|\d{3,})/g,(s,t,n)=>t?n:(Math.round(parseInt(n.replace(/\./g,''))*m/10)*10).toLocaleString('es-ES'));}
+function dmgTxt(k,i,lv,on){const m=DMG_MUL*powMul(lv||1,!!on);return String(DMG[k][i]).replace(/(~?)(\d{1,3}(?:\.\d{3})+|\d{3,})/g,(s,t,n)=>t?n:(Math.round(parseInt(n.replace(/\./g,''))*m/10)*10).toLocaleString('es-ES'));}
 const DMG={lamine:['1.150 en abanico + empuje','3 oleadas × 10 cartas de 520 + escudo'],xavi:['3 cartas × 420','1.500 en área + empuje'],xavo:['1.000 a larga distancia','×2 daño y tamaño durante 6 s'],geri:['700, rebota hasta 9 veces','15% vida (+5% por rebote) + triturado'],dani:['480 + veneno 660','Nube: 380 cada 0,5 s durante 4 s'],lazuli:['820, atraviesa rivales','4 bichos × 650 que persiguen'],victhor:['620 / 700 / 780 en ciclo','Sprint + 8 disparos × 650'],sara:['1.150 + empujón','1.500 + aturde 1,1 s'],alex:['3 fichas × 380','1.700 (o bote doble 2 × 1.300)'],pelucas:['2 sobres × 520','Abrazo 1.400 + cura hasta ~1.600'],joker:['1.100 justo donde apuntas','1.900 en área + empuje'],thor:['2 lengüetazos × 560','1.100, rebota 4 veces'],john:['1.080 en cono + empuje','400 cada 0,3 s durante 3 s'],olivia:['700 en zigzag + frena al rival','1.800 en área + tufillo 220 cada 0,5 s']};
 let galK='xavi';
 
@@ -3490,8 +3490,8 @@ function renderGallery(){
  const hero=document.createElement('div');hero.className='gahero';hero.insertAdjacentHTML('beforeend','<i class="gray"></i><i class="gped"></i>');hero.appendChild(portrait(k,320,eqSkin(k)));hero.className+=' r-'+rarK(k);hero.insertAdjacentHTML('beforeend',`<div><small>${esc(B.role)}</small><p class="chips">${chips(k)}</p><h3>${esc(B.n)}</h3>${ownsChar(k)?`<span class="lvp">Nivel ${lv}</span>`:`<span class="lvp lk">${LOCKI} ${CHAR_PRICE[k]} Fénix</span>`}</div>`);D.appendChild(hero);
  const st=document.createElement('div');st.className='info';
  st.innerHTML=`<p class="story">${esc(STORY[k])}</p><div class="kv"><span>Vida</span><b>${B.hp.toLocaleString('es-ES')}</b><span>Velocidad</span><b>${'★'.repeat(B.st[2])}${'☆'.repeat(5-B.st[2])}</b><span>Alcance</span><b>${'★'.repeat(B.st[1])}${'☆'.repeat(5-B.st[1])}</b></div>
- <p><span class="k">Ataque · ${esc(B.atkN)}</span><br>${esc(B.atkD)}<br><b class="dmg">Daño (nivel ${lv}): ${dmgTxt(k,0,lv)}</b></p>
- <p><span class="k">Súper · ${esc(B.supN)}</span><br>${esc(B.supD)}<br><b class="dmg">Súper (nivel ${lv}): ${dmgTxt(k,1,lv)}</b></p>
+ <p><span class="k">Ataque · ${esc(B.atkN)}</span><br>${esc(B.atkD)}<br><b class="dmg">Daño (nivel ${lv}): ${dmgTxt(k,0,lv)}${lv>1&&dmgTxt(k,0,lv)!==dmgTxt(k,0,lv,1)?` <small>(online: ${dmgTxt(k,0,lv,1)})</small>`:''}</b></p>
+ <p><span class="k">Súper · ${esc(B.supN)}</span><br>${esc(B.supD)}<br><b class="dmg">Súper (nivel ${lv}): ${dmgTxt(k,1,lv)}${lv>1&&dmgTxt(k,1,lv)!==dmgTxt(k,1,lv,1)?` <small>(online: ${dmgTxt(k,1,lv,1)})</small>`:''}</b></p>
  <p><span class="k">Gadget · nivel ${GAD_LV}</span><br><b>${esc(GAD[k][0])}.</b> ${esc(GAD[k][1])}</p>`;D.appendChild(st);
  {const tb=mkBtn('hero',`🎯 Probar en el campo de entrenamiento`,()=>{pick=k;mode='train';fromGal=true;startSolo();});tb.classList.add('trybtn');D.insertBefore(tb,D.children[1]);}
  const sk=Object.entries(SKINS).filter(([,S])=>S.k===k);
