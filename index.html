@@ -1213,6 +1213,9 @@ const BR={
  john:{n:'John',role:'El papá del carrito',stroller:true,hp:5400,spd:3.0,reload:1.3,supCost:2700,supRange:2,atkRange:3.2,
   look:LOOK({face:{brow:'up',mouth:'smile',lids:.3},eyeH:.8,style:'short',hair:'#141016',skin:'#b07a50',eye:'#2a1a10',top:'#2a9a8a',trim:'#ffffff',pants:'#2a2a3a',shoes:'#ffffff',shoea:'#2a9a8a'}),
   atkN:'Carritazo',atkD:'Empuja el carrito con Daniel dentro y barre todo lo que tiene delante, en forma de cono.',supN:'¡Peonza con Daniel!',supD:'Coge a Daniel en brazos y gira como una peonza durante 3 segundos, golpeando a todos los de alrededor.',st:[5,1,2]},
+ lamine:{n:'Lamine Pajal',role:'El niño prodigio',hp:4500,spd:3.2,reload:1.15,supCost:2800,supRange:4,atkRange:3,
+  look:LOOK({face:{brow:'flat',mouth:'smirk',lids:.25},style:'messy',hair:'#3a2418',glasses:'#1a2244',stubble:true,mous:'#3a2418',top:'#9ab4cc',trim:'#7a94ac',pants:'#2a2e3a',shoes:'#1a1a22',shoea:'#ffffff',pack:'#1a1a22',packa:'#c8a050',skin:'#f4d2b4',eye:'#4a5a6a'}),
+  atkN:'Bolsazo de mazos',atkD:'Da un buen golpe con su bolsa llena de mazos: barre en abanico a todos los que tiene delante.',supN:'¡Mazo prodigio!',supD:'Abre la bolsa y salen disparadas tres oleadas de cartas en espiral a su alrededor. Mientras tanto, un escudo de fundas le protege.',st:[4,2,3]},
  olivia:{n:'Olivia',role:'La bebé de La Orden',baby:true,small:true,hp:4000,spd:3.35,reload:1.2,supCost:2700,supRange:7,atkRange:7,lobSup:true,look:null,
   atkN:'Chupete babeado',atkD:'Lanza chupetes llenos de babas que avanzan en zigzag y frenan al rival.',supN:'¡Pañal bomba!',supD:'Toca para soltarlo donde está o arrastra para lanzarlo: explota y deja un tufillo que hace daño.',st:[2,4,4]},
  keeper:{n:'Portero',role:'Portero',npc:true,hp:3200,spd:2.7,reload:1,supCost:1e12,supRange:0,atkRange:0,st:[0,0,0],
@@ -1224,7 +1227,7 @@ const ORDER=Object.keys(BR).filter(k=>!BR[k].npc);
 /* ---------- Clase y rareza ---------- */
 const CLS={dano:['Daño','⚔️'],tirador:['Tirador','🎯'],lanzador:['Lanzador','💣'],control:['Control','🌀'],asesino:['Asesino','🗡️'],tanque:['Tanque','🛡️'],sanador:['Sanador','💚']};
 const RAR={comun:['Común',1],raro:['Raro',2],epico:['Épico',3],mitico:['Mítico',4],legendario:['Legendario',5],ultra:['Ultra legendaria',6]};
-const CR={john:['tanque','mitico'],olivia:['control','ultra'],xavi:['dano','comun'],xavo:['tirador','comun'],dani:['control','raro'],lazuli:['control','raro'],joker:['lanzador','raro'],geri:['dano','epico'],victhor:['asesino','epico'],alex:['tirador','epico'],sara:['tanque','legendario'],pelucas:['sanador','mitico'],thor:['asesino','legendario']};
+const CR={lamine:['dano','legendario'],john:['tanque','mitico'],olivia:['control','ultra'],xavi:['dano','comun'],xavo:['tirador','comun'],dani:['control','raro'],lazuli:['control','raro'],joker:['lanzador','raro'],geri:['dano','epico'],victhor:['asesino','epico'],alex:['tirador','epico'],sara:['tanque','legendario'],pelucas:['sanador','mitico'],thor:['asesino','legendario']};
 ORDER.sort((a,b)=>RAR[CR[a][1]][1]-RAR[CR[b][1]][1]);
 const clsOf=k=>CLS[CR[k][0]],rarOf=k=>RAR[CR[k][1]],rarK=k=>CR[k][1];
 const chips=k=>`<span class="chip cls">${clsOf(k)[1]} ${clsOf(k)[0]}</span><span class="chip rar r-${rarK(k)}">${rarOf(k)[0]}</span>`;
@@ -1271,10 +1274,10 @@ const SKINS={
 const LOOKC={};
 /* ---------- Progresión: luchadores, niveles, fuerza, gadgets, cajas ---------- */
 const FREE=['xavi','xavo','joker','dani','lazuli'];
-const CHAR_PRICE={john:700,olivia:1500,geri:500,victhor:600,alex:600,sara:800,pelucas:700,thor:800};
+const CHAR_PRICE={lamine:1000,john:700,olivia:1500,geri:500,victhor:600,alex:600,sara:800,pelucas:700,thor:800};
 const LV_COST=[0,0,30,50,80,120,170,230],MAXLV=7,GAD_LV=3,BOX_DAY=8;
 const FZ_PACKS=[[50,100],[120,220],[300,500]];
-const GAD={xavi:['Oferta flash','Se cura 800 de vida y corre más rápido 2 segundos.'],xavo:['Lata de reserva','Recarga toda la munición al instante.'],geri:['Lanzador','Un acelerón corto hacia donde se mueve o apunta.'],dani:['Charco tóxico','Deja un charco de veneno a sus pies.'],lazuli:['Caparazón de bicho','Un escudo que bloquea todo el daño durante 1,5 segundos.'],victhor:['Combo','Carga al instante un 35 % de la súper.'],sara:['Antojo','Se come algo rico y se cura 1.500.'],alex:['Ficha de la suerte','Durante 3 segundos todo su daño es doble.'],pelucas:['Abrazo de grupo','Cura 700 a él y a sus compañeros cercanos.'],joker:['Turbo','Corre mucho más rápido 3 segundos.'],thor:['Hueso','Se cura 900 y sale corriendo 1,5 segundos.'],john:['Carrito turbo','Sale disparado con el carrito y arrolla a quien pille.'],olivia:['Berrinche','Llora tan fuerte que aturde 1 segundo a los rivales de alrededor.']};
+const GAD={lamine:['Mazo de la suerte','Recarga toda la munición y corre más rápido 2 segundos.'],xavi:['Oferta flash','Se cura 800 de vida y corre más rápido 2 segundos.'],xavo:['Lata de reserva','Recarga toda la munición al instante.'],geri:['Lanzador','Un acelerón corto hacia donde se mueve o apunta.'],dani:['Charco tóxico','Deja un charco de veneno a sus pies.'],lazuli:['Caparazón de bicho','Un escudo que bloquea todo el daño durante 1,5 segundos.'],victhor:['Combo','Carga al instante un 35 % de la súper.'],sara:['Antojo','Se come algo rico y se cura 1.500.'],alex:['Ficha de la suerte','Durante 3 segundos todo su daño es doble.'],pelucas:['Abrazo de grupo','Cura 700 a él y a sus compañeros cercanos.'],joker:['Turbo','Corre mucho más rápido 3 segundos.'],thor:['Hueso','Se cura 900 y sale corriendo 1,5 segundos.'],john:['Carrito turbo','Sale disparado con el carrito y arrolla a quien pille.'],olivia:['Berrinche','Llora tan fuerte que aturde 1 segundo a los rivales de alrededor.']};
 const powMul=(lv,online)=>1+Math.min(online?.2:.42,.07*((lv||1)-1));
 const DMG_MUL=.68; // daño base más bajo: se recupera subiendo de nivel en la tienda
 // el día de cajas empieza a las 18:00 (hora local): restamos 18 h antes de mirar la fecha
@@ -1594,6 +1597,7 @@ const ATK={
  pelucas:(u,a)=>[-.09,.09].forEach(o=>shot(u,a+o,{spd:12,range:6.5,dmg:520,r:.26,kind:'pack'})),
  joker:(u,a,d)=>lob(u,a,clamp(d||5,1.5,7),'wrench',p=>{for(const o of G.units)if(o.team!==u.team&&!o.dead&&hyp(o.x-p.tx,o.y-p.ty)<(o.safe?1.6:1))hurt(o,1100,u);fxBurst(p.tx,p.ty,0,'#c8ccd8',8,2,.35,.08);},.28),
  john:(u,a)=>{const hs=new Set();[-.42,-.21,0,.21,.42].forEach(o=>shot(u,a+o,{spd:13,range:3.2,dmg:1080,r:.45,pierce:true,kind:'push',kb:5,hit:hs,dmgFix:1}));u.dash={vx:Math.cos(a)*7,vy:Math.sin(a)*7,t:.12,dmg:0,hit:new Set()};},
+ lamine:(u,a)=>{const hs=new Set();[-.5,-.25,0,.25,.5].forEach(o=>shot(u,a+o,{spd:12,range:3,dmg:1150,r:.42,pierce:true,kind:'pack',kb:3,hit:hs}));},
  olivia:(u,a)=>shot(u,a,{spd:9.5,range:7,dmg:700,r:.3,kind:'chupete',zig:1,onHit:(o)=>{if(!o.safe)o.slowT=1.3;}}),
  thor:(u,a)=>{shot(u,a,{spd:11,range:2.6,dmg:560,r:.42,pierce:true,kind:'lick'});after(.15,()=>{if(!u.dead)shot(u,a,{spd:11,range:2.6,dmg:560,r:.42,pierce:true,kind:'lick'});});}
 };
@@ -1609,6 +1613,7 @@ const SUP={
  pelucas:(u,a)=>{u.dash={vx:Math.cos(a)*13,vy:Math.sin(a)*13,t:.42,dmg:1400,hit:new Set(),hug:1};},
  joker:(u,a,d)=>lob(u,a,clamp(d||6,2,8),'moto',p=>{boom(p.tx,p.ty,2.4,1900,u.team,u,5.5,0,'#ff6a2a');fxBurst(p.tx,p.ty,.3,'#1a1a1a',14,3,.8,.16);fxText(p.tx,p.ty,1.8,'¡BOOM!','#ffbf3c',1);},.45),
  john:(u)=>{u.spinT=3;u.spdT=Math.max(u.spdT||0,3);G.zones.push({x:u.x,y:u.y,r:1.9,t:3,tick:0,every:.3,dmg:400,team:u.team,owner:u,follow:u,kind:'spin'});fxText(u.x,u.y,2.2,'¡A GIRAR!','#7ad8ff',1);},
+ lamine:(u)=>{u.shield=1.4;fxText(u.x,u.y,2.2,'¡MAZO PRODIGIO!','#ffd23a',1);[0,.35,.7].forEach((t0,w)=>after(t0,()=>{if(u.dead||G.phase!=='play')return;for(let i=0;i<10;i++)shot(u,i/10*TAU+w*.31,{spd:11,range:5.5,dmg:520,r:.28,kind:'card'});fxRing(u.x,u.y,1.2,'#ffd23a');}));},
  olivia:(u,a,d)=>{const dd=d<1?0.01:clamp(d,1.5,7);lob(u,a,dd,'panal',p=>{boom(p.tx,p.ty,2.5,1800,u.team,u,4,0,'#c8a060');G.zones.push({x:p.tx,y:p.ty,r:2,t:2.5,tick:.5,every:.5,dmg:220,team:u.team,owner:u,kind:'stink'});fxText(p.tx,p.ty,1.8,'¡PUAJ!','#c8a060',1);},dd<1?.7:.6);},
  thor:(u,a)=>shot(u,a,{spd:12,range:16,dmg:1100,r:.48,pierce:true,bounce:4,kind:'bigball',kb:4})
 };
@@ -1627,6 +1632,7 @@ function gadget(u){
   case 'pelucas':for(const m of G.units)if(m.team===u.team&&!m.dead&&!m.safe&&hyp(m.x-u.x,m.y-u.y)<3.5)heal(m,700);fxRing(u.x,u.y,3.5,'#ff8ab8');break;
   case 'joker':u.spdT=3;break;
   case 'thor':heal(u,900);u.spdT=1.5;break;
+  case 'lamine':u.ammo=3;u.spdT=2;break;
   case 'john':{const mv=hyp(u.inp.mx,u.inp.my)>.2,a=mv?ang(u.inp.mx,u.inp.my):u.aim;u.dash={vx:Math.cos(a)*13,vy:Math.sin(a)*13,t:.32,dmg:600,hit:new Set()};break;}
   case 'olivia':for(const o of enemies(u))if(hyp(o.x-u.x,o.y-u.y)<2.8)o.stun=Math.max(o.stun,1);fxRing(u.x,u.y,2.8,'#7ad8ff');fxText(u.x,u.y,2.2,'¡BUAAAA!','#7ad8ff',1);break;
  }
@@ -2686,6 +2692,7 @@ const PHR={
  joker:[['Pásame la del doce','Esto lo arreglo yo'],['¡Ahí va la moto!'],['Avería total','¡Al taller!']],
  john:[['¡Daniel, agárrate!','Paso, que llevo carrito'],['¡Peonza familiar!','¡Agárrate, Daniel!'],['Daniel dice adiós','¡Atropello con carrito!']],
  olivia:[['¡Ta-ta-ta!','¿Gu-gu?','¡Babas!'],['¡Pañal va!'],['¡Ji, ji, ji!','¡Ajó!']],
+ lamine:[['Traigo todos los mazos','¿Echamos una partida?','Esto ya lo tengo ganado'],['¡Mazo prodigio!','¡Robo carta… y gano!'],['GG, mejora el mazo','¡Jaque mate, digo… game!']],
  thor:[['¡Guau, guau!','¡Guau!'],['¡GUAAAU!'],['¡Guau, guau, crítico!']]
 };
 const SAY_DUR=2.4;
@@ -2819,6 +2826,8 @@ $('welGo').onclick=()=>{if(welBusy)return;welBusy=true;$('welOv').hidden=true;
 setInterval(welcomeCheck,1500);
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
+ {v:'2.6',d:'1 nov 2026',t:'Llega Lamine Pajal',l:[
+  ['n','Nuevo luchador LEGENDARIO: <b>Lamine Pajal, el niño prodigio</b>. Golpea en abanico con su bolsa llena de mazos y su súper, <b>¡Mazo prodigio!</b>, suelta tres oleadas de cartas en espiral mientras le protege un escudo. 1.000 Fénix en la tienda.']]},
  {v:'2.5',d:'1 nov 2026',t:'Geri al máximo',l:[
   ['c','<b>Geri</b>: su peonza básica recorre el doble de campo y rebota hasta 9 veces.'],
   ['c','<b>Geri</b>: la peonza gigante del súper sale disparada el doble de rápido.'],
@@ -3283,10 +3292,11 @@ const STORY={
  joker:'Chilvi, el mecánico de pelo platino. Lanza llaves inglesas con puntería de taller y, cuando se enfada de verdad, tira la moto.',
  john:'Llegó de Filipinas y no da un paso sin Daniel, su hijo, en el carrito. Lo empuja con tanta fuerza que barre a quien se ponga delante, y si se enfada, coge a Daniel y gira como una peonza.',
  olivia:'La más pequeña de La Orden y la que de verdad manda. Llega en diciembre gateando a toda velocidad, con su chupete lleno de babas y un pañal que mejor no abrir.',
+ lamine:'El niño prodigio de La Orden. Nunca va sin su bolsa con todos sus mazos, gana partidas que parecían perdidas y, cuando se pone serio, abre la bolsa y llueven cartas.',
  thor:'El perro de La Orden. Rápido, cariñoso y muy baboso: reparte lengüetazos y persigue su pelota por todo el mapa.'
 };
 function dmgTxt(k,i,lv){const m=DMG_MUL*powMul(lv||1,false);return String(DMG[k][i]).replace(/(~?)(\d{1,3}(?:\.\d{3})+|\d{3,})/g,(s,t,n)=>t?n:(Math.round(parseInt(n.replace(/\./g,''))*m/10)*10).toLocaleString('es-ES'));}
-const DMG={xavi:['3 cartas × 420','1.500 en área + empuje'],xavo:['1.000 a larga distancia','×2 daño y tamaño durante 6 s'],geri:['700, rebota hasta 9 veces','15% vida (+5% por rebote) + triturado'],dani:['480 + veneno 660','Nube: 380 cada 0,5 s durante 4 s'],lazuli:['820, atraviesa rivales','4 bichos × 650 que persiguen'],victhor:['620 / 700 / 780 en ciclo','Sprint + 8 disparos × 650'],sara:['1.150 + empujón','1.500 + aturde 1,1 s'],alex:['3 fichas × 380','1.700 (o bote doble 2 × 1.300)'],pelucas:['2 sobres × 520','Abrazo 1.400 + cura hasta ~1.600'],joker:['1.100 justo donde apuntas','1.900 en área + empuje'],thor:['2 lengüetazos × 560','1.100, rebota 4 veces'],john:['1.080 en cono + empuje','400 cada 0,3 s durante 3 s'],olivia:['700 en zigzag + frena al rival','1.800 en área + tufillo 220 cada 0,5 s']};
+const DMG={lamine:['1.150 en abanico + empuje','3 oleadas × 10 cartas de 520 + escudo'],xavi:['3 cartas × 420','1.500 en área + empuje'],xavo:['1.000 a larga distancia','×2 daño y tamaño durante 6 s'],geri:['700, rebota hasta 9 veces','15% vida (+5% por rebote) + triturado'],dani:['480 + veneno 660','Nube: 380 cada 0,5 s durante 4 s'],lazuli:['820, atraviesa rivales','4 bichos × 650 que persiguen'],victhor:['620 / 700 / 780 en ciclo','Sprint + 8 disparos × 650'],sara:['1.150 + empujón','1.500 + aturde 1,1 s'],alex:['3 fichas × 380','1.700 (o bote doble 2 × 1.300)'],pelucas:['2 sobres × 520','Abrazo 1.400 + cura hasta ~1.600'],joker:['1.100 justo donde apuntas','1.900 en área + empuje'],thor:['2 lengüetazos × 560','1.100, rebota 4 veces'],john:['1.080 en cono + empuje','400 cada 0,3 s durante 3 s'],olivia:['700 en zigzag + frena al rival','1.800 en área + tufillo 220 cada 0,5 s']};
 let galK='xavi';
 
 
