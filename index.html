@@ -197,8 +197,8 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
 .topback{position:sticky;top:0;align-self:flex-start;z-index:5;display:inline-flex;align-items:center;gap:4px;flex:none;margin:-6px 0 -4px;border:3px solid var(--out);border-radius:14px;padding:5px 12px 5px 8px;background:linear-gradient(#8a7aff,#4430b8);color:#fff;font:400 1rem var(--f-disp);text-shadow:var(--txt-out);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 4px 0 var(--out);cursor:pointer}
 .topback:active{transform:translateY(3px);box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 1px 0 var(--out)}
 .topback:focus-visible{outline:3px solid #fff;outline-offset:2px}
-#emoBtn{position:absolute;top:10px;left:calc(92px + env(safe-area-inset-left,0px));z-index:7;width:44px;height:40px;border:3px solid var(--out);border-radius:14px;background:linear-gradient(#ffe066,#ff9a1e);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 4px 0 var(--out);display:grid;place-items:center;cursor:pointer;touch-action:none;padding:0}
-#emoPanel{position:absolute;top:60px;left:calc(10px + env(safe-area-inset-left,0px));z-index:8;display:grid;grid-template-columns:repeat(3,58px);gap:6px;padding:8px;border:3px solid var(--out);border-radius:16px;background:rgba(26,18,60,.92);box-shadow:0 5px 0 var(--out);touch-action:none}
+#emoBtn{position:absolute;top:10px;right:calc(66px + env(safe-area-inset-right,0px));z-index:7;width:44px;height:40px;border:3px solid var(--out);border-radius:14px;background:linear-gradient(#ffe066,#ff9a1e);box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 4px 0 var(--out);display:grid;place-items:center;cursor:pointer;touch-action:none;padding:0}
+#emoPanel{position:absolute;top:60px;right:calc(10px + env(safe-area-inset-right,0px));z-index:8;display:grid;grid-template-columns:repeat(3,58px);gap:6px;padding:8px;border:3px solid var(--out);border-radius:16px;background:rgba(26,18,60,.92);box-shadow:0 5px 0 var(--out);touch-action:none}
 #emoPanel button{width:58px;height:58px;padding:2px;border:2px solid rgba(255,255,255,.25);border-radius:12px;background:rgba(255,255,255,.1);cursor:pointer}
 #emoPanel button:active{transform:scale(.92)}
 #emoPanel img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
@@ -240,6 +240,9 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
 .pbest{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.pbest div{display:flex;flex-direction:column;align-items:center;padding:4px;border-radius:14px;background:radial-gradient(circle at 50% 35%,#ffd23a,#ff5ac8 60%,#5a2ad0);border:3px solid var(--out)}.pbest canvas{width:72px;height:72px}.pbest b{font:400 .95rem var(--f-disp);text-shadow:var(--txt-out)}.pbest small{font-size:.66rem;font-weight:900}
 .pact{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}.pact .btn{font-size:1rem;padding:7px 14px}.pact .btn.cmpb{background:linear-gradient(#ff9a8a 0%,#ff5a4a 48%,#e8323a 52%,#b01e2a 100%)}.frok{font:400 1rem var(--f-disp);color:#7aff8a;text-shadow:var(--txt-out)}
 #profOv #profClose{align-self:center}
+#welOv{position:fixed;inset:0;z-index:87;background:rgba(10,6,30,.82);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}#welOv[hidden]{display:none}
+#welOv .wl{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px;padding:18px;border:3px solid var(--out);border-radius:22px;background:radial-gradient(circle at 50% 0%,#ffd23a,#ff5ac8 40%,#5a2ad0 85%);box-shadow:0 8px 0 var(--out);text-align:center}
+#welOv h2{margin:0}#welOv p{margin:0;font-weight:900}#welOv ul{list-style:none;margin:0;padding:10px;display:flex;flex-direction:column;gap:6px;background:rgba(26,18,38,.5);border-radius:14px;font-weight:800;text-align:left}
 #toast{position:absolute;left:50%;top:64px;transform:translateX(-50%);z-index:30;background:#2b1d63;border:3px solid var(--out);border-radius:16px;padding:9px 16px;font-weight:900;font-size:.88rem;max-width:90%;text-align:center;box-shadow:0 5px 0 var(--out)}
 @media (min-aspect-ratio:23/20){#tip{display:none}}
 #tip{position:absolute;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));text-align:center;font-size:.72rem;font-weight:900;color:rgba(255,255,255,.8);text-shadow:0 2px 0 var(--out);pointer-events:none;z-index:5}
@@ -478,6 +481,7 @@ h2{font:400 1.8rem var(--f-disp);margin:6px 0 0;color:#fff;text-shadow:var(--txt
  <div id="toast" hidden></div>
  <div id="unlkOv" hidden role="dialog" aria-label="Desbloqueo"><div class="rays"></div><div class="ub"><small id="unlkK"></small><canvas id="unlkCv" width="260" height="260"></canvas><b id="unlkN"></b><em id="unlkR"></em><p id="unlkP"></p><button class="btn" id="unlkOk" type="button">¡Genial!</button></div></div>
  <div id="profOv" hidden role="dialog" aria-label="Perfil"><div class="pcard"><div id="profBox"></div><button class="btn sec" id="profClose" type="button">Cerrar</button></div></div>
+ <div id="welOv" hidden role="dialog" aria-label="Regalo de bienvenida"><div class="wl"><h2>¡Bienvenido a La Orden!</h2><p>Tienes un regalo esperándote:</p><ul><li>⚡ <b>800 de Fuerza</b> para subir de nivel</li><li>🎁 <b>Un personaje gratis</b> al azar</li><li>✨ <b>Una skin</b> al azar</li></ul><button class="btn gift" id="welGo" type="button">¡Recoger!</button></div></div>
  <div id="invOv" hidden role="dialog" aria-label="Invitación"><div class="wl"><h2>¡Te invitan!</h2><p id="invTxt"></p><div class="row"><button class="btn sec" id="invNo" type="button">Ahora no</button><button class="btn" id="invYes" type="button">Unirme</button></div></div></div>
  <div id="instOv" hidden role="dialog" aria-label="Instalar app"><div class="wl"><h2>Instalar La Orden Brawl</h2><div id="instTxt"></div><button class="btn" id="instOk" type="button">Entendido</button></div></div>
  <div id="rotOv" hidden role="dialog" aria-label="Gira la pantalla"><div class="ph"></div><h2 id="rotT">¡Gira el móvil!</h2><p id="rotP">La Orden Brawl se juega mejor en horizontal y a pantalla completa.</p><button class="btn" id="rotFs" type="button">Pantalla completa</button><button class="no" id="rotNo" type="button">Seguir así</button></div>
@@ -2285,7 +2289,7 @@ function cardGrid(el,sel,onPick,taken,tryAll){
   b.onclick=()=>{if(!own){shopTab='chars';screen('sShop');renderShop();toast(`Desbloquea a ${BR[k].n} en la tienda.`);return;}onPick(k);};el.appendChild(b);}
 }
 function infoHtml(k){const B=BR[k],bar=v=>`<em><i style="width:${v*20}%"></i></em>`,lv=lvOf(k);
- return `<h3>${B.n} · ${B.role}</h3><p class="chips">${chips(k)}</p><p class="lvl"><b>Nivel ${lv}</b> · ${lv>1?`+${Math.round((powMul(lv,false)-1)*100)} % de vida y daño (online +${Math.round((powMul(lv,true)-1)*100)} %)`:'sube de nivel en la tienda, sección Fuerza'}</p><div class="bars"><span>Vida</span>${bar(B.st[0])}<span>Alcance</span>${bar(B.st[1])}<span>Velocidad</span>${bar(B.st[2])}</div><p><span class="k">Ataque</span><br><b>${B.atkN}.</b> ${B.atkD}</p><p><span class="k">Súper</span><br><b>${B.supN}.</b> ${B.supD}</p><p><span class="k">Gadget · nivel ${GAD_LV}${lv>=GAD_LV?'':' (bloqueado)'}</span><br><b>${GAD[k][0]}.</b> ${GAD[k][1]} 3 usos por partida.</p>`;}
+ return `<h3>${B.n} · ${B.role}</h3><p class="chips">${chips(k)}</p><p class="lvl"><b>Nivel ${lv}</b> · ${lv>1?`+${Math.round((powMul(lv,false)-1)*100)} % de vida y daño (online +${Math.round((powMul(lv,true)-1)*100)} %)`:'sube de nivel en la tienda, sección Fuerza'}</p><div class="bars"><span>Vida</span>${bar(B.st[0])}<span>Alcance</span>${bar(B.st[1])}<span>Velocidad</span>${bar(B.st[2])}</div><p><span class="k">Ataque</span><br><b>${B.atkN}.</b> ${B.atkD}</p><p><span class="k">Súper</span><br><b>${B.supN}.</b> ${B.supD}</p><p class="dmg"><b>Daño ataque:</b> ${dmgTxt(k,0,lv)}<br><b>Daño súper:</b> ${dmgTxt(k,1,lv)}</p><p><span class="k">Gadget · nivel ${GAD_LV}${lv>=GAD_LV?'':' (bloqueado)'}</span><br><b>${GAD[k][0]}.</b> ${GAD[k][1]} 3 usos por partida.</p>`;}
 function skinSel(el,k,after){
  const W=wallet(),mine=Object.entries(SKINS).filter(([,S])=>S.k===k);el.innerHTML='';el.hidden=!mine.length;if(!mine.length)return;
  const h=document.createElement('span');h.className='k';h.textContent='Aspecto';el.appendChild(h);
@@ -2737,8 +2741,23 @@ function renderProfile(id,P){const box=$('profBox');
   else if(a==='inv'||a==='invr'){$('profOv').hidden=true;inviteFriend(id,a==='invr');}});}
 $('profClose').onclick=()=>{$('profOv').hidden=true;profId=null;};
 $('profOv').addEventListener('click',e=>{if(e.target.id==='profOv'){$('profOv').hidden=true;profId=null;}});
+
+/* ================= Regalo de bienvenida ================= */
+let welBusy=false;
+function welcomeCheck(){if(welBusy||!$('welOv')||!$('welOv').hidden||state!=='menu'||$('sTitle').hidden)return;
+ if(DB&&UID&&!(PROF_LOADED&&PROF))return;const P=cloudOn()?PROF:(save.local||{});if(P&&P.welc)return;$('welOv').hidden=false;}
+$('welGo').onclick=()=>{if(welBusy)return;welBusy=true;$('welOv').hidden=true;
+ const W=wallet(),own=k=>FREE.includes(k)||W.chars.includes(k);const lc=ORDER.filter(k=>!own(k));const ch=lc.length?lc[Math.floor(Math.random()*lc.length)]:null;
+ const sk=Object.keys(SKINS).filter(id=>!W.owned.includes(id)&&(own(SKINS[id].k)||SKINS[id].k===ch)&&!SKINS[id].excl&&!SKINS[id].gift);const s=sk.length?sk[Math.floor(Math.random()*sk.length)]:null;
+ saveWallet(P=>{P.welc=1;P.fz=(P.fz||0)+800;P.chars=Array.isArray(P.chars)?P.chars:[];P.owned=Array.isArray(P.owned)?P.owned:[];if(ch&&!P.chars.includes(ch))P.chars.push(ch);else if(!ch)P.fenix=(P.fenix||0)+500;if(s&&!P.owned.includes(s))P.owned.push(s);else if(!s)P.fenix=(P.fenix||0)+300;});
+ toast('¡+800 de Fuerza de bienvenida!');if(ch)unlockShow({kind:'char',k:ch});if(s)unlockShow({kind:'skin',k:SKINS[s].k,sk:s});welBusy=false;};
+setInterval(welcomeCheck,1500);
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
+ {v:'2.3',d:'1 nov 2026',t:'Regalo de bienvenida',l:[
+  ['n','<b>Regalo de bienvenida</b> para todos: 800 de Fuerza, un personaje gratis al azar y una skin al azar.'],
+  ['n','En la elección de personaje y en Personajes ves el <b>daño real</b> del ataque y del súper según tu nivel.'],
+  ['c','El botón de emotes en partida pasa al lado derecho.']]},
  {v:'2.2',d:'29 oct 2026',t:'Olivia Suprema',l:[
   ['n','Skin única <b>Olivia Suprema</b>: corona de oro, capa real y chupete dorado. Solo se consigue con un código de La Orden del Friki.']]},
  {v:'2.1',d:'29 oct 2026',t:'Perfiles',l:[
@@ -3187,7 +3206,8 @@ const STORY={
  olivia:'La más pequeña de La Orden y la que de verdad manda. Llega en diciembre gateando a toda velocidad, con su chupete lleno de babas y un pañal que mejor no abrir.',
  thor:'El perro de La Orden. Rápido, cariñoso y muy baboso: reparte lengüetazos y persigue su pelota por todo el mapa.'
 };
-const DMG={xavi:['3 cartas × 420','1.500 en área + empuje'],xavo:['1.000 a larga distancia','×2 daño y tamaño durante 6 s'],geri:['760, rebota 2 veces','15% vida (+5% por rebote) + triturado'],dani:['480 + veneno 660','Nube: 380 cada 0,5 s durante 4 s'],lazuli:['820, atraviesa rivales','4 bichos × 650 que persiguen'],victhor:['620 / 700 / 780 en ciclo','Sprint + 8 disparos × 650'],sara:['1.150 + empujón','1.500 + aturde 1,1 s'],alex:['3 fichas × 380','1.700 (o bote doble 2 × 1.300)'],pelucas:['2 sobres × 520','Abrazo 1.400 + cura hasta 1.600'],joker:['1.100 justo donde apuntas','1.900 en área + empuje'],thor:['2 lengüetazos × 560','1.100, rebota 4 veces'],john:['1.250 en cono + empuje','460 cada 0,3 s durante 3 s'],olivia:['700 en zigzag + frena al rival','1.800 en área + tufillo 220 cada 0,5 s']};
+function dmgTxt(k,i,lv){const m=DMG_MUL*powMul(lv||1,false);return String(DMG[k][i]).replace(/(~?)(\d{1,3}(?:\.\d{3})+|\d{3,})/g,(s,t,n)=>t?n:(Math.round(parseInt(n.replace(/\./g,''))*m/10)*10).toLocaleString('es-ES'));}
+const DMG={xavi:['3 cartas × 420','1.500 en área + empuje'],xavo:['1.000 a larga distancia','×2 daño y tamaño durante 6 s'],geri:['760, rebota 2 veces','15% vida (+5% por rebote) + triturado'],dani:['480 + veneno 660','Nube: 380 cada 0,5 s durante 4 s'],lazuli:['820, atraviesa rivales','4 bichos × 650 que persiguen'],victhor:['620 / 700 / 780 en ciclo','Sprint + 8 disparos × 650'],sara:['1.150 + empujón','1.500 + aturde 1,1 s'],alex:['3 fichas × 380','1.700 (o bote doble 2 × 1.300)'],pelucas:['2 sobres × 520','Abrazo 1.400 + cura hasta ~1.600'],joker:['1.100 justo donde apuntas','1.900 en área + empuje'],thor:['2 lengüetazos × 560','1.100, rebota 4 veces'],john:['1.250 en cono + empuje','460 cada 0,3 s durante 3 s'],olivia:['700 en zigzag + frena al rival','1.800 en área + tufillo 220 cada 0,5 s']};
 let galK='xavi';
 function renderGallery(){
  const g=$('gaGrid');g.innerHTML='';
@@ -3196,8 +3216,8 @@ function renderGallery(){
  const hero=document.createElement('div');hero.className='gahero';hero.appendChild(portrait(k,320,eqSkin(k)));hero.className+=' r-'+rarK(k);hero.insertAdjacentHTML('beforeend',`<div><small>${esc(B.role)}</small><p class="chips">${chips(k)}</p><h3>${esc(B.n)}</h3>${ownsChar(k)?`<span class="lvp">Nivel ${lv}</span>`:`<span class="lvp lk">${LOCKI} ${CHAR_PRICE[k]} Fénix</span>`}</div>`);D.appendChild(hero);
  const st=document.createElement('div');st.className='info';
  st.innerHTML=`<p class="story">${esc(STORY[k])}</p><div class="kv"><span>Vida</span><b>${B.hp.toLocaleString('es-ES')}</b><span>Velocidad</span><b>${'★'.repeat(B.st[2])}${'☆'.repeat(5-B.st[2])}</b><span>Alcance</span><b>${'★'.repeat(B.st[1])}${'☆'.repeat(5-B.st[1])}</b></div>
- <p><span class="k">Ataque · ${esc(B.atkN)}</span><br>${esc(B.atkD)}<br><b class="dmg">Daño: ${DMG[k][0]}</b></p>
- <p><span class="k">Súper · ${esc(B.supN)}</span><br>${esc(B.supD)}<br><b class="dmg">${DMG[k][1]}</b></p>
+ <p><span class="k">Ataque · ${esc(B.atkN)}</span><br>${esc(B.atkD)}<br><b class="dmg">Daño (nivel ${lv}): ${dmgTxt(k,0,lv)}</b></p>
+ <p><span class="k">Súper · ${esc(B.supN)}</span><br>${esc(B.supD)}<br><b class="dmg">Súper (nivel ${lv}): ${dmgTxt(k,1,lv)}</b></p>
  <p><span class="k">Gadget · nivel ${GAD_LV}</span><br><b>${esc(GAD[k][0])}.</b> ${esc(GAD[k][1])}</p>`;D.appendChild(st);
  {const tb=mkBtn('hero',`🎯 Probar en el campo de entrenamiento`,()=>{pick=k;mode='train';fromGal=true;startSolo();});tb.classList.add('trybtn');D.insertBefore(tb,D.children[1]);}
  const sk=Object.entries(SKINS).filter(([,S])=>S.k===k);
