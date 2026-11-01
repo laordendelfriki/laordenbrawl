@@ -3312,12 +3312,17 @@ function galAnim(cv,k,sk,hero){if(GALT)cancelAnimationFrame(GALT);const c=cv.get
   // sombra del personaje (se encoge al saltar)
   const ss=1-jump/120;c.fillStyle='rgba(10,6,30,.45)';c.beginPath();c.ellipse(cx,py+2,78*ss,20*ss,0,0,TAU);c.fill();
   // personaje grande, respirando
-  // giro sin deformar: entre dos caras se funden las dos vistas (nunca se estira la cara)
-  const Q=Math.PI/2,an=((ang%TAU)+TAU)%TAU,i0=Math.floor(an/Q),fr=an/Q-i0,DV=['down','left','up','right'];
-  const blend=Math.min(1,Math.max(0,(fr-.35)/.3)),views=[[DV[i0%4],1-blend],[DV[(i0+1)%4],blend]];
-  for(const [dv,al] of views){if(al<=.01)continue;let im;try{im=sprite(k,dv==='right'?'left':dv,f,false,sk);}catch(e){continue;}
+  // giro 360º: cada vista se "envuelve" en un cilindro y rota de verdad (las facciones se deslizan por la curva), y entre vistas se funden
+  const Q=Math.PI/2,an=((ang%TAU)+TAU)%TAU,DV=['down','left','up','right'],iN=Math.round(an/Q)%4,dl=an-Math.round(an/Q)*Q;
+  const draws=[[iN,dl,1]];const fade=Math.min(.5,Math.max(0,(Math.abs(dl)-Q*.4)/(Q*.2)));if(fade>0){const j=(iN+(dl>0?1:3))%4;draws[0][2]=1-fade;draws.push([j,dl-(dl>0?Q:-Q),fade]);}
+  draws.sort((x,y)=>x[2]-y[2]);
+  for(const [vi,dd,al] of draws){const dv=DV[vi];let im;try{im=sprite(k,dv==='right'?'left':dv,f,false,sk);}catch(e){continue;}
    const br=1+Math.sin(t*2.6)*.025,sc=Math.min(250/im.height,250/im.width)*1.1,w=im.width*sc/br,h=im.height*sc*br;
-   c.save();c.globalAlpha=al;c.translate(cx,py+6-jump);if(dv==='right')c.scale(-1,1);c.drawImage(im,-w/2,-h,w,h);c.restore();}
+   const flip=dv==="right",rot=(flip?-dd:dd)*.8,R=w*.62,cols=Math.ceil(w);c.save();c.globalAlpha=al;c.translate(cx,py+6-jump);if(flip)c.scale(-1,1);
+   for(let x=0;x<cols;x++){const u=(x+.5-w/2)/R;if(Math.abs(u)>1){const sx=(x/w)*im.width;if(Math.abs(rot)<.02)c.drawImage(im,sx,0,im.width/w+.5,im.height,x-w/2,-h,1.2,h);continue;}
+    const ph=Math.asin(u)-rot;if(Math.abs(ph)>Math.PI/2)continue;const su=Math.sin(ph),sx=(w/2+su*R)/w*im.width;const shadeL=.18*(1-Math.cos(ph));
+    c.drawImage(im,Math.max(0,Math.min(im.width-1,sx)),0,Math.max(1,im.width/w),im.height,x-w/2,-h,1.25,h);}
+   c.restore();}
   // luz lateral que se mueve con el giro (da volumen)
   {const lx=cx+Math.sin(an)*90,lg=c.createRadialGradient(lx,py-150,10,lx,py-150,170);lg.addColorStop(0,'rgba(255,250,220,.22)');lg.addColorStop(1,'rgba(255,250,220,0)');c.save();c.globalCompositeOperation='lighter';c.fillStyle=lg;c.fillRect(cx-160,py-320,320,330);c.restore();}
   // chispas
