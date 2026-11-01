@@ -265,6 +265,10 @@ h1{animation:flt2 5s ease-in-out infinite}@keyframes flt2{50%{transform:rotate(-
 .gahero div{position:relative}
 #sPick .info{animation:popin .35s cubic-bezier(.2,1.6,.4,1)}@keyframes popin{from{transform:scale(.94);opacity:.4}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.screen::after,.logo,h1,.menu .btn.play::before,.card canvas,.gahero .gray,.gahero>canvas,.menu .btn.play{animation:none!important}}
+.gahero{perspective:900px}
+.gahero .g3d{position:relative;width:min(92%,380px);height:auto;aspect-ratio:420/440;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .25s;cursor:grab;filter:drop-shadow(0 16px 24px rgba(0,0,0,.45))}
+.gahero .g3d:active{cursor:grabbing}
+.gahero .g3dh{position:relative;font:400 .8rem var(--f-disp);font-style:normal;color:#fff;opacity:.85;text-shadow:var(--txt-out);margin-top:-6px}
 #toast{position:absolute;left:50%;top:64px;transform:translateX(-50%);z-index:30;background:#2b1d63;border:3px solid var(--out);border-radius:16px;padding:9px 16px;font-weight:900;font-size:.88rem;max-width:90%;text-align:center;box-shadow:0 5px 0 var(--out)}
 @media (min-aspect-ratio:23/20){#tip{display:none}}
 #tip{position:absolute;left:0;right:0;bottom:calc(10px + env(safe-area-inset-bottom,0px));text-align:center;font-size:.72rem;font-weight:900;color:rgba(255,255,255,.8);text-shadow:0 2px 0 var(--out);pointer-events:none;z-index:5}
@@ -2814,6 +2818,7 @@ setInterval(welcomeCheck,1500);
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
  {v:'2.4',d:'1 nov 2026',t:'Gran lavado de cara',l:[
+  ['n','<b>Personajes en 3D</b>: tu luchador sobre una peana giratoria. Arrástralo para darle la vuelta y tócalo para que salte.'],
   ['n','Mapas con más volumen: muros más altos con sombras, arbustos con relieve, suelo con luces y sombras, y paisaje alrededor del campo (árboles, tejados o agua).'],
   ['f','Arreglados los botones que se veían cortados.'],
   ['n','<b>Nuevo aspecto</b>: menús con luz y brillos animados, personajes que se mueven en la selección, y en Personajes un escenario con focos y tu luchador caminando.'],
@@ -3280,16 +3285,47 @@ const DMG={xavi:['3 cartas × 420','1.500 en área + empuje'],xavo:['1.000 a lar
 let galK='xavi';
 
 let GALT=null;
-function galAnim(cv,k,sk){if(GALT)cancelAnimationFrame(GALT);const c=cv.getContext('2d'),dirs=['down','left','up','right'];const t0=performance.now();
- const step=()=>{if(!cv.isConnected){GALT=null;return;}const t=(performance.now()-t0)/1000,d=dirs[Math.floor(t/1.6)%4],f=1+Math.floor(t*6)%2;c.clearRect(0,0,150,170);
-  c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(75,152,40,10,0,0,TAU);c.fill();
-  let im;try{im=sprite(k,d==='right'?'left':d,f,false,sk);}catch(e){return;}const s=Math.min(130/im.width,140/im.height),w=im.width*s,h=im.height*s;
-  c.save();if(d==='right'){c.translate(150,0);c.scale(-1,1);}c.drawImage(im,75-w/2,150-h+Math.sin(t*12)*2,w,h);c.restore();GALT=requestAnimationFrame(step);};step();}
+/* Vista 3D del personaje: peana giratoria, se le puede dar la vuelta arrastrando, respira, salta y ataca */
+function galAnim(cv,k,sk,hero){if(GALT)cancelAnimationFrame(GALT);const c=cv.getContext('2d'),Wc=cv.width,Hc=cv.height,t0=performance.now();
+ let ang=0,vel=.55,drag=null,lastAtk=0,jumpT=-9,parts=[];
+ const dirOf=a=>{a=((a%TAU)+TAU)%TAU;const q=Math.round(a/(Math.PI/2))%4;return ['down','left','up','right'][q];};
+ cv.style.touchAction='pan-y';
+ cv.onpointerdown=e=>{drag={x:e.clientX,a:ang,t:performance.now(),moved:0};try{cv.setPointerCapture(e.pointerId);}catch(_){}};
+ cv.onpointermove=e=>{if(drag){const dx=e.clientX-drag.x;drag.moved=Math.max(drag.moved,Math.abs(dx));ang=drag.a-dx*.012;vel=0;}else if(hero){const r=cv.getBoundingClientRect();hero.style.setProperty('--rx',(((e.clientY-r.top)/r.height-.5)*-8).toFixed(2)+'deg');hero.style.setProperty('--ry',(((e.clientX-r.left)/r.width-.5)*10).toFixed(2)+'deg');}};
+ const up=e=>{if(!drag)return;if(drag.moved<6){jumpT=performance.now()/1000;sfx&&sfx('coin');}else vel=.55*Math.sign(drag.a-ang||1);drag=null;};cv.onpointerup=up;cv.onpointercancel=up;
+ cv.onpointerleave=()=>{if(hero){hero.style.setProperty('--rx','0deg');hero.style.setProperty('--ry','0deg');}};
+ let seen=false;const step=()=>{if(!cv.isConnected){if(seen){GALT=null;return;}GALT=requestAnimationFrame(step);return;}seen=true;const now=performance.now()/1000,t=now-t0/1000,dt=1/60;
+  if(!drag){ang+=vel*dt;}
+  const d=dirOf(ang),jt=now-jumpT,jump=jt<.6?Math.sin(jt/.6*Math.PI)*46:0;
+  if(now-lastAtk>3.2){lastAtk=now;}const atk=now-lastAtk<.25;const walk=!atk&&jt>.6&&Math.floor(t*1.3)%3===1;const f=atk?3:walk?1+Math.floor(t*7)%2:0;
+  c.clearRect(0,0,Wc,Hc);const cx=Wc/2,py=Hc-78;
+  // halo trasero
+  const hg=c.createRadialGradient(cx,py-170,10,cx,py-170,200);hg.addColorStop(0,'rgba(255,255,255,.55)');hg.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=hg;c.fillRect(0,0,Wc,Hc);
+  // peana cilíndrica 3D
+  const pw=150,ph=38,pd=34;
+  let sg=c.createLinearGradient(cx-pw,0,cx+pw,0);sg.addColorStop(0,'#2a1d6e');sg.addColorStop(.35,'#7a5ae8');sg.addColorStop(.5,'#9a82ff');sg.addColorStop(1,'#1e1450');
+  c.fillStyle=sg;c.beginPath();c.ellipse(cx,py+pd,pw,ph,0,0,Math.PI);c.lineTo(cx-pw,py);c.ellipse(cx,py,pw,ph,0,Math.PI,0,true);c.closePath();c.fill();c.strokeStyle='#1a1226';c.lineWidth=4;c.stroke();
+  c.strokeStyle='rgba(255,210,58,.9)';c.lineWidth=3;c.beginPath();c.ellipse(cx,py+pd*.55,pw,ph,0,0,Math.PI);c.stroke();
+  sg=c.createRadialGradient(cx-30,py-10,10,cx,py,pw);sg.addColorStop(0,'#c8b8ff');sg.addColorStop(1,'#5a3ad0');c.fillStyle=sg;c.beginPath();c.ellipse(cx,py,pw,ph,0,0,TAU);c.fill();c.stroke();
+  // anillo de luz que gira sobre la peana
+  c.save();c.translate(cx,py);c.scale(1,ph/pw);for(let i=0;i<12;i++){const a=t*1.2+i*TAU/12;c.fillStyle=`rgba(255,240,170,${.35+.35*Math.sin(t*3+i)})`;c.beginPath();c.arc(Math.cos(a)*(pw-18),Math.sin(a)*(pw-18),7,0,TAU);c.fill();}c.restore();
+  // sombra del personaje (se encoge al saltar)
+  const ss=1-jump/120;c.fillStyle='rgba(10,6,30,.45)';c.beginPath();c.ellipse(cx,py+2,78*ss,20*ss,0,0,TAU);c.fill();
+  // personaje grande, respirando
+  let im;try{im=sprite(k,d==='right'?'left':d,f,false,sk);}catch(e){GALT=requestAnimationFrame(step);return;}
+  const br=1+Math.sin(t*2.6)*.025,sc=Math.min(250/im.height,250/im.width)*1.1,w=im.width*sc/br,h=im.height*sc*br;
+  // efecto de giro: se estrecha al pasar entre caras
+  const fr=((ang%(Math.PI/2))+Math.PI/2)%(Math.PI/2)/(Math.PI/2),squeeze=.82+.18*Math.abs(Math.cos(fr*Math.PI));
+  c.save();c.translate(cx,py+6-jump);if(d==='right')c.scale(-1,1);c.scale(squeeze,1);c.drawImage(im,-w/2,-h,w,h);c.restore();
+  // chispas
+  if(Math.random()<.25)parts.push({x:cx+(Math.random()-.5)*260,y:py+10,vy:-(40+Math.random()*70),l:1.6,s:2+Math.random()*3});
+  parts=parts.filter(p=>(p.l-=dt)>0);for(const p of parts){p.y+=p.vy*dt;c.fillStyle=`rgba(255,240,180,${p.l/1.6})`;c.beginPath();c.arc(p.x,p.y,p.s,0,TAU);c.fill();}
+  GALT=requestAnimationFrame(step);};step();}
 function renderGallery(){
  const g=$('gaGrid');g.innerHTML='';
  ORDER.forEach(k=>{const b=document.createElement('button');b.type='button';b.className='gacard r-'+rarK(k)+(k===galK?' on':'')+(ownsChar(k)?'':' lockd');b.appendChild(portrait(k,96,eqSkin(k)));b.insertAdjacentHTML('beforeend',`<b>${esc(BR[k].n)}</b>`);b.onclick=()=>{galK=k;renderGallery();};g.appendChild(b);});
  const k=galK,B=BR[k],lv=lvOf(k),D=$('gaDet');D.innerHTML='';
- const hero=document.createElement('div');hero.className='gahero';hero.insertAdjacentHTML('beforeend','<i class="gray"></i><i class="gped"></i>');hero.appendChild(portrait(k,320,eqSkin(k)));{const av=document.createElement('canvas');av.className='gwalk';av.width=150;av.height=170;hero.appendChild(av);galAnim(av,k,eqSkin(k));}hero.className+=' r-'+rarK(k);hero.insertAdjacentHTML('beforeend',`<div><small>${esc(B.role)}</small><p class="chips">${chips(k)}</p><h3>${esc(B.n)}</h3>${ownsChar(k)?`<span class="lvp">Nivel ${lv}</span>`:`<span class="lvp lk">${LOCKI} ${CHAR_PRICE[k]} Fénix</span>`}</div>`);D.appendChild(hero);
+ const hero=document.createElement('div');hero.className='gahero';hero.insertAdjacentHTML('beforeend','<i class="gray"></i>');{const av=document.createElement('canvas');av.className='g3d';av.width=420;av.height=440;hero.appendChild(av);galAnim(av,k,eqSkin(k),hero);hero.insertAdjacentHTML('beforeend','<em class="g3dh">↔ Arrastra para girarlo</em>');}hero.className+=' r-'+rarK(k);hero.insertAdjacentHTML('beforeend',`<div><small>${esc(B.role)}</small><p class="chips">${chips(k)}</p><h3>${esc(B.n)}</h3>${ownsChar(k)?`<span class="lvp">Nivel ${lv}</span>`:`<span class="lvp lk">${LOCKI} ${CHAR_PRICE[k]} Fénix</span>`}</div>`);D.appendChild(hero);
  const st=document.createElement('div');st.className='info';
  st.innerHTML=`<p class="story">${esc(STORY[k])}</p><div class="kv"><span>Vida</span><b>${B.hp.toLocaleString('es-ES')}</b><span>Velocidad</span><b>${'★'.repeat(B.st[2])}${'☆'.repeat(5-B.st[2])}</b><span>Alcance</span><b>${'★'.repeat(B.st[1])}${'☆'.repeat(5-B.st[1])}</b></div>
  <p><span class="k">Ataque · ${esc(B.atkN)}</span><br>${esc(B.atkD)}<br><b class="dmg">Daño (nivel ${lv}): ${dmgTxt(k,0,lv)}</b></p>
