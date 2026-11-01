@@ -2820,7 +2820,6 @@ setInterval(welcomeCheck,1500);
 // ===== Notas del parche (lo más nuevo arriba). Al añadir cambios, sube PATCHES[0] =====
 const PATCHES=[
  {v:'2.4',d:'1 nov 2026',t:'Gran lavado de cara',l:[
-  ['n','<b>Personajes en 3D</b>: tu luchador sobre una peana giratoria. Arrástralo para darle la vuelta y tócalo para que salte.'],
   ['n','Mapas con más volumen: muros más altos con sombras, arbustos con relieve, suelo con luces y sombras, y paisaje alrededor del campo (árboles, tejados o agua).'],
   ['f','Arreglados los botones que se veían cortados.'],
   ['n','<b>Nuevo aspecto</b>: menús con luz y brillos animados, personajes que se mueven en la selección, y en Personajes un escenario con focos y tu luchador caminando.'],
@@ -3289,7 +3288,7 @@ let galK='xavi';
 
 /* ================= Personajes en 3D de verdad (three.js) ================= */
 let THREE_P=null;
-function loadThree(){if(window.THREE)return Promise.resolve(window.THREE);if(THREE_P)return THREE_P;THREE_P=new Promise((ok,ko)=>{const s=document.createElement('script');s.src='three.min.js';s.onload=()=>ok(window.THREE);s.onerror=ko;document.head.appendChild(s);});return THREE_P;}
+function loadThree(){if(window.THREE)return Promise.resolve(window.THREE);if(THREE_P)return THREE_P;THREE_P=new Promise((ok,ko)=>{const s=document.createElement('script');s.src='';s.onload=()=>ok(window.THREE);s.onerror=ko;document.head.appendChild(s);});return THREE_P;}
 let R3=null;
 function char3D(wrap,k,sk,hero){
  const fb=()=>{const av=document.createElement('canvas');av.className='g3d';av.width=420;av.height=440;wrap.appendChild(av);galAnim(av,k,sk,hero);};
@@ -3474,7 +3473,7 @@ function renderGallery(){
  const g=$('gaGrid');g.innerHTML='';
  ORDER.forEach(k=>{const b=document.createElement('button');b.type='button';b.className='gacard r-'+rarK(k)+(k===galK?' on':'')+(ownsChar(k)?'':' lockd');b.appendChild(portrait(k,96,eqSkin(k)));b.insertAdjacentHTML('beforeend',`<b>${esc(BR[k].n)}</b>`);b.onclick=()=>{galK=k;renderGallery();};g.appendChild(b);});
  const k=galK,B=BR[k],lv=lvOf(k),D=$('gaDet');D.innerHTML='';
- const hero=document.createElement('div');hero.className='gahero';hero.insertAdjacentHTML('beforeend','<i class="gray"></i>');{const wrap=document.createElement('div');wrap.className='g3dw';hero.appendChild(wrap);char3D(wrap,k,eqSkin(k),hero);hero.insertAdjacentHTML('beforeend','<em class="g3dh">↔ Arrastra para girarlo · toca para saltar</em>');}hero.className+=' r-'+rarK(k);hero.insertAdjacentHTML('beforeend',`<div><small>${esc(B.role)}</small><p class="chips">${chips(k)}</p><h3>${esc(B.n)}</h3>${ownsChar(k)?`<span class="lvp">Nivel ${lv}</span>`:`<span class="lvp lk">${LOCKI} ${CHAR_PRICE[k]} Fénix</span>`}</div>`);D.appendChild(hero);
+ const hero=document.createElement('div');hero.className='gahero';hero.insertAdjacentHTML('beforeend','<i class="gray"></i><i class="gped"></i>');hero.appendChild(portrait(k,320,eqSkin(k)));hero.className+=' r-'+rarK(k);hero.insertAdjacentHTML('beforeend',`<div><small>${esc(B.role)}</small><p class="chips">${chips(k)}</p><h3>${esc(B.n)}</h3>${ownsChar(k)?`<span class="lvp">Nivel ${lv}</span>`:`<span class="lvp lk">${LOCKI} ${CHAR_PRICE[k]} Fénix</span>`}</div>`);D.appendChild(hero);
  const st=document.createElement('div');st.className='info';
  st.innerHTML=`<p class="story">${esc(STORY[k])}</p><div class="kv"><span>Vida</span><b>${B.hp.toLocaleString('es-ES')}</b><span>Velocidad</span><b>${'★'.repeat(B.st[2])}${'☆'.repeat(5-B.st[2])}</b><span>Alcance</span><b>${'★'.repeat(B.st[1])}${'☆'.repeat(5-B.st[1])}</b></div>
  <p><span class="k">Ataque · ${esc(B.atkN)}</span><br>${esc(B.atkD)}<br><b class="dmg">Daño (nivel ${lv}): ${dmgTxt(k,0,lv)}</b></p>
