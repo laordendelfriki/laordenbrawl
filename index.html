@@ -514,20 +514,22 @@ h1{animation:flt2 5s ease-in-out infinite}@keyframes flt2{50%{transform:rotate(-
 #pkOv[hidden]{display:none}
 #pkOv .pkrays{position:absolute;left:50%;top:40%;width:220vmax;height:220vmax;margin:-110vmax 0 0 -110vmax;background:repeating-conic-gradient(rgba(255,255,255,.12) 0 9deg,transparent 9deg 22deg);animation:spin 30s linear infinite;pointer-events:none}
 #pkOv>*:not(.pkrays){position:relative}
-.pkstage{width:100%;max-width:640px;max-height:calc(100% - 110px);overflow-y:auto;display:flex;justify-content:center}
+.pkstage{width:100%;max-width:760px;flex:0 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;display:flex;justify-content:center}
 .pkhint{color:#fff;font:400 1.1rem var(--f-disp);text-shadow:var(--txt-out);margin:0;text-align:center}
 .bigpack{cursor:pointer;animation:pkbob 2s ease-in-out infinite}.bigpack canvas{width:200px;height:auto;filter:drop-shadow(0 10px 0 rgba(0,0,0,.4))}
 .bigpack.tear{animation:pktear .65s ease-in forwards}
 @keyframes pktear{0%{transform:scale(1)}30%{transform:scale(1.08) rotate(-4deg)}55%{transform:scale(1.1) rotate(4deg)}100%{transform:scale(1.6);opacity:0;filter:brightness(3)}}
-.pkgrid{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;padding:16px}
+.pkgrid{display:flex;flex-wrap:wrap;justify-content:center;align-content:flex-start;gap:12px;padding:14px 10px}
 .pkflip{position:relative;width:120px;height:168px;perspective:800px;cursor:pointer;animation:pkin .45s cubic-bezier(.2,1.6,.4,1) both}
 @keyframes pkin{from{transform:translateY(60px) scale(.5);opacity:0}}
-.pkflip>div{position:absolute;inset:0;backface-visibility:hidden;transition:transform .5s;border-radius:12px}
+.pkflip>div{position:absolute;inset:0;border-radius:12px}
 .pkback{display:flex;align-items:center;justify-content:center}.pkback canvas{width:100%;height:auto}
 .pkback>span{width:100%;height:100%;display:flex;align-items:center;justify-content:center;border:3px solid var(--out);border-radius:12px;background:linear-gradient(#ffe066,#ff9a1e);font:400 3rem var(--f-disp);color:#fff;text-shadow:var(--txt-out);box-sizing:border-box}
 .pkback.glow2{box-shadow:0 0 18px 4px #d08aff}.pkback.glow3{box-shadow:0 0 22px 6px #ffe066;animation:pkglow 1s ease-in-out infinite}
 @keyframes pkglow{50%{box-shadow:0 0 34px 10px #ffe066}}
-.pkfront{transform:rotateY(180deg)}.pkflip.on .pkback{transform:rotateY(-180deg)}.pkflip.on .pkfront{transform:rotateY(0)}
+.pkflip .pkfront{display:none}.pkflip.on .pkback{display:none}.pkflip.on .pkfront{display:flex;animation:pkrev .35s cubic-bezier(.2,1.5,.4,1)}@keyframes pkrev{0%{transform:scaleX(0) scale(1.1)}100%{transform:none}}
+.pki{position:relative}
+@media (max-height:560px){.pkflip{width:86px;height:120px}.pkc em{font-size:.6rem;bottom:-6px;padding:1px 4px}.pkx .coin{width:20px;height:20px}.pkx b{font-size:.8rem}.pkx canvas{width:56px}.pkx .emo{width:36px;height:36px}.spimg{width:40px;height:40px}#pkOv{gap:4px;padding:8px}.pkhint{font-size:.9rem}#pkOv .btn{font-size:1rem;padding:7px 14px}.bigpack canvas{width:120px}.zoomc canvas{width:min(170px,40vh)}}
 .pki{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-sizing:border-box;text-align:center}
 .pki canvas{width:100%;height:auto}
 .pkc{justify-content:flex-start}.pkc em{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);white-space:nowrap;font:400 .78rem var(--f-disp);font-style:normal;padding:2px 7px;border:2px solid var(--out);border-radius:9px;color:#fff;display:flex;align-items:center;gap:3px}
