@@ -1359,6 +1359,7 @@ const SKINS={
  joker_hr:{k:'joker',n:'Joker Turbo',tag:'Héroes',price:450,look:{hat:'goggles',hata:'#7ae8ff',top:'#1a1a22',trim:'#ff9a2a',stripes:null,motif:'bolt',motifc:'#ff9a2a',pants:'#1a1a22',shoes:'#ff9a2a',shoea:'#1a1a22',pack:'#3a3a44',packa:'#ff9a2a'}},
  xavi_dr:{k:'xavi',n:'Xavi Dragón',tag:'Temporada 1',excl:'pase',price:0,look:{hat:'dragon',hatc:'#2aa05a',hata:'#ffd23a',top:'#1e7a44',trim:'#ffd23a',motif:'scales',motifc:'#7ae89a',cape:'#1e7a44',capeIn:'#ff8a1e',pack:null,pants:'#14502c',shoes:'#ffd23a',shoea:'#1e7a44'}},
  xavo_dm:{k:'xavo',n:'Xavo Diamante',tag:'Competitivo',excl:'rank',price:0,look:{top:'#3a8aff',camo:'#7ae8ff',claw:'#ffffff',trim:'#ffffff',pants:'#1a3a8a',shoes:'#7ae8ff',shoea:'#ffffff',hat:'crown',hatc:'#7ae8ff',hata:'#ffffff'}},
+ lamine_col:{k:'lamine',n:'Lamine Coleccionista',tag:'Álbum completo',excl:'album',price:0,look:{hat:'crown',hatc:'#ffd23a',hata:'#ff4d6a',top:'#ffd23a',trim:'#fff3a0',cape:'#1a1226',capeIn:'#ffd23a',pants:'#1a1226',shoes:'#ffd23a',shoea:'#1a1226',pack:'#ffd23a',packa:'#1a1226'}},
  sara_ms:{k:'sara',n:'Sara la Suprema',tag:'Competitivo',excl:'rank',price:0,look:{hat:'crown',hatc:'#ffd23a',hata:'#ff4d6a',top:'#7a2ab8',trim:'#ffd23a',cape:'#b01e4a',capeIn:'#ffd23a',collar:true,pants:'#3a1a5a',shoes:'#ffd23a',shoea:'#7a2ab8'}},
  john_hw:{k:'john',n:'John Espectro',tag:'Halloween',price:500,look:{ghost:true,skin:'#cfe4ec',hair:'#eef8fb',top:'#253250',trim:'#5affd8',cape:'#1c2640',capeIn:'#2ac8b0',pants:'#1c2640',shoes:'#141a28',shoea:'#5affd8',eye:'#2affd0',face:{brow:'up',mouth:'open',lids:.3},stroller:{frame:'#3a4a6a',hood:'#2a3a5c',seat:'#5affd8'}}},
  john_lila:{k:'john',n:'John Púas Lilas',tag:'Especial',price:550,look:{style:'spiky',hair:'#a24aff',eye:'#ff1e2e',eyeH:.9,top:'#6a2ab8',trim:'#d8a8ff',stripes:null,pants:'#2a1440',shoes:'#1a1022',shoea:'#b86aff',face:{brow:'angry',mouth:'smile',lids:.25},stroller:{frame:'#4a1a7a',hood:'#7a3ad0',seat:'#ff3a5a'}}},
@@ -2632,7 +2633,7 @@ function renderShop(){
   for(const [id,S] of Object.entries(SKINS)){
    const own=W.owned.includes(id),on=own&&W.eq[S.k]===id,hasC=ownsChar(S.k);
    let b;
-   if(!own&&S.excl){b=mkBtn('poor',S.excl==='pase'?'Pase · nivel 50':S.excl==='code'?'Código de tienda':'Competitivo');b.onclick=()=>{if(S.excl==='pase'){shopTab='pass';renderShop();}else if(S.excl==='code'){screen('sCodes');renderCodes();}else{screen('sComp');renderComp();}};}
+   if(!own&&S.excl){b=mkBtn('poor',S.excl==='pase'?'Pase · nivel 50':S.excl==='code'?'Código de tienda':S.excl==='album'?'Álbum completo':'Competitivo');b.onclick=()=>{if(S.excl==='album'){screen('sAlbum');renderAlbum();}else if(S.excl==='pase'){shopTab='pass';renderShop();}else if(S.excl==='code'){screen('sCodes');renderCodes();}else{screen('sComp');renderComp();}};}
    else if(!own){b=mkBtn(S.gift?'gift':W.fenix<S.price||!hasC?'poor':'',S.gift?'¡Gratis! Reclamar':hasC?`${COIN}${S.price}`:`${LOCKI}${BR[S.k].n}`,()=>{if(!hasC){shopTab='chars';renderShop();toast(`Primero desbloquea a ${BR[S.k].n}.`);return;}buySkin(id);});}
    else if(on)b=mkBtn('sec','Quitar',()=>{saveWallet(P=>{P.eq=P.eq||{};delete P.eq[S.k];});renderShop();toast(`${BR[S.k].n} vuelve a su aspecto normal.`);});
    else b=mkBtn('online','Ponérmela',()=>{saveWallet(P=>{P.eq=P.eq||{};P.eq[S.k]=id;});renderShop();toast(`¡${S.n} lista para pelear!`);});
@@ -2909,9 +2910,10 @@ setInterval(welcomeCheck,1500);
 const PATCHES=[
  {v:'2.7',d:'2 nov 2026',t:'Sobres TCG, álbum y chat',l:[
   ['n','Adiós a las cajas: ahora se abren <b>sobres TCG</b>. Hay tres: básico, épico y legendario. Traen cartas coleccionables, Fénix, Fuerza, emotes, sprays, marcos, banners, skins y luchadores. Las cajas que tenías se han convertido en sobres básicos.'],
-  ['n','Nuevo <b>álbum de cartas</b> con 36 cartas: una de cada luchador, su versión brillante y cartas especiales de los protagonistas de la tienda. Completa colecciones para ganar marcos, banners y sprays exclusivos.'],
+  ['n','Nuevo <b>álbum de cartas</b> con más de 60 cartas: una de cada luchador, su versión brillante y cartas especiales de los protagonistas de la tienda. Completa colecciones para ganar marcos, banners y sprays exclusivos.'],
   ['n','<b>Marcos y banners</b> para tu perfil, y <b>sprays</b> para pintar el suelo durante la partida desde el botón de emotes.'],
   ['n','Los sobres se compran con Fénix en la tienda.'],
+  ['n','Completa el álbum entero para ganar la skin única <b>Lamine Coleccionista</b>. Solo se consigue así.'],
   ['n','Nuevo <b>chat global</b> para hablar con todos los que juegan.']]},
  {v:'2.6',d:'1 nov 2026',t:'Llega Lamine Pajal',l:[
   ['n','Nuevo luchador LEGENDARIO: <b>Lamine Pajal, el niño prodigio</b>. Golpea en abanico con su bolsa llena de mazos y su súper, <b>¡Mazo prodigio!</b>, suelta tres oleadas de cartas en espiral mientras le protege un escudo. 1.000 Fénix en la tienda.']]},
@@ -3316,13 +3318,17 @@ Object.assign(CARDS,{
  s_prodigio:{n:'El niño prodigio',r:2,k:'lamine',t:'Lamine y su bolsa llena de mazos.',set:'tienda',bg:['#9ab4cc','#2a3a5a']},
  s_cuadrilla:{n:'La cuadrilla',r:1,trio:['dani','lazuli','joker'],t:'Los de siempre, siempre en la tienda.',set:'tienda',bg:['#3ad86a','#0e4a2a']}
 });
+Object.entries(SKINS).forEach(([id,S])=>{if(S.excl||S.gift||!BR[S.k])return;CARDS['k_'+id]={n:S.n,r:S.price>=500?3:S.price>=400?2:1,k:S.k,sk:id,t:'Skin de '+BR[S.k].n,set:'skins'};});
 const CARD_IDS=Object.keys(CARDS);
 const ALBUM=[
  {id:'serie',n:'Luchadores de La Orden',d:'Una carta de cada luchador.',rw:{fenix:500,banner:'b_orden'}},
  {id:'tienda',n:'Especiales de la tienda',d:'Las cartas de los protagonistas de La Orden.',rw:{fenix:1000,frame:'f_fund',banner:'b_fund'}},
- {id:'brill',n:'Edición brillante',d:'Las versiones brillantes de todos los luchadores.',rw:{fenix:1500,frame:'f_holo',spray:'sp_corona'}}
+ {id:'brill',n:'Edición brillante',d:'Las versiones brillantes de todos los luchadores.',rw:{fenix:1500,frame:'f_holo',spray:'sp_corona'}},
+ {id:'skins',n:'Galería de skins',d:'Una carta por cada skin del juego.',rw:{fenix:2000}},
+ {id:'all',n:'Coleccionista supremo',d:'Consigue TODAS las cartas del álbum.',rw:{skin:'lamine_col'}}
 ];
-const DUPE_FX=[5,15,40,120];
+const setIds=sid=>sid==='all'?CARD_IDS:CARD_IDS.filter(id=>CARDS[id].set===sid);
+const DUPE_FX=[2,5,15,50];
 const FRAMES={
  f_none:{n:'Sin marco',src:'base',bg:'transparent'},
  f_plata:{n:'Plata',src:'shop',price:200,bg:'linear-gradient(135deg,#ffffff,#9aa4b8 50%,#e8eef8)'},
@@ -3363,9 +3369,9 @@ const SPRAYS={
 const SPR_IDS=Object.keys(SPRAYS);
 SPR_IDS.forEach(id=>{const S=SPRAYS[id],E=EMO[S.e];const im=new Image();im.src=E.img||svgUrl(E.svg);S.im=im;S.url=im.src;});
 const PACKS={
- basic:{n:'Sobre básico',price:100,cards:3,rolls:1,w:[70,24,5,1],min:0,fx:[20,50],c:['#5ab4ff','#1a4ac0'],gl:'#9ad0ff'},
- epic:{n:'Sobre épico',price:350,cards:4,rolls:2,w:[45,35,15,5],min:1,fx:[60,120],c:['#d08aff','#6a1ac0'],gl:'#e0b0ff'},
- leg:{n:'Sobre legendario',price:900,cards:5,rolls:3,w:[20,40,28,12],min:2,fx:[150,300],c:['#ffe066','#d8700a'],gl:'#fff3a0'}
+ basic:{n:'Sobre básico',price:100,cards:3,rolls:1,w:[74,21,4,1],min:0,fx:[20,50],c:['#5ab4ff','#1a4ac0'],gl:'#9ad0ff'},
+ epic:{n:'Sobre épico',price:350,cards:4,rolls:2,w:[52,33,12,3],min:1,fx:[60,120],c:['#d08aff','#6a1ac0'],gl:'#e0b0ff'},
+ leg:{n:'Sobre legendario',price:900,cards:5,rolls:3,w:[30,42,22,6],min:2,fx:[150,300],c:['#ffe066','#d8700a'],gl:'#fff3a0'}
 };
 const LOGO_IM=new Image();LOGO_IM.src=LOGO;
 function pw(){const W=wallet(),P=cloudOn()?PROF:(save.local||{});return Object.assign(W,{cards:P.cards&&typeof P.cards==='object'?P.cards:{},frames:Array.isArray(P.frames)?P.frames:[],banners:Array.isArray(P.banners)?P.banners:[],sprays:Array.isArray(P.sprays)?P.sprays:[],frame:P.frame||'f_none',banner:P.banner||'b_none',spray:P.spray||'',packs:P.packs&&typeof P.packs==='object'?P.packs:{},albGot:Array.isArray(P.albGot)?P.albGot:[]});}
@@ -3421,7 +3427,7 @@ function cardBackCv(w){const h=Math.round(w*1.4),c=mk(w,h),x=c.getContext('2d');
 function pickW(ws){const s=ws.reduce((a,b)=>a+b,0);let r=rnd()*s;for(let i=0;i<ws.length;i++){r-=ws[i];if(r<0)return i;}return ws.length-1;}
 function rollPack(t){const P=PACKS[t],W=pw(),out=[];const fx=P.fx[0]+Math.floor(rnd()*(P.fx[1]-P.fx[0]+1));
  for(let i=0;i<P.cards;i++){let r=pickW(P.w);if(i===P.cards-1)r=Math.max(r,P.min);
-  const pool=CARD_IDS.filter(id=>CARDS[id].r===r),ws=pool.map(id=>id[0]==='h'?.35:id[0]==='s'?.6:1);out.push({t:'card',id:pool[pickW(ws)]});}
+  const pool=CARD_IDS.filter(id=>CARDS[id].r===r),ws=pool.map(id=>id[0]==='h'?.45:id[0]==='s'?.6:id[0]==='k'?.7:1);out.push({t:'card',id:pool[pickW(ws)]});}
  out.push({t:'fenix',n:fx});
  const lockedC=ORDER.filter(k=>!ownsChar(k)),freeS=Object.keys(SKINS).filter(id=>!W.owned.includes(id)&&ownsChar(SKINS[id].k)&&!SKINS[id].excl&&!SKINS[id].gift),
   freeE=Object.keys(EMO).filter(id=>(EMO[id].src==='box'||EMO[id].src==='shop')&&!W.emos.includes(id)),freeF=Object.keys(FRAMES).filter(id=>FRAMES[id].src==='pack'&&!W.frames.includes(id)),
@@ -3487,23 +3493,24 @@ $('pkDone').onclick=()=>{$('pkOv').hidden=true;const it=PKQ&&PKQ.items||[];PKQ=n
  renderBox();albumBadge();};
 
 /* ---- álbum ---- */
-function albumBadge(){const W=pw();const n=ALBUM.filter(A=>!W.albGot.includes(A.id)&&CARD_IDS.filter(id=>CARDS[id].set===A.id).every(id=>W.cards[id])).length;const b=$('bAlbum');if(b)b.dataset.n=n;}
-function rwText(R){const o=[];if(R.fenix)o.push(`${R.fenix} Fénix`);if(R.frame)o.push(`marco ${FRAMES[R.frame].n}`);if(R.banner)o.push(`banner ${BANNERS[R.banner].n}`);if(R.spray)o.push(`spray ${SPRAYS[R.spray].n}`);return o.join(' + ');}
+function albumBadge(){const W=pw();const n=ALBUM.filter(A=>!W.albGot.includes(A.id)&&setIds(A.id).every(id=>W.cards[id])).length;const b=$('bAlbum');if(b)b.dataset.n=n;}
+function rwText(R){const o=[];if(R.fenix)o.push(`${R.fenix} Fénix`);if(R.frame)o.push(`marco ${FRAMES[R.frame].n}`);if(R.banner)o.push(`banner ${BANNERS[R.banner].n}`);if(R.spray)o.push(`spray ${SPRAYS[R.spray].n}`);if(R.skin)o.push(`la skin única ${SKINS[R.skin].n}`);return o.join(' + ');}
 function renderAlbum(){const W=pw(),list=$('alList');list.innerHTML='';const got=CARD_IDS.filter(id=>W.cards[id]).length;
  $('alTot').innerHTML=`<b>${got}</b> de ${CARD_IDS.length} cartas`;
- for(const A of ALBUM){const ids=CARD_IDS.filter(id=>CARDS[id].set===A.id),have=ids.filter(id=>W.cards[id]).length,done=have===ids.length,claimed=W.albGot.includes(A.id);
+ for(const A of ALBUM){const ids=setIds(A.id),have=ids.filter(id=>W.cards[id]).length,done=have===ids.length,claimed=W.albGot.includes(A.id);
   const sec=document.createElement('div');sec.className='alsec'+(done?' done':'');
   sec.innerHTML=`<div class="alhd"><div><b>${esc(A.n)}</b><small>${esc(A.d)}</small></div><span class="alct">${have}/${ids.length}</span></div><div class="albar"><i style="width:${Math.round(100*have/ids.length)}%"></i></div><p class="alrw">Premio: ${rwText(A.rw)}${claimed?' · <b>conseguido ✓</b>':''}</p>`;
   if(done&&!claimed){const b=mkBtn('gift','¡Reclamar premio!',()=>claimAlbum(A));sec.appendChild(b);}
   const grid=document.createElement('div');grid.className='algrid';
-  ids.forEach(id=>{const n=W.cards[id]||0,c=document.createElement('button');c.type='button';c.className='alcard'+(n?'':' miss')+(CARDS[id].holo&&n?' holo':'');
+  if(A.id!=='all')ids.forEach(id=>{const n=W.cards[id]||0,c=document.createElement('button');c.type='button';c.className='alcard'+(n?'':' miss')+(CARDS[id].holo&&n?' holo':'');
    if(n){c.appendChild(cardCv(id,120));if(n>1)c.insertAdjacentHTML('beforeend',`<i>×${n}</i>`);c.onclick=()=>zoomCard(id);}else{c.innerHTML=`<span>?</span><small>${CARD_IDS.indexOf(id)+1}</small>`;}
    grid.appendChild(c);});
   sec.appendChild(grid);list.appendChild(sec);}
  albumBadge();}
 function claimAlbum(A){const W=pw();if(W.albGot.includes(A.id))return;
  saveWallet(P=>{P.albGot=Array.isArray(P.albGot)?P.albGot:[];P.albGot.push(A.id);const R=A.rw;if(R.fenix)P.fenix=(P.fenix||0)+R.fenix;
-  const add=(f,v)=>{P[f]=Array.isArray(P[f])?P[f]:[];if(!P[f].includes(v))P[f].push(v);};if(R.frame)add('frames',R.frame);if(R.banner)add('banners',R.banner);if(R.spray)add('sprays',R.spray);});
+  const add=(f,v)=>{P[f]=Array.isArray(P[f])?P[f]:[];if(!P[f].includes(v))P[f].push(v);};if(R.frame)add('frames',R.frame);if(R.banner)add('banners',R.banner);if(R.spray)add('sprays',R.spray);if(R.skin){add('owned',R.skin);add('chars',SKINS[R.skin].k);P.eq=P.eq&&typeof P.eq==='object'?P.eq:{};P.eq[SKINS[R.skin].k]=R.skin;}});
+ if(A.rw.skin)setTimeout(()=>unlockShow({kind:'skin',k:SKINS[A.rw.skin].k,sk:A.rw.skin}),300);
  sfx('win');toast(`¡Colección completada! Ganas ${rwText(A.rw)}.`);renderAlbum();}
 function zoomCard(id){const ov=$('pkOv'),st=$('pkStage');ov.hidden=false;ov.style.setProperty('--pg',CRAR[CARDS[id].r][1]);st.innerHTML='';const d=document.createElement('div');d.className='zoomc'+(CARDS[id].holo?' holo':'');d.appendChild(cardCv(id,260));st.appendChild(d);
  $('pkHint').textContent=`Tienes ${pw().cards[id]||0}`;$('pkAll').hidden=true;$('pkDone').hidden=false;PKQ=null;}
