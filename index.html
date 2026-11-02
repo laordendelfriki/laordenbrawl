@@ -498,6 +498,7 @@ h1{animation:flt2 5s ease-in-out infinite}@keyframes flt2{50%{transform:rotate(-
 #feed .fb{color:#8ac8ff}#feed .fr{color:#ff9aa4}
 
 /* ---- sobres, álbum, perfil, chat ---- */
+.dpick{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px}.dpick button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;border:3px solid var(--out);border-radius:12px;background:#2a1d6a;cursor:pointer;color:#fff;min-width:0}.dpick button[aria-pressed="true"]{background:linear-gradient(#ffe066,#ff9a1e);box-shadow:0 0 0 2px #fff}.dpick small{font:400 .72rem var(--f-disp);text-shadow:var(--txt-out);overflow-wrap:anywhere}.dpick .spimg{width:40px;height:40px}.dpick .bnprev{height:28px}#decoPick .phead{display:flex;align-items:center;gap:10px}#decoPick h3{margin:0;color:#fff;font:400 1.3rem var(--f-disp);text-shadow:var(--txt-out)}
 #shTabs{grid-template-columns:repeat(4,1fr)!important}#shTabs button{grid-column:auto!important}#shTabs button:nth-child(7){grid-column:span 2!important}
 .btn.album{background:linear-gradient(#fff3a0 0%,#ffd23a 48%,#e8a01a 52%,#b8700a 100%)}
 .btn.album::after,.btn.chat::after{content:attr(data-n);position:absolute;top:-10px;right:-10px;min-width:26px;height:26px;border-radius:13px;background:#e8323a;border:3px solid var(--out);font:400 .95rem/20px var(--f-disp);color:#fff;text-align:center;padding:0 4px}
@@ -670,6 +671,7 @@ h1{animation:flt2 5s ease-in-out infinite}@keyframes flt2{50%{transform:rotate(-
  <section class="screen" id="sRank" hidden>
   <h2>Perfil y ranking</h2>
   <div class="info" id="myStats"></div>
+  <div class="info" id="decoPick"></div>
   <div class="info" id="pemoPick"></div>
   <div class="info"><label class="k" for="renameIn">Cambiar tu nombre</label><div class="joinrow"><input id="renameIn" maxlength="12" placeholder="Nuevo nombre"><button class="btn sec" id="bRename" type="button">Cambiar</button></div></div>
   <h2>Ranking de La Orden</h2>
@@ -2594,7 +2596,7 @@ async function renderRank(){
  $('myStats').innerHTML=`<div class="profhead">${emoHTML(myEmo(),'big')}<div><h3>${esc((P.nick)||save.nick||'Tú')}</h3><p>${tierBadge(rkState().t)} ${rkState().rp} puntos de competitivo</p></div></div><span class="k">Tu icono (toca para cambiarlo)</span><div class="emopick">${emoOwned().map(id=>`<button type="button" data-e="${id}" aria-pressed="${id===myEmo()}">${emoHTML(id)}</button>`).join('')}</div><h3 style="display:none">${esc((P.nick)||save.nick||'Tú')}</h3><p>${P.tro||0} trofeos · ${rankOf(P.tro||0)}</p><div class="kv"><span>Partidas</span><b>${P.games||0}</b><span>Victorias</span><b>${P.wins||0}</b><span>K.O.</span><b>${P.ko||0}</b><span>Goles</span><b>${P.goals||0}</b><span>Daño total</span><b>${P.dmg||0}</b></div>${best.length?`<p class="k">Tus mejores luchadores</p><p>${best.map(([k,v])=>`${BR[k].n} ${v}`).join(' · ')}</p>`:''}${DB&&UID?'':'<p class="k">Sin cuenta: tus datos solo están en este dispositivo.</p>'}${CANW===false?'<p class="k">Tu progreso se guarda en la nube cuando juegas online en la sala de Xavi. Si Xavi te invita como Editor, se guardará siempre.</p>':''}`;
  document.querySelectorAll('#myStats .emopick button').forEach(b=>b.onclick=()=>{saveWallet(P=>{P.emo=b.dataset.e;});renderRank();});
 }
-$('bRank').onclick=()=>{screen('sRank');renderRank();renderPemoPick();};
+$('bRank').onclick=()=>{screen('sRank');renderRank();renderPemoPick();renderDecoPick();};
 const COIN='<svg class="coin" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#ffbf1e" stroke="#1a1226" stroke-width="2"/><circle cx="12" cy="12" r="7.6" fill="#ff9a1e"/><path fill="#fff3b0" d="M12 4.6c.8 2.6 3.6 3.8 3.6 7.2a3.6 3.6 0 0 1-7.2 0c0-1.6.8-2.6 1.6-3.4.1 1.2.6 2 1.4 2.4-.4-2.2.2-4.4.6-6.2z"/></svg>';
 const LOCKI='<svg class="coin" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="12" rx="3" fill="#ffd23a" stroke="#1a1226" stroke-width="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="#1a1226" stroke-width="2.4"/></svg>';
 const FZI='<svg class="coin" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="#7a3aff" stroke="#1a1226" stroke-width="2"/><path fill="#fff" stroke="#1a1226" stroke-width="1.2" d="M13.5 3.5 6.5 13.5h4.5l-1.5 7 7.5-10.5h-4.6z"/></svg>';
@@ -2889,9 +2891,10 @@ function renderProfile(id,P){const box=$('profBox');
  <div class="pstats"><div><b>${P.games||0}</b><small>Partidas</small></div><div><b>${P.wins||0}</b><small>Victorias</small></div><div><b>${wr}%</b><small>Ganadas</small></div><div><b>${P.ko||0}</b><small>K.O.</small></div><div><b>${P.goals||0}</b><small>Goles</small></div><div><b>${bpl}</b><small>Nivel de pase</small></div></div>
  ${best.length?`<span class="k">Luchadores favoritos</span><div class="pbest">${best.map(([k,v])=>`<div data-k="${k}" data-s="${esc(P.eq&&P.eq[k]&&SKINS[P.eq[k]]?P.eq[k]:'')}"><canvas width="96" height="96"></canvas><b>${esc(BR[k].n)}</b><small>${v} trofeos</small></div>`).join('')}</div>`:''}
  <div class="kv"><span>Personajes</span><b>${chars} de ${ORDER.length}</b><span>Skins</span><b>${skins}</b><span>Logros</span><b>${ach} de ${ACH.length}</b><span>Cartas</span><b>${P.cards&&typeof P.cards==='object'?Object.keys(P.cards).filter(c=>CARDS[c]).length:0} de ${CARD_IDS.length}</b><span>Daño total</span><b>${P.dmg||0}</b></div>
- ${act?`<div class="pact">${act}</div>`:''}`;
+ ${act?`<div class="pact">${act}</div>`:''}${me?`<div class="pact"><button class="btn gold" data-pa="deco" type="button">Cambiar marco, banner y spray</button></div>`:''}`;
  box.querySelectorAll('.pbest [data-k]').forEach(d=>d.querySelector('canvas').getContext('2d').drawImage(portrait(d.dataset.k,96,d.dataset.s||''),0,0));
  box.querySelectorAll('[data-pa]').forEach(b=>b.onclick=()=>{const a=b.dataset.pa;FRDOC[id]=FRDOC[id]||P;
+  if(a==='deco'){$('profOv').hidden=true;profId=null;screen('sShop');shopTab='deco';renderShop();return;}
   if(a==='add'){profSet(Q=>{Q.fr=Array.from(new Set((Q.fr||[]).concat(id))).slice(-200);Q.frx=(Q.frx||[]).filter(x=>x!==id);});toast('Solicitud enviada a '+(P.nick||'Jugador')+'.');renderProfile(id,P);}
   else if(a==='ok'){frAccept(id);renderProfile(id,P);}
   else if(a==='inv'||a==='invr'){$('profOv').hidden=true;inviteFriend(id,a==='invr');}});}
@@ -3532,6 +3535,16 @@ function renderShopDeco(list){list.className='decol';$('shNote').textContent='Ma
  g=sec('Banners');for(const [id,B] of Object.entries(BANNERS)){const d=document.createElement('div');d.className='decard wide'+(W.banner===id?' on':'');d.innerHTML=`<span class="bnprev" style="background:${B.bg}"></span><b>${esc(B.n)}</b>`;d.appendChild(buyBtn(B,id,'banners','banner',W.banner));g.appendChild(d);}
  g=sec('Sprays');for(const [id,S] of Object.entries(SPRAYS)){const d=document.createElement('div');d.className='decard'+(W.spray===id?' on':'');d.innerHTML=`<img class="spimg" src="${S.url}" alt=""><b>${esc(S.n)}</b>`;d.appendChild(buyBtn(S,id,'sprays','spray',W.spray));g.appendChild(d);}}
 
+function renderDecoPick(){const box=$('decoPick');if(!box)return;const W=pw();
+ const own={frame:Object.keys(FRAMES).filter(id=>hasFrame(W,id)),banner:Object.keys(BANNERS).filter(id=>hasBanner(W,id)),spray:SPR_IDS.filter(id=>hasSpray(W,id))};
+ const cur={frame:hasFrame(W,W.frame)?W.frame:'f_none',banner:hasBanner(W,W.banner)?W.banner:'b_none',spray:mySpray()};
+ box.innerHTML=`<span class="k">Tu tarjeta de perfil</span><div class="phead" style="background:${bannerBg(cur.banner)}">${frameHTML(cur.frame,emoHTML(myEmo(),'big'),'lg')}<div><h3>${esc(String((PROF&&PROF.nick)||save.nick||'Jugador').slice(0,12))}</h3></div></div>
+ <span class="k">Banner</span><div class="dpick">${own.banner.map(id=>`<button type="button" data-t="banner" data-id="${id}" aria-pressed="${cur.banner===id}" title="${esc(BANNERS[id].n)}"><span class="bnprev" style="background:${BANNERS[id].bg}"></span><small>${esc(BANNERS[id].n)}</small></button>`).join('')}</div>
+ <span class="k">Marco</span><div class="dpick">${own.frame.map(id=>`<button type="button" data-t="frame" data-id="${id}" aria-pressed="${cur.frame===id}">${frameHTML(id,emoHTML(myEmo(),'sm'),'sm')}<small>${esc(FRAMES[id].n)}</small></button>`).join('')}</div>
+ <span class="k">Spray de partida</span><div class="dpick">${own.spray.map(id=>`<button type="button" data-t="spray" data-id="${id}" aria-pressed="${cur.spray===id}"><img class="spimg" src="${SPRAYS[id].url}" alt=""><small>${esc(SPRAYS[id].n)}</small></button>`).join('')}</div>
+ <button class="btn gold" type="button" id="bDecoShop">Conseguir más en la tienda</button>`;
+ box.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{const t=b.dataset.t,id=b.dataset.id;saveWallet(P=>{P[t]=id;});renderDecoPick();toast('¡Cambiado!');});
+ $('bDecoShop').onclick=()=>{screen('sShop');shopTab='deco';renderShop();};}
 /* ---- sprays en partida ---- */
 const SPR_BASE=100,SPR_DUR=7;
 const pemOk=e=>!!(PEMO[e-1]||(e>SPR_BASE&&SPR_IDS[e-SPR_BASE-1]));
@@ -3547,11 +3560,11 @@ function drawSpray(u){const age=performance.now()/1000-(u.pemT||0);if(age>SPR_DU
 const CH_BAD=['puta','puto','gilipollas','cabron','cabrón','maricon','maricón','zorra','subnormal','retrasado','mierda','coño','polla','follar','hijo de puta','hdp','imbecil','imbécil','idiota','pendejo','negrata','nazi'];
 function chFilter(s){let t=String(s||'').replace(/\s+/g,' ').trim().slice(0,120);t=t.replace(/(https?:\/\/|www\.)\S+/gi,'[enlace]');const low=t.toLowerCase();
  for(const w of CH_BAD){let i=low.indexOf(w);while(i>=0){t=t.slice(0,i)+'*'.repeat(w.length)+t.slice(i+w.length);i=low.indexOf(w,i+w.length);}}return t;}
-let CHREF=null,CHMSG=[],CHERR='',chLast=0,CHSEEN=0;
+const CH_PATH='brawl/rooms/CHATGLB1';let CHREF=null,CHMSG=[],CHERR='',chLast=0,CHSEEN=0;
 try{CHSEEN=+localStorage.getItem('brawlChSeen')||0;}catch(e){}
 function chatDb(){try{return window.firebase&&firebase.apps&&firebase.apps.length&&firebase.database?firebase.database():null;}catch(e){return null;}}
 function chatListen(){if(CHREF)return;const db=chatDb();if(!db){CHERR='El chat necesita conexión a internet y una cuenta.';return;}
- CHREF=db.ref('brawl/chat').limitToLast(60);CHREF.on('value',sn=>{const v=sn.val()||{};CHERR='';CHMSG=Object.entries(v).map(([id,m])=>Object.assign({id},m)).filter(m=>m&&typeof m.m==='string').sort((a,b)=>(a.t||0)-(b.t||0));
+ CHREF=db.ref(CH_PATH).orderByKey().limitToLast(60);CHREF.on('value',sn=>{const v=sn.val()||{};CHERR='';CHMSG=Object.entries(v).map(([id,m])=>Object.assign({id,u:m&&m.uid,t:m&&m.t},m&&m.p||{})).filter(m=>m&&typeof m.m==='string').sort((a,b)=>(a.t||0)-(b.t||0));
   if(!$('sChat').hidden){renderChat();chMarkSeen();}chBadge();},e=>{CHERR='No se puede conectar con el chat ahora mismo.';console.warn(e);if(!$('sChat').hidden)renderChat();});}
 function chMarkSeen(){const l=CHMSG[CHMSG.length-1];if(l){CHSEEN=l.t||Date.now();try{localStorage.setItem('brawlChSeen',CHSEEN);}catch(e){}}chBadge();}
 function chBadge(){const b=$('bChat');if(!b)return;const n=CHMSG.filter(m=>(m.t||0)>CHSEEN&&m.u!==UID).length;b.dataset.n=Math.min(99,n);}
@@ -3561,13 +3574,13 @@ function renderChat(){const box=$('chList');const atBottom=box.scrollHeight-box.
  else if(!CHMSG.length)box.innerHTML='<p class="hint">Todavía no hay mensajes. ¡Saluda!</p>';
  else box.innerHTML=CHMSG.map(m=>`<div class="chm${m.u===UID?' me':''}" data-id="${esc(m.id)}"><button class="chav" type="button" data-u="${esc(m.u||'')}">${frameHTML(FRAMES[m.f]?m.f:'f_none',emoHTML(EMO[m.e]?m.e:'feliz'),'sm')}</button><div class="chb"><div class="chn"><b>${esc(String(m.n||'Jugador').slice(0,12))}</b><small>${chTime(m.t)}</small>${isAdmin()?`<button class="chdel" type="button" data-del="${esc(m.id)}" aria-label="Borrar">✕</button>`:''}</div><p>${esc(m.m)}</p></div></div>`).join('');
  box.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{if(b.dataset.u)openProfile(b.dataset.u);});
- box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const db=chatDb();if(db)db.ref('brawl/chat/'+b.dataset.del).remove().catch(()=>toast('No se ha podido borrar.'));});
+ box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const db=chatDb();if(db)db.ref(CH_PATH+'/'+b.dataset.del).remove().catch(()=>toast('No se ha podido borrar.'));});
  if(atBottom||box.dataset.first!=='1'){box.scrollTop=box.scrollHeight;box.dataset.first='1';}
  const logged=!!(DB&&UID);$('chIn').disabled=!logged;$('chIn').placeholder=logged?'Escribe un mensaje…':'Inicia sesión para escribir';}
 $('chForm').addEventListener('submit',e=>{e.preventDefault();const db=chatDb();if(!db||!UID){toast('Inicia sesión para usar el chat.');return;}
  const raw=$('chIn').value;const m=chFilter(raw);if(!m)return;const n=Date.now();if(n-chLast<4000){toast('Espera un poco entre mensajes.');return;}chLast=n;
  const W=pw(),nick=String((PROF&&PROF.nick)||save.nick||'Jugador').slice(0,12);
- db.ref('brawl/chat').push({u:UID,n:nick,e:myEmo(),f:hasFrame(W,W.frame)?W.frame:'f_none',m,t:firebase.database.ServerValue.TIMESTAMP}).then(()=>{$('chIn').value='';}).catch(err=>{console.warn(err);toast('No se ha podido enviar. Revisa la conexión.');});});
+ db.ref(CH_PATH+'/c'+n.toString(36)+Math.random().toString(36).slice(2,6)).set({uid:UID,t:firebase.database.ServerValue.TIMESTAMP,p:{n:nick,e:myEmo(),f:hasFrame(W,W.frame)?W.frame:'f_none',m}}).then(()=>{$('chIn').value='';}).catch(err=>{console.warn(err);toast('No se ha podido enviar. Revisa la conexión.');});});
 
 /* ================= Pase de batalla ================= */
 const SEASON={id:'s1',name:'La Orden del Dragón',start:new Date(2026,9,28),end:new Date(2026,10,28,23,59),price:1200,skin:'xavi_dr'};
