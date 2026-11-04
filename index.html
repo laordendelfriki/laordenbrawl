@@ -2541,7 +2541,8 @@ async function initAccount(){
  if(USR){try{MEV=await USR.me();UID=MEV.id;IS_OWNER=!!MEV.isOwner;}catch(e){}}
  if(DB&&UID){
   DB.doc('players/'+UID).onSnapshot(sn=>{if(sn.metadata&&sn.metadata.fromCache&&!sn.exists)return;PROF_LOADED=true;PROF=sn.exists?sn.data():null;
-   if(PROF){save.tro=PROF.tro||0;if(PROF.nick)save.nick=PROF.nick;store();}
+   if(PROF){save.tro=PROF.tro||0;if(PROF.nick)save.nick=PROF.nick;try{save.local=JSON.parse(JSON.stringify(PROF));}catch(e){}store();
+    setTimeout(()=>{try{if(!$('sBox').hidden)renderBox();if(!$('sAlbum').hidden)renderAlbum();if(!$('sShop').hidden)renderShop();if(!$('sRank').hidden)renderDecoPick();}catch(e){}},0);}
    else if(save.nick&&save.local&&(save.local.games||save.local.fenix)){const P=Object.assign(emptyProf(),JSON.parse(JSON.stringify(save.local)),{nick:save.nick,tro:save.tro||0,upd:Date.now()});PROF=P;writeOwn(P);}
    renderAccount();frBadge();},()=>{});
   frSubscribe();
@@ -2551,7 +2552,7 @@ async function initAccount(){
 }
 function writeOwn(next){
  if(!(DB&&UID)||CANW===false)return;
- DB.doc('players/'+UID).set(next).then(()=>{CANW=true;}).catch(()=>{CANW=false;renderAccount();});
+ const go=(n)=>DB.doc('players/'+UID).set(next).then(()=>{CANW=true;}).catch(e=>{console.warn('save',e);if(n>0)setTimeout(()=>go(n-1),1500);else{CANW=false;renderAccount();toast('No se ha podido guardar en la nube'+(e&&e.code?' ('+e.code+')':'')+'. Revisa la conexión y vuelve a abrir el juego.');}});go(2);
 }
 function recordResult(x){
  save.tro=Math.max(0,save.tro+x.d);const lp=applyRes(save.local||emptyProf(),x);save.local=lp;store();
@@ -3475,11 +3476,12 @@ function renderBox(){const W=pw();$('bxCur').innerHTML=`${COIN}<b>${W.fenix}</b>
   const o=mkBtn(n>0?'gift':'poor',n>0?'Abrir':'Abrir',()=>openPack(t));o.disabled=n<1;bt.appendChild(o);
   bt.appendChild(mkBtn(W.fenix<P.price?'poor':'online',`${COIN}${P.price}`,()=>buyPack(t)));d.appendChild(bt);row.appendChild(d);}
  const bb=$('bBox');if(bb)bb.dataset.n=W.boxes+(W.packs.epic||0)+(W.packs.leg||0);}
-function buyPack(t){const P=PACKS[t],W=pw();if(W.fenix<P.price){toast(`Te faltan ${P.price-W.fenix} Fénix.`);return;}
+function buyPack(t){if(acctLoading()){toast('Cargando tu cuenta, espera un segundo…');return;}const P=PACKS[t],W=pw();if(W.fenix<P.price){toast(`Te faltan ${P.price-W.fenix} Fénix.`);return;}
  saveWallet(Q=>{Q.fenix=(Q.fenix||0)-P.price;if(t==='basic')Q.boxes=(Q.boxes||0)+1;else{Q.packs=Q.packs&&typeof Q.packs==='object'?Q.packs:{};Q.packs[t]=(Q.packs[t]||0)+1;}});
  toast(`¡${P.n} comprado!`);if(!$('sBox').hidden)renderBox();if(!$('sShop').hidden)renderShop();}
 let PKQ=null;
-function openPack(t){const W=pw();if(packCount(W,t)<1){toast('No te quedan sobres de ese tipo.');return;}
+const acctLoading=()=>!!(DB&&UID&&!PROF_LOADED);
+function openPack(t){if(acctLoading()){toast('Cargando tu cuenta, espera un segundo…');return;}const W=pw();if(packCount(W,t)<1){toast('No te quedan sobres de ese tipo.');return;}
  const items=rollPack(t);applyPack(t,items);renderBox();
  const ov=$('pkOv'),st=$('pkStage');ov.hidden=false;ov.style.setProperty('--pg',PACKS[t].gl);st.innerHTML='';$('pkDone').hidden=true;$('pkAll').hidden=true;
  const pk=document.createElement('div');pk.className='bigpack';const cv=mk(200,290);drawPackShape(cv.getContext('2d'),100,145,180,276,t);pk.appendChild(cv);st.appendChild(pk);$('pkHint').textContent='Toca el sobre para abrirlo';
